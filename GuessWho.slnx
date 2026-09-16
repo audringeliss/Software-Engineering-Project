@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="guesswho.client/guesswho.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="GuessWho.Server/GuessWho.Server.csproj" />
+</Solution>
