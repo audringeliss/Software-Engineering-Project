@@ -22,8 +22,8 @@ The main goals of this project are:
 
   Laura Kanapienytė
   
-- **Company name** - still coming up with ideas
-- **Product name** - still coming up with ideas
+- **Company name** - ***LAG Inc.***
+- **Product name** - ***Guess Who?***
 
 ## Feature Roadmap
 
@@ -102,6 +102,17 @@ The Final version should provide a complete multiplayer Guess Who? web applicati
 
 ## Technology stack
 
-need to discuss and research more
+**Backend**:
 
-## other things [...]
+- ASP.NET Core - the main server-side framework responsible for the application logic and API.
+- C# - the main programming language used for the backend.
+
+**Frontend**:
+
+- React - used to build the user interface and interactive game components.
+- TypeScript / JavaScript - used for React development.
+- HTML & CSS - used for the structure and styling of the application.
+
+## End-to-end user scenario
+
+The player opens the Guess Who? website and creates or logs into their account. They select New Game, choose a category (for example, People or Objects), and invite another player to join. Both players select a person or object that the other player will have to guess. The first player asks a question about the opponent's hidden target. The question should have a True/False answer. The opponent receives the question and selects True or False. The answer is then shown to the asking player who can now close those options that they think are not going to be their opponents chosen target. Players continue asking and answering questions until one player is confident about the hidden target. The player selects their final guess from the available people or objects. The system checks the guess and displays whether the player won or lost. The game result is saved to the player's account and statistics.
