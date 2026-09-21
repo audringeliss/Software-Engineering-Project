@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "name": "Alex",
+    "category": "People",
+    "attributes": ["Glasses", "Hat", "Brown Hair"],
+    "isFlipped": false,
+    "position": { "row": 0, "column": 0 }
+  },
+  {
+    "id": "2",
+    "name": "Jennifer",
+    "category": "People",
+    "attributes": ["Blonde Hair", "Blue Eyes"],
+    "isFlipped": false,
+    "position": { "row": 0, "column": 1 }
+  },
+  {
+    "id": "3",
+    "name": "Ben",
+    "category": "People",
+    "attributes": ["Hat", "Brown Hair", "Beard"],
+    "isFlipped": false,
+    "position": { "row": 0, "column": 2 }
+  }
+]

@@ -1,51 +1,70 @@
 import { useEffect, useState } from 'react';
-import './App.css';
 
 function App() {
-    const [forecasts, setForecasts] = useState();
+    const [cards, setCards] = useState([]);
 
     useEffect(() => {
-        populateWeatherData();
+        fetch('https://localhost:7087/api/cards')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Gauti duomenys:', data);
+                if (Array.isArray(data)) {
+                    setCards(data);
+                }
+            })
+            .catch(error => console.error('Tinklo klaida:', error));
     }, []);
 
-    const contents = forecasts === undefined
-        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
-        : <table className="table table-striped" aria-labelledby="tableLabel">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Temp. (C)</th>
-                    <th>Temp. (F)</th>
-                    <th>Summary</th>
-                </tr>
-            </thead>
-            <tbody>
-                {forecasts.map(forecast =>
-                    <tr key={forecast.date}>
-                        <td>{forecast.date}</td>
-                        <td>{forecast.temperatureC}</td>
-                        <td>{forecast.temperatureF}</td>
-                        <td>{forecast.summary}</td>
-                    </tr>
-                )}
-            </tbody>
-        </table>;
-
     return (
-        <div>
-            <h1 id="tableLabel">Weather forecast</h1>
-            <p>This component demonstrates fetching data from the server.</p>
-            {contents}
+        <div style={{
+            padding: '30px',
+            fontFamily: 'Segoe UI, sans-serif',
+            backgroundColor: '#121212',
+            color: '#ffffff',
+            minHeight: '100vh',
+            boxSizing: 'border-box'
+        }}>
+            <h1 style={{ marginBottom: '50px' }}>Guess Who? Game Board</h1>
+
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+                gap: '20px',
+                maxWidth: '1000px',
+                margin: '0 auto'
+            }}>
+                {cards.map((card, index) => {
+                    const name = card.name || card.Name || 'Be pavadinimo';
+                    const category = card.category || card.Category || 'Bendras';
+                    const attributes = card.attributes || card.Attributes || [];
+                    const isFlipped = card.isFlipped ?? card.IsFlipped ?? false;
+
+                    return (
+                        <div key={card.id || card.Id || index} style={{
+                            border: '2px solid #007bff',
+                            borderRadius: '12px',
+                            padding: '20px',
+                            backgroundColor: isFlipped ? '#222' : '#1e1e24',
+                            boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+                            textAlign: 'left'
+                        }}>
+                            <h2 style={{ marginTop: 0, color: '#4da6ff' }}>{name}</h2>
+                            <p style={{ margin: '5px 0', fontSize: '14px', color: '#ccc' }}>
+                                <strong>Category:</strong> {category}
+                            </p>
+                            <hr style={{ borderColor: '#333', margin: '10px 0' }} />
+                            <p style={{ margin: '5px 0 0 0', fontSize: '14px', fontWeight: 'bold' }}>Attributes:</p>
+                            <ul style={{ paddingLeft: '20px', margin: '5px 0 0 0', fontSize: '13px', color: '#bbb' }}>
+                                {Array.isArray(attributes) && attributes.map((attr, i) => (
+                                    <li key={i}>{String(attr)}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
-    
-    async function populateWeatherData() {
-        const response = await fetch('weatherforecast');
-        if (response.ok) {
-            const data = await response.json();
-            setForecasts(data);
-        }
-    }
 }
 
 export default App;
