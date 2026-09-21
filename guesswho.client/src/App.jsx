@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 function App() {
     const [cards, setCards] = useState([]);
+    const [eliminatedCards, setEliminatedCards] = useState([]);
 
     useEffect(() => {
         fetch('https://localhost:7087/api/cards')
@@ -14,6 +15,14 @@ function App() {
             })
             .catch(error => console.error('Tinklo klaida:', error));
     }, []);
+
+    const toggleFlip = (id) => {
+        setEliminatedCards(prev => 
+            prev.includes(id)
+                ? prev.filter(cardId => cardId !== id)
+                : [...prev, id]
+        );
+    }
 
     return (
         <div style={{
@@ -34,31 +43,46 @@ function App() {
                 margin: '0 auto'
             }}>
                 {cards.map((card, index) => {
+                    const id = card.id || card.Id || index;
                     const name = card.name || card.Name || 'Be pavadinimo';
                     const category = card.category || card.Category || 'Bendras';
                     const attributes = card.attributes || card.Attributes || [];
-                    const isFlipped = card.isFlipped ?? card.IsFlipped ?? false;
+                    
+                    const isFlipped = eliminatedCards.includes(id) || (card.isFlipped ?? card.IsFlipped ?? false);
 
                     return (
-                        <div key={card.id || card.Id || index} style={{
-                            border: '2px solid #007bff',
-                            borderRadius: '12px',
-                            padding: '20px',
-                            backgroundColor: isFlipped ? '#222' : '#1e1e24',
-                            boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
-                            textAlign: 'left'
-                        }}>
-                            <h2 style={{ marginTop: 0, color: '#4da6ff' }}>{name}</h2>
-                            <p style={{ margin: '5px 0', fontSize: '14px', color: '#ccc' }}>
-                                <strong>Category:</strong> {category}
-                            </p>
-                            <hr style={{ borderColor: '#333', margin: '10px 0' }} />
-                            <p style={{ margin: '5px 0 0 0', fontSize: '14px', fontWeight: 'bold' }}>Attributes:</p>
-                            <ul style={{ paddingLeft: '20px', margin: '5px 0 0 0', fontSize: '13px', color: '#bbb' }}>
-                                {Array.isArray(attributes) && attributes.map((attr, i) => (
-                                    <li key={i}>{String(attr)}</li>
-                                ))}
-                            </ul>
+                        <div 
+                            key={id} 
+                            onClick={() => toggleFlip(id)}
+                            style={{
+                                cursor: 'pointer',
+                                border: '2px solid #007bff',
+                                borderRadius: '12px',
+                                padding: '20px',
+                                backgroundColor: isFlipped ? '#222' : '#1e1e24',
+                                opacity: isFlipped ? 0.4 : 1,
+                                boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+                                textAlign: 'left',
+                                transition: 'all 0.3s ease'
+                            }}
+                        >
+                            {isFlipped ? (
+                                <h2 style={{ textAlign: 'center', color: '#555', marginTop: '20px' }}>Eliminated</h2>
+                            ) : (
+                                <>
+                                    <h2 style={{ marginTop: 0, color: '#4da6ff' }}>{name}</h2>
+                                    <p style={{ margin: '5px 0', fontSize: '14px', color: '#ccc' }}>
+                                        <strong>Category:</strong> {category}
+                                    </p>
+                                    <hr style={{ borderColor: '#333', margin: '10px 0' }} />
+                                    <p style={{ margin: '5px 0 0 0', fontSize: '14px', fontWeight: 'bold' }}>Attributes:</p>
+                                    <ul style={{ paddingLeft: '20px', margin: '5px 0 0 0', fontSize: '13px', color: '#bbb' }}>
+                                        {Array.isArray(attributes) && attributes.map((attr, i) => (
+                                            <li key={i}>{String(attr)}</li>
+                                        ))}
+                                    </ul>
+                                </>
+                            )}
                         </div>
                     );
                 })}
