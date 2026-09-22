@@ -55,7 +55,7 @@ The Alpha version should demonstrate that the fundamental question -> answer gam
 
 ### **Beta version**
 
-Everything that Alfa version has plus:
+Everything that Alpha version has plus:
 
 **Backend**:
 
