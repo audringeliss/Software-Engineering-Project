@@ -13,17 +13,16 @@ The main goals of this project are:
 
 ## Team information
 
+- **Company name** - ***LAG Inc.***
+- **Product name** - ***Guess Who?***
 - **Team leader** - Audringa Daškevičiūtė
 - **Team members**:
 
-  Audringa Daškevičiūtė (audringeliss),
+  Audringa Daškevičiūtė (audringeliss) - Lead Full Stack Engineer, Systems Engineer
 
-  Girius Frankonis (giriusfrank),
+  Girius Frankonis (giriusfrank) - Lead Backend Engineer, Systems Engineer
 
-  Laura Kanapienytė (laurakanap)
-  
-- **Company name** - ***LAG Inc.***
-- **Product name** - ***Guess Who?***
+  Laura Kanapienytė (laurakanap) - Lead UI/UX Designer, Systems Engineer
 
 ## Feature Roadmap
 
