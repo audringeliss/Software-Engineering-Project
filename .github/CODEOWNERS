@@ -1,0 +1,17 @@
+# Code owners for "Guess Who?"
+
+# Default: the team leader owns anything not covered more specifically below.
+* @audringeliss
+
+# Backend
+/Controllers/ @audringeliss @giriusfrank
+/Models/ @audringeliss @giriusfrank @laurakanap
+/Program.cs @audringeliss @giriusfrank
+
+# Frontend
+/ClientApp/ @audringeliss @laurakanap
+
+# Process and docs - any team member can own or change these.
+/docs/ @audringeliss @giriusfrank @laurakanap
+/.github/ @audringeliss @giriusfrank @laurakanap
+/CONTRIBUTING.md @audringeliss @giriusfrank @laurakanap

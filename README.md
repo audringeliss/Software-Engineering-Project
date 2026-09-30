@@ -13,17 +13,16 @@ The main goals of this project are:
 
 ## Team information
 
+- **Company name** - ***LAG Inc.***
+- **Product name** - ***Guess Who?***
 - **Team leader** - Audringa Daškevičiūtė
 - **Team members**:
 
-  Audringa Daškevičiūtė (audringeliss),
+  Audringa Daškevičiūtė (audringeliss) - Lead Full Stack Engineer, Systems Engineer
 
-  Girius Frankonis (giriusfrank),
+  Girius Frankonis (giriusfrank) - Lead Backend Engineer, Systems Engineer
 
-  Laura Kanapienytė (laurakanap)
-  
-- **Company name** - ***LAG Inc.***
-- **Product name** - ***Guess Who?***
+  Laura Kanapienytė (laurakanap) - Lead UI/UX Designer, Systems Engineer
 
 ## Feature Roadmap
 
@@ -119,7 +118,7 @@ Categories will be chosen from the following list:
 | 2      | Apps & Artificial Inteligence tools  | Facebook, Threads, ChatGPT, Claude                |
 | 3      | Cartoon Network                      | Ben Ten, Steven Universe, Buttercup               |
 | 4      | Celebrities                          | Dua Lipa, Keanu Reeves, Tom Holland               |
-| 5      | Childen's Animation Characters       | Spongebob Squarepants, Hello Kitty, Mickey Mouse  |
+| 5      | Children's Animation Characters       | Spongebob Squarepants, Hello Kitty, Mickey Mouse  |
 | 6      | Countries                            | Lithuania, Sweden, Italy, Brazil                  |
 | 7      | Disney                               | Buzz, Stich, McQueen, Cruella de Vil              |
 | 8      | Games (characters)                   | Minecraft, Stardew Valley, Counter Strike, GTA    |
