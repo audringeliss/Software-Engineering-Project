@@ -23,7 +23,7 @@ To keep the codebase consistent across all developers, follow these standards:
   * Always run `dotnet format` locally prior to committing.
   * Enable **"Format on Save"** in your IDE (VS Code, Visual Studio or Rider).
 * **Frontend (React / TypeScript / JS):**
-  * Format code according to the styles established under `ClientApp/src`.
+  * Format code according to the styles established under `guesswho.client/src`.
   * Use Prettier and ESLint with "Format on Save" enabled in your editor.
 
 ---
@@ -33,9 +33,9 @@ To keep the codebase consistent across all developers, follow these standards:
 * **Creating PRs:** Every code change must be submitted as a PR into `main`.
 * **PR Template:** Complete all sections of the auto-filled template from `.github/pull_request_template.md` (do not leave blank placeholders).
 * **Code Ownership (`CODEOWNERS`):** Review requests are automatically assigned based on `.github/CODEOWNERS`:
-  * **Backend (`/Controllers/`, `Program.cs`):** Reviewed by Audringa (`@audringeliss`) and Girius (`@giriusfrank`).
-  * **Backend (`/Models/`):** Accessible to all team members.
-  * **Frontend (`/ClientApp/`):** Reviewed by Audringa (`@audringeliss`) and Laura (`@laurakanap`).
+  * **Backend (`/GuessWho.Server/`, `/Controllers/`, `Program.cs`):** Reviewed by Audringa (`@audringeliss`) and Girius (`@giriusfrank`).
+  * **Backend (`/Models/`):** Accessible to all team members (`@audringeliss`, `@giriusfrank`, `@laurakanap`).
+  * **Frontend (`/guesswho.client/`):** Reviewed by Audringa (`@audringeliss`) and Laura (`@laurakanap`).
   * **Docs & Configuration (`/docs/`, `/.github/`, `CONTRIBUTING.md`):** Accessible to all team members.
 * **Approval:** At least 1 approving review from a designated code owner is required before merging into `main`.
 
