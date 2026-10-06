@@ -4,12 +4,13 @@
 * @audringeliss
 
 # Backend
+/GuessWho.Server/ @audringeliss @giriusfrank
 /Controllers/ @audringeliss @giriusfrank
 /Models/ @audringeliss @giriusfrank @laurakanap
-/Program.cs @audringeliss @giriusfrank
+/Program.cs @audringeliss @giriusfrank @laurakanap
 
 # Frontend
-/ClientApp/ @audringeliss @laurakanap
+/guesswho.client/ @audringeliss @laurakanap
 
 # Process and docs - any team member can own or change these.
 /docs/ @audringeliss @giriusfrank @laurakanap
