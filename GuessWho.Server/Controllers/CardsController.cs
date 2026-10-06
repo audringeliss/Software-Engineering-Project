@@ -1,42 +1,56 @@
-using GuessWho.Server.Models;
-using GuessWho.Server.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.IO;
+using System.Linq;
 
-namespace GuessWho.Server.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class CardsController : ControllerBase
+namespace GuessWho.Server.Controllers
 {
-    private readonly CardDataLoader _dataLoader;
-    private readonly IWebHostEnvironment _env;
-
-    public CardsController(CardDataLoader dataLoader, IWebHostEnvironment env)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class CardsController : ControllerBase
     {
-        _dataLoader = dataLoader;
-        _env = env;
-    }
+        // get: api/cards/categories
+        [HttpGet("categories")]
+        public IActionResult GetCategories()
+        {
+            try
+            {
+                var dataFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "Data");
 
-    [HttpGet]
-    public async Task<ActionResult<List<Card>>> GetCards()
-    {
-        string filePath = Path.Combine(_env.ContentRootPath, "Data", "cards.json");
-        var cards = await _dataLoader.LoadCardsFromFileAsync(filePath);
-        return Ok(cards);
-    }
+                if (!Directory.Exists(dataFolderPath))
+                {
+                    return Ok(new[] { "animals", "people" });
+                }
 
-    [HttpPost("process-answer")]
-    public async Task<ActionResult<List<Card>>> ProcessAnswer([FromBody] QuestionRequest request, [FromQuery] bool hasAttribute)
-    {
-        string filePath = Path.Combine(_env.ContentRootPath, "Data", "cards.json");
-        var cards = await _dataLoader.LoadCardsFromFileAsync(filePath);
+                var categories = Directory.GetFiles(dataFolderPath, "*.json")
+                    .Select(Path.GetFileNameWithoutExtension)
+                    .ToList();
 
-        var engine = new GameEngine(cards);
-        
-        engine.ProcessAnswer(request.TargetAttribute, hasAttribute);
+                return Ok(categories);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
-        var remainingCards = engine.GetFilteredCards(includeFlipped: true);
+        [HttpGet]
+        public IActionResult GetCards([FromQuery] string category)
+        {
+            if (string.IsNullOrWhiteSpace(category))
+            {
+                return BadRequest("Category is required.");
+            }
 
-        return Ok(remainingCards);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", $"{category.ToLower()}.json");
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound($"Category '{category}' not found.");
+            }
+
+            var jsonContent = System.IO.File.ReadAllText(filePath);
+            return Content(jsonContent, "application/json");
+        }
     }
 }
