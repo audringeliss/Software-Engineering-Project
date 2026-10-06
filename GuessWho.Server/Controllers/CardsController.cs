@@ -9,34 +9,57 @@ namespace GuessWho.Server.Controllers;
 public class CardsController : ControllerBase
 {
     private readonly CardDataLoader _dataLoader;
-    private readonly IWebHostEnvironment _env;
 
-    public CardsController(CardDataLoader dataLoader, IWebHostEnvironment env)
+    public CardsController(CardDataLoader dataLoader)
     {
         _dataLoader = dataLoader;
-        _env = env;
     }
 
-    [HttpGet]
-    public async Task<ActionResult<List<Card>>> GetCards()
+    // 1. Get available categories
+    [HttpGet("categories")]
+    public IActionResult GetCategories()
     {
-        string filePath = Path.Combine(_env.ContentRootPath, "Data", "cards.json");
-        var cards = await _dataLoader.LoadCardsFromFileAsync(filePath);
+        var categories = new[]
+        {
+            new { id = "people", name = "People", icon = "👤" },
+            new { id = "animals", name = "Animals", icon = "🐾" }
+        };
+
+        return Ok(categories);
+    }
+
+    // 2. Get cards by category (e.g., /api/cards/people or /api/cards/animals)
+    [HttpGet("{categoryId}")]
+    public async Task<ActionResult<List<Card>>> GetCards(string categoryId)
+    {
+        var cards = await _dataLoader.GetCategoryCardsAsync(categoryId);
+
+        if (cards == null || !cards.Any())
+        {
+            return NotFound($"Category '{categoryId}' was not found or contains no cards.");
+        }
+
         return Ok(cards);
     }
 
-    [HttpPost("process-answer")]
-    public async Task<ActionResult<List<Card>>> ProcessAnswer([FromBody] QuestionRequest request, [FromQuery] bool hasAttribute)
+    // 3. Process game engine answer for a specific category
+    [HttpPost("{categoryId}/process-answer")]
+    public async Task<ActionResult<List<Card>>> ProcessAnswer(
+        string categoryId, 
+        [FromBody] QuestionRequest request, 
+        [FromQuery] bool hasAttribute)
     {
-        string filePath = Path.Combine(_env.ContentRootPath, "Data", "cards.json");
-        var cards = await _dataLoader.LoadCardsFromFileAsync(filePath);
+        var cards = await _dataLoader.GetCategoryCardsAsync(categoryId);
+
+        if (cards == null || !cards.Any())
+        {
+            return NotFound($"Category '{categoryId}' was not found.");
+        }
 
         var engine = new GameEngine(cards);
-        
         engine.ProcessAnswer(request.TargetAttribute, hasAttribute);
 
         var remainingCards = engine.GetFilteredCards(includeFlipped: true);
-
         return Ok(remainingCards);
     }
 }
