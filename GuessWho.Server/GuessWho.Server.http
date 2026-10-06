@@ -1,6 +1,27 @@
-@GuessWho.Server_HostAddress = http://localhost:5264
+@HostAddress = https://localhost:7087
 
-GET {{GuessWho.Server_HostAddress}}/weatherforecast/
+###
+GET {{HostAddress}}/api/cards
 Accept: application/json
 
 ###
+POST {{HostAddress}}/api/game/start?category=People&targetId=3
+Accept: application/json
+
+###
+POST {{HostAddress}}/api/game/ask
+Content-Type: application/json
+
+{
+  "questionText": "Does your person wear glasses?",
+  "targetAttribute": "Glasses",
+  "askedAt": "2026-10-06T12:00:00Z"
+}
+
+###
+GET {{HostAddress}}/api/game/state
+Accept: application/json
+
+###
+POST {{HostAddress}}/api/game/answer?isTrue=false
+Accept: application/json
