@@ -36,7 +36,7 @@ public class GameEngine
     {
         var cardsToFlip = _cards
             .Where(c => !c.IsFlipped)
-            .Where(c => c.HasAttribute(attribute) != hasAttribute) 
+            .Where(c => c.HasAttribute(attribute) != hasAttribute)
             .ToList();
 
         foreach (var card in cardsToFlip)
