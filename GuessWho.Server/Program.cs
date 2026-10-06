@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<CardDataLoader>();
+builder.Services.AddSingleton<GameState>();
 
 builder.Services.AddCors(options =>
 {
@@ -21,11 +22,8 @@ builder.Services.AddEndpointsApiExplorer();
 var app = builder.Build();
 
 app.UseHttpsRedirection();
-
 app.UseCors("AllowReactApp");
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
