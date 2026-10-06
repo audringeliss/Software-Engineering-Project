@@ -1,65 +1,56 @@
-using GuessWho.Server.Models;
-using GuessWho.Server.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.IO;
+using System.Linq;
 
-namespace GuessWho.Server.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class CardsController : ControllerBase
+namespace GuessWho.Server.Controllers
 {
-    private readonly CardDataLoader _dataLoader;
-
-    public CardsController(CardDataLoader dataLoader)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class CardsController : ControllerBase
     {
-        _dataLoader = dataLoader;
-    }
-
-    // 1. Get available categories
-    [HttpGet("categories")]
-    public IActionResult GetCategories()
-    {
-        var categories = new[]
+        // get: api/cards/categories
+        [HttpGet("categories")]
+        public IActionResult GetCategories()
         {
-            new { id = "people", name = "People", icon = "👤" },
-            new { id = "animals", name = "Animals", icon = "🐾" }
-        };
+            try
+            {
+                var dataFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "Data");
 
-        return Ok(categories);
-    }
+                if (!Directory.Exists(dataFolderPath))
+                {
+                    return Ok(new[] { "animals", "people" });
+                }
 
-    // 2. Get cards by category (e.g., /api/cards/people or /api/cards/animals)
-    [HttpGet("{categoryId}")]
-    public async Task<ActionResult<List<Card>>> GetCards(string categoryId)
-    {
-        var cards = await _dataLoader.GetCategoryCardsAsync(categoryId);
+                var categories = Directory.GetFiles(dataFolderPath, "*.json")
+                    .Select(Path.GetFileNameWithoutExtension)
+                    .ToList();
 
-        if (cards == null || !cards.Any())
-        {
-            return NotFound($"Category '{categoryId}' was not found or contains no cards.");
+                return Ok(categories);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        return Ok(cards);
-    }
-
-    // 3. Process game engine answer for a specific category
-    [HttpPost("{categoryId}/process-answer")]
-    public async Task<ActionResult<List<Card>>> ProcessAnswer(
-        string categoryId, 
-        [FromBody] QuestionRequest request, 
-        [FromQuery] bool hasAttribute)
-    {
-        var cards = await _dataLoader.GetCategoryCardsAsync(categoryId);
-
-        if (cards == null || !cards.Any())
+        [HttpGet]
+        public IActionResult GetCards([FromQuery] string category)
         {
-            return NotFound($"Category '{categoryId}' was not found.");
+            if (string.IsNullOrWhiteSpace(category))
+            {
+                return BadRequest("Category is required.");
+            }
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", $"{category.ToLower()}.json");
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound($"Category '{category}' not found.");
+            }
+
+            var jsonContent = System.IO.File.ReadAllText(filePath);
+            return Content(jsonContent, "application/json");
         }
-
-        var engine = new GameEngine(cards);
-        engine.ProcessAnswer(request.TargetAttribute, hasAttribute);
-
-        var remainingCards = engine.GetFilteredCards(includeFlipped: true);
-        return Ok(remainingCards);
     }
 }
