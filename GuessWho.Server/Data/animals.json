@@ -1,0 +1,10 @@
+[
+  { "id": 101, "name": "Cat"},
+  { "id": 102, "name": "Dog"},
+  { "id": 103, "name": "Elephant"},
+  { "id": 104, "name": "Lion"},
+  { "id": 105, "name": "Hamster"},
+  { "id": 106, "name": "Parrot"},
+  { "id": 107, "name": "Rabbit"},
+  { "id": 108, "name": "Turtle"}
+]
