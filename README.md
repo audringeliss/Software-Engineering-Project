@@ -9,7 +9,7 @@ The main goals of this project are:
 - Allow two (or more) players to play the same game remotely.
 - Give players different categories to choose from.
 - Make the game easy to understand through a clear UI.
-- Provide player accounts and statistics
+- Provide player accounts and statistics.
 
 ## Team information
 
@@ -18,11 +18,11 @@ The main goals of this project are:
 - **Team leader** - Audringa Daškevičiūtė
 - **Team members**:
 
-  Audringa Daškevičiūtė (audringeliss) - Lead Full Stack Engineer, Systems Engineer
+  Audringa Daškevičiūtė (*audringeliss*) - Lead Full Stack Engineer, Systems Engineer
 
-  Girius Frankonis (giriusfrank) - Lead Backend Engineer, Systems Engineer
+  Girius Frankonis (*giriusfrank*) - Lead Backend Engineer, Systems Engineer
 
-  Laura Kanapienytė (laurakanap) - Lead UI/UX Designer, Systems Engineer
+  Laura Kanapienytė (*laurakanap*) - Lead UI/UX Designer, Systems Engineer
 
 ## Feature Roadmap
 
@@ -38,7 +38,7 @@ Each version builds upon the functionality of the previous version.
 
 **Backend**:
 
-- Basic Guess Who? game logic.
+- Basic "***Guess Who?***" game logic.
 - Question submission.
 - True/False answer system.
 - Person/object selection.
@@ -62,9 +62,9 @@ Everything that Alpha version has plus:
 **Backend**:
 
 - Two-player game sessions.
-- Connection between two players (servers, like ***Kahoot!***).
+- Connection between two players (servers, like "***Kahoot!***").
 - Turn management.
-- Shared game state.
+- Shared game state and information.
 - Separate data collection per game session.
 - Player accounts.
 - Validation for player account.
@@ -73,14 +73,14 @@ Everything that Alpha version has plus:
 **UI**:
 
 - Game start section.
-- Category selection.
+- Improved category selection.
 - Current player indicator.
 - Result screen.
 - Sign in and log in application.
 - Validation for player account and for different input fields.
 - Better web interface visual design.
 
-The Beta version should allow two players to complete a full Guess Who? game using different categories and an improved user interface.
+The Beta version should allow two players to complete a full "***Guess Who?***" game using different categories and an improved user interface.
 
 ### **Final version**
 
@@ -92,7 +92,7 @@ Everything that Beta version has plus:
 - More people and objects.
 - Timed Q&A.
 - Larger selection of possible targets (18-27 per category).
-- Multiple simultaneous game sessions with the same opponent.
+- Multiple simultaneous game sessions with the same opponent(-s).
 - Individual player statistics.
 - 3+ players in a single game matches.
 - Disconnection handling.
@@ -107,7 +107,7 @@ Everything that Beta version has plus:
 - Responsive design.
 - Easy to understand statistics.
 
-The Final version should provide a complete multiplayer Guess Who? web application with multiple categories, server-based multiplayer, comprehensive UI, complete game functionality player accounts and statistics.
+The Final version should provide a complete multiplayer "***Guess Who?***" web application with multiple categories, server-based multiplayer, comprehensive UI, complete game functionality, player accounts and statistics.
 
 ### Possible "Guess Who?" categories 
 Categories will be chosen from the following list:
@@ -144,4 +144,4 @@ Categories will be chosen from the following list:
 
 ## End-to-end user scenario
 
-The player opens the Guess Who? website and creates or logs into their account. They select New Game, choose a category (for example, People or Objects), and invite another player to join. Both players select a person or object that the other player will have to guess. The first player asks a question about the opponent's hidden target. The question should have a True/False answer. The opponent receives the question and selects True or False. The answer is then shown to the asking player who can now close those options that they think are not going to be their opponents chosen target. Players continue asking and answering questions until one player is confident about the hidden target. The player selects their final guess from the available people or objects. The system checks the guess and displays whether the player won or lost. The game result is saved to the player's account and statistics.
+The player opens the "***Guess Who?***" website and creates or logs into their account. They select *New Game*, choose a category (for example, People or Objects), and invite another player to join. Both players select a person or object that the other player will have to guess. The first player asks a question about the opponent's hidden target. The question should have a True/False answer. The opponent receives the question and selects *True* or *False*. The answer is then shown to the asking player who can now close those options that they think are not going to be their opponents chosen target. Players continue asking and answering questions until one player is confident about the hidden target. The player selects their *final guess* from the available people or objects. The system checks the guess and displays whether the player *won* or *lost*. The game result is saved to the player's *account* and *statistics*.

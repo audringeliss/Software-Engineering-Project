@@ -1,10 +1,104 @@
 [
-  { "id": 101, "name": "Cat"},
-  { "id": 102, "name": "Dog"},
-  { "id": 103, "name": "Elephant"},
-  { "id": 104, "name": "Lion"},
-  { "id": 105, "name": "Hamster"},
-  { "id": 106, "name": "Parrot"},
-  { "id": 107, "name": "Rabbit"},
-  { "id": 108, "name": "Turtle"}
+  { 
+    "id": "101", 
+    "name": "Cat", 
+    "category": "animals",
+    "imageUrl": "/images/animals/cat.jpg",
+    "attributes": ["mammal", "tail", "four legs"]
+  },
+  { 
+  "id": 102, 
+  "name": "Dog", 
+  "imageUrl": "/images/animals/dog.jpg",
+  "attributes": ["pet", "tail", "four legs", "pointed ears"]},
+  { 
+  "id": 103, 
+  "name": "Elephant", 
+  "imageUrl": "/images/animals/elephant.jpg",
+  "attributes": ["wild animal", "trunk", "four legs", "big ears"]},
+  { 
+  "id": 104, 
+  "name": "Lion", 
+  "imageUrl": "/images/animals/lion.jpg",
+  "attributes": ["wild animal", "mane", "four legs", "pointed ears"]},
+  { 
+  "id": 105, 
+  "name": "Hamster", 
+  "imageUrl": "/images/animals/hamster.jpg",
+  "attributes": ["pet", "tail", "four legs", "small size"]},
+  { 
+  "id": 106, 
+  "name": "Parrot", 
+  "imageUrl": "/images/animals/parrot.jpg",
+  "attributes": ["bird", "beak", "two legs", "wings"]},
+  { 
+  "id": 107, 
+  "name": "Rabbit", 
+  "imageUrl": "/images/animals/rabbit.jpg",
+  "attributes": ["pet", "long ears", "four legs", "tail"]},
+  { 
+  "id": 108, 
+  "name": "Turtle", 
+  "imageUrl": "/images/animals/turtle.jpg",
+  "attributes": ["water animal", "shell", "four legs", "slow"]},
+  {
+  "id": 109, 
+  "name": "Bee", 
+  "imageUrl": "/images/animals/bee.jpg",
+  "attributes": ["bug", "wings", "six legs", "stinger"]},
+  { 
+  "id": 110, 
+  "name": "Bear", 
+  "imageUrl": "/images/animals/bear.jpg",
+  "attributes": ["wild animal", "claws", "four legs", "fur"]},
+  { 
+  "id": 111, 
+  "name": "Cow", 
+  "imageUrl": "/images/animals/cow.jpg",
+  "attributes": ["farm animal", "horns", "four legs", "tail"]},
+  { 
+  "id": 112, 
+  "name": "Duck", 
+  "imageUrl": "/images/animals/duck.jpg",
+  "attributes": ["bird", "webbed feet", "two legs", "beak"]},
+  { 
+  "id": 113, 
+  "name": "Fish", 
+  "imageUrl": "/images/animals/fish.jpg",
+  "attributes": ["water animal", "gills", "fins", "scales"]},
+  { 
+  "id": 114, 
+  "name": "Fox", 
+  "imageUrl": "/images/animals/fox.jpg",
+  "attributes": ["wild animal", "pointed ears", "four legs", "tail"]},
+  { 
+  "id": 115, 
+  "name": "Frog", 
+  "imageUrl": "/images/animals/frog.jpg",
+  "attributes": ["water animal", "smooth skin", "four legs", "jumps"]},
+  { 
+  "id": 116, 
+  "name": "Horse", 
+  "imageUrl": "/images/animals/horse.jpg",
+  "attributes": ["farm animal", "mane", "four legs", "tail"]},
+  { 
+  "id": 117, 
+  "name": "Seahorse", 
+  "imageUrl": "/images/animals/seahorse.jpg",
+  "attributes": ["water animal", "prehensile tail", "four legs", "small size"]},
+  { 
+  "id": 118, 
+  "name": "Sheep", 
+  "imageUrl": "/images/animals/sheep.jpg",
+  "attributes": ["farm animal", "wool", "four legs", "tail"]},
+  { 
+  "id": 119, 
+  "name": "Guinea Pig", 
+  "imageUrl": "/images/animals/guineapig.jpg",
+  "attributes": ["pet", "small size", "four legs", "long ears"]},
+  { 
+  "id": 120, 
+  "name": "Chicken", 
+  "imageUrl": "/images/animals/chicken.jpg",
+  "attributes": ["farm animal", "feathers", "two legs", "beak"]}
 ]
