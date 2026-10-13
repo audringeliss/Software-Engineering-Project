@@ -8,49 +8,63 @@ function CardGrid({ cards, eliminatedCards, onToggleCard, selectedCategory }) {
         );
     }
 
+    const remainingCount = cards.length - eliminatedCards.length;
+
     return (
         <section className="card-board" aria-label="Card board">
             <div className="board-heading">
                 <div>
                     <p className="board-label">Current deck</p>
-                    <h2>{selectedCategory}</h2>
+                    <h2 style={{ textTransform: 'capitalize' }}>{selectedCategory}</h2>
                 </div>
-                <span className="card-count">{cards.length} cards</span>
+                <div className="card-count-badge">
+                    <span className="card-count">{remainingCount} / {cards.length} left</span>
+                </div>
             </div>
+
             <div className="card-grid">
                 {cards.map((card, index) => {
                     const id = card.id || card.Id || index;
                     const name = card.name || card.Name || 'Unknown';
                     const imageUrl = card.imageUrl || card.ImageUrl || '';
-                    const isFlipped = eliminatedCards.includes(id);
+                    const isEliminated = eliminatedCards.includes(id);
 
                     return (
-                    <div
-                        key={id}
-                        onClick={() => onToggleCard(id)}
-                        className={`card-container ${isFlipped ? 'card-container--flipped' : ''}`}
-                        aria-label={`${name} card`}
-                    >
-                        <div className="guess-card">
-                            <div className="guess-card__face guess-card__face--front">
-                                {/* Picture container */}
-                                {imageUrl && (
-                                    <div className="card-image-container">
-                                        <img src={imageUrl} alt={name} className="card-photo" />
+                        <div
+                            key={id}
+                            onClick={() => onToggleCard(id)}
+                            className={`card-container ${isEliminated ? 'is-eliminated' : ''}`}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    onToggleCard(id);
+                                }
+                            }}
+                            aria-label={`${name} - ${isEliminated ? 'Eliminated' : 'Active'}`}
+                        >
+                            <div className="guess-card">
+                                {/* Priekinė kortelės pusė */}
+                                <div className="guess-card__face guess-card__face--front">
+                                    {imageUrl && (
+                                        <div className="card-image-container">
+                                            <img src={imageUrl} alt={name} className="card-photo" />
+                                        </div>
+                                    )}
+                                    <h3>{name}</h3>
+                                </div>
+
+                                {/* Galinė kortelės pusė (išbraukta) */}
+                                <div className="guess-card__face guess-card__face--back">
+                                    <div className="eliminated-overlay">
+                                        <span className="eliminated-icon" aria-hidden="true">✕</span>
+                                        <h3>Eliminated</h3>
+                                        <p>Click to restore</p>
                                     </div>
-                                )}
-
-                                <h3>{name}</h3>
-                            </div>
-
-                            <div className="guess-card__face guess-card__face--back">
-                                <span className="eliminated-icon" aria-hidden="true">✕</span>
-                                <h3>Eliminated</h3>
-                                <p>Click to flip back</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                );
+                    );
                 })}
             </div>
         </section>
