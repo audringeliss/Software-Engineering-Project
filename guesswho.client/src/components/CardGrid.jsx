@@ -21,6 +21,7 @@ function CardGrid({ cards, eliminatedCards, onToggleCard, selectedCategory }) {
                 {cards.map((card, index) => {
                     const id = card.id || card.Id || index;
                     const name = card.name || card.Name || 'Unknown';
+                    const imageUrl = card.imageUrl || card.ImageUrl || ''; // Extracted image property
                     const attributes = card.attributes || card.Attributes || [];
                     const isFlipped = eliminatedCards.includes(id);
                     const cardType = selectedCategory.toLowerCase().includes('animal') ? 'Animal' : 'Person';
@@ -35,6 +36,14 @@ function CardGrid({ cards, eliminatedCards, onToggleCard, selectedCategory }) {
                         <div className="guess-card">
                             <div className="guess-card__face guess-card__face--front">
                                 <div className="card-badge">{cardType}</div>
+                                
+                                {/* Picture container */}
+                                {imageUrl && (
+                                    <div className="card-image-container">
+                                        <img src={imageUrl} alt={name} className="card-photo" />
+                                    </div>
+                                )}
+
                                 <h3>{name}</h3>
 
                                 <p className="card-section-label">Attributes</p>
