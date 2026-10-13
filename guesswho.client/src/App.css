@@ -340,7 +340,8 @@
     overflow: hidden;
     border-radius: 8px;
     margin-bottom: 10px;
-    background-color: #141a26 display: flex;
+    background-color: #141a26;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -369,6 +370,10 @@
 .card-container--flipped .guess-card,
 .card-container.is-eliminated .guess-card {
     transform: rotateY(180deg);
+}
+
+.card-container.is-eliminated:hover .guess-card {
+    transform: rotateY(0deg) translateY(-4px);
 }
 
 .guess-card__face {
@@ -416,7 +421,8 @@
 .guess-card__face h3 {
     position: relative;
     z-index: 1;
-    margin: 4px 0 2px color: #f4f8ff;
+    margin: 4px 0 2px;
+    color: #f4f8ff;
     font-size: 1.2rem;
     text-align: center;
     word-break: break-word;
@@ -454,6 +460,7 @@
 .guess-card__face--back {
     align-items: center;
     justify-content: center;
+    text-align: center;
     color: #ffadb1;
     background: linear-gradient(160deg, rgba(39, 16, 24, 0.98), rgba(19, 12, 17, 0.98));
     transform: rotateY(180deg);
@@ -574,5 +581,15 @@
 
     .card-container {
         height: 220px;
+    }
+
+    .card-container--flipped:hover .guess-card {
+        transform: rotateY(0deg) translateY(-4px) !important;
+    }
+
+    .card-container--flipped:hover .guess-card__face--front {
+        opacity: 0.85;
+        filter: grayscale(40%);
+        transition: opacity 0.3s ease, filter 0.3s ease;
     }
 }
