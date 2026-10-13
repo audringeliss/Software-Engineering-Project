@@ -1,134 +1,123 @@
 [
   {
     "id": "1",
-    "name": "Alex",
+    "name": "Bernard",
     "category": "People",
-    "attributes": [ "Glasses", "Hat", "Brown Hair" ],
-    "isFlipped": false,
-    "position": {
-      "row": 0,
-      "column": 0
-    }
+    "imageUrl": "/images/people/bernard.jpg"
   },
   {
     "id": "2",
-    "name": "Jennifer",
+    "name": "Bryan",
     "category": "People",
-    "attributes": [ "Blonde Hair", "Blue Eyes" ],
-    "isFlipped": false,
-    "position": {
-      "row": 0,
-      "column": 1
-    }
+    "imageUrl": "/images/people/bryan.jpg"
   },
   {
     "id": "3",
-    "name": "Ben",
+    "name": "David",
     "category": "People",
-    "attributes": [ "Hat", "Brown Hair", "Beard" ],
-    "isFlipped": false,
-    "position": {
-      "row": 0,
-      "column": 2
-    }
+    "imageUrl": "/images/people/david.jpg"
   },
   {
     "id": "4",
-    "name": "David",
+    "name": "Eddie",
     "category": "People",
-    "attributes": [ "Blonde Hair", "Beard", "Glasses" ],
-    "isFlipped": false,
-    "position": {
-      "row": 0,
-      "column": 3
-    }
+    "imageUrl": "/images/people/eddie.jpg"
   },
   {
     "id": "5",
-    "name": "Emma",
+    "name": "Ella",
     "category": "People",
-    "attributes": [ "Red Hair", "Green Eyes" ],
-    "isFlipped": false,
-    "position": {
-      "row": 1,
-      "column": 0
-    }
+    "imageUrl": "/images/people/ella.jpg"
   },
   {
     "id": "6",
-    "name": "George",
+    "name": "Emma",
     "category": "People",
-    "attributes": [ "Hat", "White Hair", "Glasses" ],
-    "isFlipped": false,
-    "position": {
-      "row": 1,
-      "column": 1
-    }
+    "imageUrl": "/images/people/emma.jpg"
   },
   {
     "id": "7",
-    "name": "Hannah",
+    "name": "Emily",
     "category": "People",
-    "attributes": [ "Brown Hair", "Blue Eyes" ],
-    "isFlipped": false,
-    "position": {
-      "row": 1,
-      "column": 2
-    }
+    "imageUrl": "/images/people/emily.jpg"
   },
   {
     "id": "8",
-    "name": "Lucas",
+    "name": "Jane",
     "category": "People",
-    "attributes": [ "Black Hair", "Brown Eyes" ],
-    "isFlipped": false,
-    "position": {
-      "row": 1,
-      "column": 3
-    }
+    "imageUrl": "/images/people/jane.jpg"
   },
   {
     "id": "9",
-    "name": "Mia",
+    "name": "Jennifer",
     "category": "People",
-    "attributes": [ "Blonde Hair", "Hat" ],
-    "isFlipped": false,
-    "position": {
-      "row": 2,
-      "column": 0
-    }
+    "imageUrl": "/images/people/jennifer.jpg"
   },
   {
     "id": "10",
-    "name": "Noah",
+    "name": "Jim",
     "category": "People",
-    "attributes": [ "Beard", "Brown Hair" ],
-    "isFlipped": false,
-    "position": {
-      "row": 2,
-      "column": 1
-    }
+    "imageUrl": "/images/people/jim.jpg"
   },
   {
     "id": "11",
-    "name": "Olivia",
+    "name": "Kate",
     "category": "People",
-    "attributes": [ "Glasses", "Red Hair" ],
-    "isFlipped": false,
-    "position": {
-      "row": 2,
-      "column": 2
-    }
+    "imageUrl": "/images/people/kate.jpg"
   },
   {
     "id": "12",
+    "name": "Louis",
+    "category": "People",
+    "imageUrl": "/images/people/louis.jpg"
+  },
+  {
+    "id": "13",
+    "name": "Mary",
+    "category": "People",
+    "imageUrl": "/images/people/mary.jpg"
+  },
+  {
+    "id": "14",
+    "name": "Robert",
+    "category": "People",
+    "imageUrl": "/images/people/robert.jpg"
+  },
+  {
+    "id": "15",
+    "name": "Rose",
+    "category": "People",
+    "imageUrl": "/images/people/rose.jpg"
+  },
+  {
+    "id": "16",
     "name": "Sam",
     "category": "People",
-    "attributes": [ "White Hair", "Glasses" ],
-    "isFlipped": false,
-    "position": {
-      "row": 2,
-      "column": 3
-    }
+    "imageUrl": "/images/people/sam.jpg"
+  },
+  {
+    "id": "17",
+    "name": "Sophia",
+    "category": "People",
+    "imageUrl": "/images/people/sophia.jpg"
+  },
+  {
+    "id": "18",
+    "name": "Steve",
+    "category": "People",
+    "imageUrl": "/images/people/steve.jpg"
+  },
+  {
+    "id": "19",
+    "name": "Tom",
+    "category": "People",
+    "imageUrl": "/images/people/tom.jpg"
+  },
+  {
+    "id": "20",
+    "name": "Taylor",
+    "category": "People",
+    "imageUrl": "/images/people/taylor.jpg"
   }
+  
 ]

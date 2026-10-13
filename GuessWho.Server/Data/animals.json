@@ -90,5 +90,15 @@
   "id": 118, 
   "name": "Sheep", 
   "imageUrl": "/images/animals/sheep.jpg",
-  "attributes": ["farm animal", "wool", "four legs", "tail"]}
+  "attributes": ["farm animal", "wool", "four legs", "tail"]},
+  { 
+  "id": 119, 
+  "name": "Guinea Pig", 
+  "imageUrl": "/images/animals/guineapig.jpg",
+  "attributes": ["pet", "small size", "four legs", "long ears"]},
+  { 
+  "id": 120, 
+  "name": "Chicken", 
+  "imageUrl": "/images/animals/chicken.jpg",
+  "attributes": ["farm animal", "feathers", "two legs", "beak"]}
 ]
