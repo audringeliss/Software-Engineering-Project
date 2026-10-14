@@ -372,10 +372,6 @@
     transform: rotateY(180deg);
 }
 
-.card-container.is-eliminated:hover .guess-card {
-    transform: rotateY(0deg) translateY(-4px);
-}
-
 .guess-card__face {
     position: absolute;
     width: 100%;
@@ -458,23 +454,39 @@
 }
 
 .guess-card__face--back {
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: #ffadb1;
     background: linear-gradient(160deg, rgba(39, 16, 24, 0.98), rgba(19, 12, 17, 0.98));
     transform: rotateY(180deg);
 }
 
+.eliminated-overlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+    color: #d28084;
+}
+
+.eliminated-card-name {
+    font-size: 1.25rem;
+    font-weight: 750;
+    color: #613138;
+    text-align: center;
+    letter-spacing: 0.05em;
+}
+
 .eliminated-icon {
-    font-size: 2rem;
+    font-size: 3rem;
     line-height: 1;
 }
 
 .guess-card__face--back h3 {
-    margin: 8px 0 4px;
-    color: #ff7d7d;
-    font-size: 0.9rem;
+    margin: 0;
+    color: #ac5353;
+    font-size: 1rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
 }
@@ -581,15 +593,5 @@
 
     .card-container {
         height: 220px;
-    }
-
-    .card-container--flipped:hover .guess-card {
-        transform: rotateY(0deg) translateY(-4px) !important;
-    }
-
-    .card-container--flipped:hover .guess-card__face--front {
-        opacity: 0.85;
-        filter: grayscale(40%);
-        transition: opacity 0.3s ease, filter 0.3s ease;
     }
 }
