@@ -31,7 +31,7 @@ function App() {
             })
             .catch(error => {
                 console.error('Categories fetch error:', error);
-                setCategories(['animals', 'people']);
+                setCategories(['animals', 'people', 'pokemon']);
             });
     }, []);
 

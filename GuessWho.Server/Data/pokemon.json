@@ -1,0 +1,152 @@
+[
+{
+    "id": "1",
+    "name": "Cubone",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/cubone.jpg"
+  },
+  {
+    "id": "2",
+    "name": "Pikachu",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/pikachu.jpg"
+  },
+  {
+    "id": "3",
+    "name": "Charmander",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/charmander.jpg"
+  },
+  {
+    "id": "4",
+    "name": "Squirtle",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/squirtle.jpg"
+  },
+  {
+    "id": "5",
+    "name": "Bulbasaur",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/bulbasaur.jpg"
+  },
+  {
+    "id": "6",
+    "name": "Jigglypuff",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/jigglypuff.jpg"
+  },
+  {
+    "id": "7",
+    "name": "Dratini",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/dratini.jpg"
+  },
+  {
+    "id": "8",
+    "name": "Psyduck",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/psyduck.jpg"
+  },
+  {
+    "id": "9",
+    "name": "Ditto",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/ditto.jpg"
+  },
+  {
+    "id": "10",
+    "name": "Bellsprout",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/bellsprout.jpg"
+  },
+  {
+    "id": "11",
+    "name": "Caterpie",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/caterpie.jpg"
+  },
+  {
+    "id": "12",
+    "name": "Eevee",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/eevee.jpg"
+  },
+  {
+    "id": "13",
+    "name": "Drowzee",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/drowzee.jpg"
+  },
+  {
+    "id": "14",
+    "name": "Koffing",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/koffing.jpg"
+  },
+  {
+    "id": "15",
+    "name": "Magikarp",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/magikarp.jpg"
+  },
+  {
+    "id": "16",
+    "name": "Gastly",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/gastly.jpg"
+  },
+  {
+    "id": "17",
+    "name": "Kabuto",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/kabuto.jpg"
+  },
+  {
+    "id": "18",
+    "name": "Krabby",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/krabby.jpg"
+  },
+  {
+    "id": "19",
+    "name": "Magnemite",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/magnemite.jpg"
+  },
+  {
+    "id": "20",
+    "name": "Mr. Mime",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/mrmime.jpg"
+  },
+  {
+    "id": "21",
+    "name": "Ponyta",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/ponyta.jpg"
+  },
+  {
+    "id": "22",
+    "name": "Rhyhorn",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/rhyhorn.jpg"
+  },
+  {
+    "id": "23",
+    "name": "Seel",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/seel.jpg"
+  },
+  {
+    "id": "24",
+    "name": "Venonat",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/venonat.jpg"
+  },
+  {
+    "id": "25",
+    "name": "Shellder",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon/shellder.jpg"
+  }
+]
