@@ -41,7 +41,7 @@ function CardGrid({ cards, eliminatedCards, onToggleCard, selectedCategory }) {
                                     onToggleCard(id);
                                 }
                             }}
-                            aria-label={`${name} - ${isEliminated ? 'Eliminated' : 'Active'}`}
+                            aria-label={`${name} ${isEliminated ? 'Eliminated' : 'Active'}`}
                         >
                             <div className="guess-card">
                                 {/* Priekinė kortelės pusė */}
@@ -57,9 +57,9 @@ function CardGrid({ cards, eliminatedCards, onToggleCard, selectedCategory }) {
                                 {/* Galinė kortelės pusė (išbraukta) */}
                                 <div className="guess-card__face guess-card__face--back">
                                     <div className="eliminated-overlay">
-                                        <span className="eliminated-icon" aria-hidden="true">✕</span>
                                         <h3>Eliminated</h3>
-                                        <p>Click to restore</p>
+                                        <span className="eliminated-icon" aria-hidden="true">✕</span>
+                                        <span className="eliminated-card-name">{name}</span>
                                     </div>
                                 </div>
                             </div>
