@@ -1,0 +1,122 @@
+[
+  {
+    "id": "1",
+    "name": "Baymax",
+    "category": "Disney",
+    "imageUrl": "/images/disney/baymax.jpg"
+  },
+  {
+    "id": "2",
+    "name": "The Beast",
+    "category": "Disney",
+    "imageUrl": "/images/disney/beast.jpg"
+  },
+  {
+    "id": "3",
+    "name": "Buzz Lightyear",
+    "category": "Disney",
+    "imageUrl": "/images/disney/buzzlightyear.jpg"
+  },
+  {
+    "id": "4",
+    "name": "Cruella de Vil",
+    "category": "Disney",
+    "imageUrl": "/images/disney/cruelladevil.jpg"
+  },
+  {
+    "id": "5",
+    "name": "Dory",
+    "category": "Disney",
+    "imageUrl": "/images/disney/dory.jpg"
+  },
+  {
+    "id": "6",
+    "name": "Simba",
+    "category": "Disney",
+    "imageUrl": "/images/disney/simba.jpg"
+  },
+  {
+    "id": "7",
+    "name": "Stitch",
+    "category": "Disney",
+    "imageUrl": "/images/disney/stitch.jpg"
+  },
+  {
+    "id": "8",
+    "name": "Genie",
+    "category": "Disney",
+    "imageUrl": "/images/disney/genie.jpg"
+  },
+  {
+    "id": "9",
+    "name": "Hades",
+    "category": "Disney",
+    "imageUrl": "/images/disney/hades.jpg"
+  },
+  {
+    "id": "10",
+    "name": "Lightning McQueen",
+    "category": "Disney",
+    "imageUrl": "/images/disney/lightningmcqueen.jpg"
+  },
+  {
+    "id": "11",
+    "name": "Maui",
+    "category": "Disney",
+    "imageUrl": "/images/disney/maui.jpg"
+  },
+  {
+    "id": "12",
+    "name": "Megara",
+    "category": "Disney",
+    "imageUrl": "/images/disney/megara.jpg"
+  },
+  {
+    "id": "13",
+    "name": "Merida",
+    "category": "Disney",
+    "imageUrl": "/images/disney/merida.jpg"
+  },
+  {
+    "id": "14",
+    "name": "Olaf",
+    "category": "Disney",
+    "imageUrl": "/images/disney/olaf.jpg"
+  },
+  {
+    "id": "15",
+    "name": "Mike Wazowski",
+    "category": "Disney",
+    "imageUrl": "/images/disney/mikewazowski.jpg"
+  },
+  {
+    "id": "16",
+    "name": "Rapunzel",
+    "category": "Disney",
+    "imageUrl": "/images/disney/rapunzel.jpg"
+  },
+  {
+    "id": "17",
+    "name": "Mr. Incredible",
+    "category": "Disney",
+    "imageUrl": "/images/disney/mrincredible.jpg"
+  },
+  {
+    "id": "18",
+    "name": "Nick Wilde",
+    "category": "Disney",
+    "imageUrl": "/images/disney/nickwilde.jpg"
+  },
+  {
+    "id": "19",
+    "name": "WALL-E",
+    "category": "Disney",
+    "imageUrl": "/images/disney/walle.jpg"
+  },
+  {
+    "id": "20",
+    "name": "Ralph",
+    "category": "Disney",
+    "imageUrl": "/images/disney/ralph.jpg"
+  }
+]
