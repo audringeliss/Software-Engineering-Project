@@ -31,7 +31,7 @@ function App() {
             })
             .catch(error => {
                 console.error('Categories fetch error:', error);
-                setCategories(['animals', 'people', 'pokémon', 'disney']);
+                setCategories(['animals', 'people', 'pokémon', 'disney', 'comics']);
             });
     }, []);
 
