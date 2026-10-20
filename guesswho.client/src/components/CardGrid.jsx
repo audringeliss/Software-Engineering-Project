@@ -12,15 +12,6 @@ function CardGrid({ cards, eliminatedCards, onToggleCard, selectedCategory }) {
 
     return (
         <section className="card-board" aria-label="Card board">
-            <div className="board-heading">
-                <div>
-                    <p className="board-label">Current deck</p>
-                    <h2 style={{ textTransform: 'capitalize' }}>{selectedCategory}</h2>
-                </div>
-                <div className="card-count-badge">
-                    <span className="card-count">{remainingCount} / {cards.length} left</span>
-                </div>
-            </div>
 
             <div className="card-grid">
                 {cards.map((card, index) => {

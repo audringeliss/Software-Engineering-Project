@@ -19,17 +19,6 @@ function CategorySelector({ categories, selectedCategory, onCategoryChange }) {
             </div>
 
             <div className="category-tiles-grid">
-                <button
-                    type="button"
-                    className={`category-tile category-tile--all ${!selectedCategory ? 'category-tile--selected' : ''}`}
-                    onClick={() => onCategoryChange('')}
-                >
-                    <span className="category-tile-icon" aria-hidden="true">🌟</span>
-                    <span className="category-tile-name">NO CATEGORY</span>
-                    <span className="category-tile-desc">Play with everything</span>
-                </button>
-
-                {/* Individual Category Cards */}
                 {categories.map((category, index) => {
                     const value = typeof category === 'object'
                         ? (category.id || category.Id || category.name || category.Name)

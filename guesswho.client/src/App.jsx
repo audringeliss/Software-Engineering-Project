@@ -66,6 +66,14 @@ function App() {
         );
     };
 
+    // Reset current game state back to start
+    const handleResetBoard = () => {
+        setEliminatedCards([]);
+        setQnaHistory([]);
+        setPendingQuestion(null);
+        setQuestionInput('');
+    };
+
     const handleSendQuestion = () => {
         if (!questionInput.trim()) return;
         setPendingQuestion(questionInput);
@@ -80,19 +88,52 @@ function App() {
         setPendingQuestion(null);
     };
 
+    const remainingCount = cards.length - eliminatedCards.length;
+
     return (
         <div className="game-app">
             <header className="game-header">
-                <h1 className="game-title">GUESS WHO?</h1>
+                {!selectedCategory ? (
+                    <h1 className="game-title">GUESS WHO?</h1>
+                ) : (
+                    <div className="game-nav-bar">
+                        <div className="nav-buttons-group">
+                            <button 
+                                type="button" 
+                                className="change-deck-btn"
+                                onClick={() => setSelectedCategory('')}
+                            >
+                                <span className="btn-icon">←</span> Choose Different Deck
+                            </button>
+
+                            <button 
+                                type="button" 
+                                className="reset-board-btn"
+                                onClick={handleResetBoard}
+                                title="Reset game board"
+                            >
+                                🔄 Reset Board
+                            </button>
+                        </div>
+
+                        <div className="active-deck-badge">
+                            <span className="deck-label">PLAYING:</span>
+                            <span className="deck-name">{selectedCategory.toUpperCase()}</span>
+                            {cards.length > 0 && (
+                                <span className="deck-count-pill">{remainingCount} / {cards.length} LEFT</span>
+                            )}
+                        </div>
+                    </div>
+                )}
             </header>
 
-            <CategorySelector
-                categories={categories}
-                selectedCategory={selectedCategory}
-                onCategoryChange={setSelectedCategory}
-            />
-
-            {!selectedCategory || isLoadingCards ? (
+            {!selectedCategory ? (
+                <CategorySelector
+                    categories={categories}
+                    selectedCategory={selectedCategory}
+                    onCategoryChange={setSelectedCategory}
+                />
+            ) : isLoadingCards ? (
                 <GameStatus
                     selectedCategory={selectedCategory}
                     isLoadingCards={isLoadingCards}
