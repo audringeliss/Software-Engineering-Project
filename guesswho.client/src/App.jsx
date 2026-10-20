@@ -35,6 +35,7 @@ function App() {
             });
     }, []);
 
+    // Load category cards and initialize the backend GameController session
     useEffect(() => {
         if (!selectedCategory) {
             setCards([]);
@@ -47,17 +48,29 @@ function App() {
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 return response.json();
             })
-            .then(data => {
+            .then(async data => {
                 const cardsArray = Array.isArray(data) ? data : data.cards || data.Cards || [];
                 setCards(cardsArray);
                 setEliminatedCards([]);
                 setQnaHistory([]);
                 setPendingQuestion(null);
+
+                // Pick a random target card for the game session
+                if (cardsArray.length > 0) {
+                    const randomTarget = cardsArray[Math.floor(Math.random() * cardsArray.length)];
+                    const targetId = randomTarget.id || randomTarget.Id;
+
+                    // Initialize backend GameController session
+                    await fetch(`/api/game/start?category=${encodeURIComponent(selectedCategory)}&targetId=${encodeURIComponent(targetId)}`, {
+                        method: 'POST'
+                    });
+                }
             })
             .catch(error => console.error('Cards fetch error:', error))
             .finally(() => setIsLoadingCards(false));
     }, [selectedCategory]);
 
+    // Manual client-side card flipping (local toggle)
     const toggleFlip = (id) => {
         setEliminatedCards(prev =>
             prev.includes(id)
@@ -66,7 +79,7 @@ function App() {
         );
     };
 
-    // Reset current game state back to start
+    // Reset current game state
     const handleResetBoard = () => {
         setEliminatedCards([]);
         setQnaHistory([]);
@@ -74,13 +87,51 @@ function App() {
         setQuestionInput('');
     };
 
-    const handleSendQuestion = () => {
+    // Send question to backend GameController (/api/game/ask)
+    const handleSendQuestion = async () => {
         if (!questionInput.trim()) return;
-        setPendingQuestion(questionInput);
-        setQuestionInput('');
+
+        const currentInput = questionInput;
+        try {
+            await fetch('/api/game/ask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    questionText: currentInput,
+                    targetAttribute: currentInput, // Or map to a specific attribute if desired
+                    askedAt: new Date().toISOString()
+                })
+            });
+
+            setPendingQuestion(currentInput);
+            setQuestionInput('');
+        } catch (error) {
+            console.error('Error asking question:', error);
+        }
     };
 
-    const handleAnswerQuestion = (isTrue) => {
+    // Submit answer to backend GameController (/api/game/answer)
+    // The backend processes the answer using GameEngine and returns updated cards
+    const handleAnswerQuestion = async (isTrue) => {
+        try {
+            const response = await fetch(`/api/game/answer?isTrue=${isTrue}`, {
+                method: 'POST'
+            });
+
+            if (response.ok) {
+                const updatedCards = await response.json();
+                
+                // Identify which cards were flipped by the backend engine
+                const newlyEliminated = updatedCards
+                    .filter(c => c.isFlipped || c.IsFlipped)
+                    .map(c => c.id || c.Id);
+
+                setEliminatedCards(newlyEliminated);
+            }
+        } catch (error) {
+            console.error('Error processing answer on backend:', error);
+        }
+
         setQnaHistory(prev => [...prev, {
             question: pendingQuestion,
             answer: isTrue ? 'True' : 'False'

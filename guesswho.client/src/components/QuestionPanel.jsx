@@ -20,6 +20,11 @@ function QuestionPanel({
                         placeholder="e.g. Does your person have glasses?"
                         value={questionInput}
                         onChange={(event) => onQuestionChange(event.target.value)}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter' && questionInput.trim() && pendingQuestion === null) {
+                                onSendQuestion();
+                            }
+                        }}
                         disabled={pendingQuestion !== null}
                         style={{
                             flex: 1,
