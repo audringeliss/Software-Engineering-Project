@@ -9,7 +9,6 @@ function QuestionPanel({
         <div className="question-panel">
             <section className="panel question-panel__ask">
                 <div className="panel-heading">
-                    <span className="panel-number">02</span>
                     <div>
                         <h2>Ask a question</h2>
                         <p>Type a yes-or-no question about the cards.</p>
@@ -21,6 +20,11 @@ function QuestionPanel({
                         placeholder="e.g. Does your person have glasses?"
                         value={questionInput}
                         onChange={(event) => onQuestionChange(event.target.value)}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter' && questionInput.trim() && pendingQuestion === null) {
+                                onSendQuestion();
+                            }
+                        }}
                         disabled={pendingQuestion !== null}
                         style={{
                             flex: 1,
@@ -44,7 +48,6 @@ function QuestionPanel({
 
             <section className="panel question-panel__answer">
                 <div className="panel-heading">
-                    <span className="panel-number">03</span>
                     <div>
                         <h2>Answer the question</h2>
                         <p>Select whether the answer is true or false.</p>

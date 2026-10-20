@@ -1,0 +1,182 @@
+[
+  { 
+    "id": "101", 
+    "name": "Antman", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/antman.jpg"
+  },
+  { 
+    "id": "102", 
+    "name": "Batman", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/batman.jpg"
+  },
+  { 
+    "id": "103", 
+    "name": "Captain America", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/captainamerica.jpg"
+  },
+  { 
+    "id": "104", 
+    "name": "Deadpool", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/deadpool.jpg"
+  },
+  { 
+    "id": "105", 
+    "name": "Iron Man", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/ironman.jpg"
+  },
+  { 
+    "id": "106", 
+    "name": "Spider-Man", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/spiderman.jpg"
+  },
+  { 
+    "id": "107", 
+    "name": "Superman", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/superman.jpg"
+  },
+  { 
+    "id": "108", 
+    "name": "Thor", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/thor.jpg"
+  },
+  { 
+    "id": "109", 
+    "name": "Wolverine", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/wolverine.jpg"
+  },
+  { 
+    "id": "110", 
+    "name": "Wonder Woman", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/wonderwoman.jpg"
+  },
+  { 
+    "id": "111", 
+    "name": "Hulk", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/hulk.jpg"
+  },
+  { 
+    "id": "112", 
+    "name": "Black Panther", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/blackpanther.jpg"
+  },
+  { 
+    "id": "113", 
+    "name": "Green Arrow", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/greenarrow.jpg"
+  },
+  { 
+    "id": "114", 
+    "name": "Aquaman", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/aquaman.jpg"
+  },
+  { 
+    "id": "115", 
+    "name": "Batgirl", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/batgirl.jpg"
+  },
+  { 
+    "id": "116", 
+    "name": "Black Widow", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/blackwidow.jpg"
+  },
+  { 
+    "id": "117", 
+    "name": "Blue Beetle", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/bluebeetle.jpg"
+  },
+  { 
+    "id": "118", 
+    "name": "Doctor Strange", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/doctorstrange.jpg"
+  },
+  { 
+    "id": "119", 
+    "name": "Catwoman", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/catwoman.jpg"
+  },
+  { 
+    "id": "120", 
+    "name": "Hawkeye", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/hawkeye.jpg"
+  },
+  { 
+    "id": "121", 
+    "name": "Harley Quinn", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/harleyquinn.jpg"
+  },
+  { 
+    "id": "122", 
+    "name": "Loki", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/loki.jpg"
+  },
+  { 
+    "id": "123", 
+    "name": "The Flash", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/theflash.jpg"
+  },
+  { 
+    "id": "124", 
+    "name": "Nightwing", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/nightwing.jpg"
+  },
+  { 
+    "id": "125", 
+    "name": "Polka Dot Man", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/polkadotman.jpg"
+  },
+  { 
+    "id": "126", 
+    "name": "Shazam", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/shazam.jpg"
+  },
+  { 
+    "id": "127", 
+    "name": "The Joker", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/thejoker.jpg"
+  },
+  { 
+    "id": "128", 
+    "name": "Wanda Maximoff", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/wandamaximoff.jpg"
+  },
+  { 
+    "id": "129", 
+    "name": "Thanos", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/thanos.jpg"
+  },
+  { 
+    "id": "130", 
+    "name": "Supergirl", 
+    "category": "Comics",
+    "imageUrl": "/images/comics/supergirl.jpg"
+  }
+]

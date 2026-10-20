@@ -4,7 +4,6 @@ function QnaHistory({ qnaHistory }) {
     return (
         <section className="panel qna-history">
             <div className="panel-heading">
-                <span className="panel-number">04</span>
                 <div>
                     <h2>Question history</h2>
                 </div>
