@@ -41,7 +41,6 @@ Each version builds upon the functionality of the previous version.
 - Basic "***Guess Who?***" game logic.
 - Question submission.
 - True/False answer system.
-- Person/object selection.
 - More than one category: People, Animals, etc.
 
 **UI**:

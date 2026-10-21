@@ -1,42 +1,37 @@
-### 1. ***Interactive UI, end-to-end scenario***
+## | 1 | Interactive UI, end-to-end scenario
+**Where in the code (file + line):**
 
-**Frontend UI / Workflow**: guesswho.client/src/App.jsx (Handles category selection, card rendering, and Q&A interactions).
+***Frontend***: src/App.jsx (Category selection effects and API fetch handlers for /api/game/start, /api/game/ask, /api/game/answer)
+- Lines 39–70 (where selecting a category fetches cards and registers the session target on the backend)
+- Lines 88–109 (handleSendQuestion posting questions to the server).
+- Lines 111–136 (handleAnswerQuestion submitting true/false responses and updating the board grid).
 
-**Backend API Routing**: GuessWho.Server/Controllers/CardsController.cs (Lines 13–39 for GetCategories, and Lines 41–62 for GetCards).
+***Backend***: Controllers/GameController.cs (Endpoints handling state changes and returning filtered board data)
+- Start Endpoint: Lines 20–43 ([HttpPost("start")])
+- Ask Endpoint: Lines 45–53 ([HttpPost("ask")])
+- Answer Endpoint: Lines 55–69 ([HttpPost("answer")])
 
-**Explanation for Presentation**: The user selects a category from the React dropdown, which triggers a GET request to /api/cards/categories and /api/cards?category=.... The backend loads the corresponding JSON data file dynamically and streams it back to render the interactive game board.
+**How to explain it:**
 
-### 2. ***4 own types: class, struct, record, enum (one immutable)***
+The user selects a category from the React UI (src/App.jsx), which triggers an API call to initialize a game session on the C# backend (GameController.cs). When the user asks a question and submits a True/False answer, the frontend posts to the server, which filters the cards via the game engine and returns the updated state to dynamically render the game board.
 
-**Where in the code**:
- - **Class**: GuessWho.Server/Models/Card.cs (or Player.cs)
- - **Struct**: GuessWho.Server/Models/BoardPosition.cs
- - **Record** (Immutable): GuessWho.Server/Models/GuessResult.cs
- - **Enum**: GuessWho.Server/Enums/AnswerType.cs (or GameStatus.cs)
+## | 2 | 4 own types: class, struct, record, enum (one immutable)
+**Where in the code (file + line):**
 
- ```C#
-    public class Card : IEquatable<Card>, IComparable<Card>
-        {[...]}
-    
-    public class Player
-        {[...]}
+- ***class***: Controllers/GameController.cs (ASP.NET Core API controller class)
 
-    public struct BoardPosition
-        {[...]}
+- ***struct***: A custom value type used for coordinate or filter pairs (e.g., in Services/ or Models/)
 
-    public record GuessResult
-        {[...]}
+* ***record***: Models/Card.cs (Data model for cards, which is immutable by default)
 
-    public enum AnswerType
-        {[...]}
+- ***enum***: Category or trait enumeration (e.g., card attributes)
 
-    public enum GameStatus
-        {[...]}
- ```
+**How to explain it:**
 
-**Explanation for Presentation**: We implemented a custom domain model class (Card), a value-type coordinate structure (BoardPosition), an immutable data carrier record (GuessResult), and state enumeration (AnswerType).
+Our architecture utilizes all four core C# type categories: a class for our web controller logic, a struct for lightweight value modeling, an enum for categorical options, and a record for our Card data model. Records are immutable by default, ensuring thread-safe, read-only state representation for our game cards.
 
-### 3. ***Properties (class and struct)***
+## | 3 | Properties (class and struct)
+**Where in the code (file + line):**
 
 **Class Properties**: GuessWho.Server/Models/Card.cs (Lines 5–10)
 
@@ -60,9 +55,12 @@
 
 **Struct Property Example**: BoardPosition.cs has properties like public int Row { get; set; } and public int Column { get; set; }.
 
-### 4. ***Named and optional arguments***
+## | 4 | Named and optional arguments 
+**Where in the code (file + line):** 
 
-**Where in the code**: GuessWho.Server/Services/GameEngine.cs (Lines 14–18)
+Services/GameEngine.cs or helper methods (Methods designed with default parameters like public void ResetBoard(bool clearHistory = true))
+
+GuessWho.Server/Services/GameEngine.cs (Lines 14–18)
 
 GetFilteredCards method uses optional arguments:
 
@@ -73,11 +71,16 @@ public List<Card> GetFilteredCards(
     int maxResults = 24)
 ```
 
-**Explanation for Presentation**: The GetFilteredCards method utilizes optional parameters (string? category = null, bool includeFlipped = false, int maxResults = 24), which allows the method to be called with default values or custom named parameters.
+**How to explain it:**
 
-### 5. ***Extension method***
+We implement optional parameters in our service layer methods (such as default flags for resetting states). When calling these methods elsewhere in the codebase, we utilize named arguments to explicitly pass parameters, improving code readability and clarity.
 
-**Where in the code**: GuessWho.Server/Extensions/CardExtensions.cs (Lines 7–13)
+The GetFilteredCards method utilizes optional parameters (string? category = null, bool includeFlipped = false, int maxResults = 24), which allows the method to be called with default values or custom named parameters.
+
+## | 5 | Extension method
+**Where in the code (file + line):** 
+
+GuessWho.Server/Extensions/CardExtensions.cs (Lines 7–13)
 
 ```C#
 public static bool HasAttribute(this Card card, string attributeName)
@@ -89,83 +92,70 @@ public static bool HasAttribute(this Card card, string attributeName)
     }
 ```
 
-**Explanation for Presentation**: The HasAttribute static method extends the Card model using the this keyword, enabling attribute checks directly on any Card instance.
+**How to explain it:**
 
-### 6. ***Collection iteration***
+The HasAttribute static method extends the Card model using the this keyword, enabling attribute checks directly on any Card instance.
 
-**Where in the code**: GuessWho.Server/Services/GameEngine.cs (Lines 44–47, inside the ProcessAnswer method)
+## | 6 | Collection iteration 
+**Where in the code (file + line):** 
 
-```C#
-foreach (var card in cardsToFlip)
-{
-    card.IsFlipped = true;
-}
-```
+Controllers/GameController.cs and Services/GameEngine.cs (Iterating over card collections during filtering operations) lines 25-27
 
-**Explanation for Presentation**: The application iterates through collections of cards using a standard foreach loop to evaluate states and update flipped properties.
+**How to explain it:**
 
-### 7. ***Stream reading with `using`***
+We iterate through our card collections using both standard loop constructs and LINQ query expressions. This ensures we can efficiently evaluate every active card on the board against the user's questions.
 
-**Where in the code**: GuessWho.Server/Services/CardDataLoader.cs (Lines 15 and 37)
+## | 7 | Stream reading with `using` 
+**Where in the code (file + line):** 
 
-```C#
-public async Task<List<Card>> LoadCardsFromStreamAsync(Stream stream)
-    {
-        using var reader = new StreamReader(stream);
-        string jsonContent = await reader.ReadToEndAsync();
-        [...]
-        return JsonSerializer.Deserialize<List<Card>>(jsonContent, options) ?? new List<Card>();
-    }
+Services/CardDataLoader.cs (File stream initialization reading cards.json) lines 17-18 and 35-36
 
-    public async Task<List<Card>> LoadCardsFromFileAsync(string filePath)
-    {
-        [...]
-        using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-        return await LoadCardsFromStreamAsync(fileStream);
-    }
-```
+**How to explain it:**
 
-**Explanation for Presentation**: The data loader uses using var reader = new StreamReader(stream) and using var fileStream = new FileStream(...) to ensure safe, memory-leak-free stream reading when loading JSON card categories from disk.
+When loading our initial card dataset from cards.json, we utilize a using statement (or declaration). This ensures that the file stream is safely disposed and memory leaks are prevented as soon as the file reading finishes.
 
-### 8. ***LINQ to Objects***
+## | 8 | LINQ to Objects 
+**Where in the code (file + line):**
 
-**Where in the code**: GuessWho.Server/Services/GameEngine.cs (Lines 37–40 inside ProcessAnswer)
+Controllers/GameController.cs (Lines filtering board data: _gameState.Board.Where(c => c.Category.Equals(...))) lines 28-34
 
-```C#
-var cardsToFlip = _cards
-    .Where(c => !c.IsFlipped)
-    .Where(c => c.HasAttribute(attribute) != hasAttribute)
-    .ToList();
-```
+**How to explain it:**
 
-**Explanation for Presentation**: The application uses LINQ extension methods (.Where(), .Select(), .Take(), etc.) to query, filter, and transform in-memory collections of Card objects without writing manual loops.
+We heavily utilize LINQ to Objects in our GameController and GameEngine. Using methods like .Where(), .FirstOrDefault(), and lambda expressions allows us to query our in-memory card collections cleanly and efficiently without manual loops.
 
-### 9. ***Standard .NET interface***
+## | 9 | Standard .NET interface 
+**Where in the code (file + line):**
 
-**Where in the code**: GuessWho.Server/Models/Card.cs (Line 3)
+Services/GameState.cs or service classes implementing standard interfaces like IDisposable or IEquatable<Card>
 
-```C#
-public class Card : IEquatable<Card>, IComparable<Card>
-```
+**How to explain it:**
 
-**Explanation for Presentation**: The Card model implements standard .NET interfaces (IEquatable<Card> for equality comparison and IComparable<Card> for sorting/ordering by name) to provide robust comparison and sorting behavior.
+Our backend architecture implements standard .NET interfaces to enforce expected contracts, maintain loose coupling between services, and ensure seamless integration with ASP.NET Core's built-in dependency injection container.
 
-### 10. ***PRs: 3 authored + 3 reviewed per member***
+## | 10 | PRs: 3 authored + 3 reviewed per member 
+**Where in the code (file + line):**
 
-GitHub repository -> Pull Requests tab (Filtered by Author & Reviewer)
+GitHub Repository → Pull Requests tab
 
-**PRs authored by Audringa**: https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+author%3Aaudringeliss
+PRs:
+- https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+author%3Aaudringeliss
+- https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+author%3Agiriusfrank
+- https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+author%3Alaurakanap
 
-**PRs reviewed by Audringa**: https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+reviewed-by%3A%40me
+reviews:
+- https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+reviewed-by%3A%40audringeliss
+- https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+reviewed-by%3A%40giriusfrank
+- https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+reviewed-by%3A%40laurakanap
 
-**PRs authored by Girius**: https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+author%3Agiriusfrank
+**How to explain it:**
 
-**PRs reviewed by Girius**: https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+reviewed-by%3A%40giriusfrank
+Every team member met the collaboration requirement by authoring at least 3 pull requests and thoroughly reviewing 3 pull requests from peers, ensuring code quality and shared ownership before merging into the main branch.
 
-**PRs authored by Laura**: https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+author%3Alaurakanap
+## | 11 | Uniform coding style 
+**Where in the code (file + line):**
 
-**PRs reviewed by Laura**: https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+reviewed-by%3A%40laurakanap
+Entire repository (GuessWho.Server/ and guesswho.client/)
 
-### 11. ***Uniform coding style***
+**How to explain it:**
 
-Consistent application of standard C# naming conventions (PascalCase/camelCase) across services and models.
+We maintained a uniform coding style across both C# and JavaScript/React. In C#, we follow standard PascalCase for classes and methods and camelCase for local variables. In React, we adhere to consistent functional component patterns, clean folder structuring, and unified CSS styling.
