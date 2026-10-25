@@ -10,7 +10,6 @@ All branches are created off the `main` branch, and completed work is merged bac
 
 ### Team Member Prefixes:
 * **Audringa Daškevičiūtė:** `ad/` (e.g., `ad/add-signalr-hubs`)
-* **Girius Frankonis:** `gf/` (e.g., `gf/card-flip-animation`)
 * **Laura Kanapienytė:** `lk/` (e.g., `lk/user-authentication-api`)
 
 ---
@@ -33,9 +32,9 @@ To keep the codebase consistent across all developers, follow these standards:
 * **Creating PRs:** Every code change must be submitted as a PR into `main`.
 * **PR Template:** Complete all sections of the auto-filled template from `.github/pull_request_template.md` (do not leave blank placeholders).
 * **Code Ownership (`CODEOWNERS`):** Review requests are automatically assigned based on `.github/CODEOWNERS`:
-  * **Backend (`/GuessWho.Server/`, `/Controllers/`, `Program.cs`):** Reviewed by Audringa (`@audringeliss`) and Girius (`@giriusfrank`).
-  * **Backend (`/Models/`):** Accessible to all team members (`@audringeliss`, `@giriusfrank`, `@laurakanap`).
-  * **Frontend (`/guesswho.client/`):** Reviewed by Audringa (`@audringeliss`) and Laura (`@laurakanap`).
+  * **Backend (`/GuessWho.Server/`, `/Controllers/`, `Program.cs`):** Reviewed by all team members (`@audringeliss`, `@laurakanap`).
+  * **Backend (`/Models/`):** Accessible to all team members (`@audringeliss`, `@laurakanap`).
+  * **Frontend (`/guesswho.client/`):** Reviewed by all team members (`@audringeliss`, `@laurakanap`).
   * **Docs & Configuration (`/docs/`, `/.github/`, `CONTRIBUTING.md`):** Accessible to all team members.
 * **Approval:** At least 1 approving review from a designated code owner is required before merging into `main`.
 

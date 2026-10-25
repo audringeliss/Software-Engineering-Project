@@ -139,12 +139,10 @@ GitHub Repository → Pull Requests tab
 
 PRs:
 - https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+author%3Aaudringeliss
-- https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+author%3Agiriusfrank
 - https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+author%3Alaurakanap
 
 reviews:
 - https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+reviewed-by%3A%40audringeliss
-- https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+reviewed-by%3A%40giriusfrank
 - https://github.com/audringeliss/Software-Engineering-Project/pulls?q=is%3Apr+state%3Aclosed+reviewed-by%3A%40laurakanap
 
 **How to explain it:**
