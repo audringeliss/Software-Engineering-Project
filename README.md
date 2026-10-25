@@ -18,11 +18,9 @@ The main goals of this project are:
 - **Team leader** - Audringa Daškevičiūtė
 - **Team members**:
 
-  Audringa Daškevičiūtė (*audringeliss*) - Lead Full Stack Engineer, Systems Engineer
+  Audringa Daškevičiūtė (*audringeliss*) - Lead Backend Engineer, Lead UI/UX Designer, Systems Engineer
 
-  Girius Frankonis (*giriusfrank*) - Lead Backend Engineer, Systems Engineer
-
-  Laura Kanapienytė (*laurakanap*) - Lead UI/UX Designer, Systems Engineer
+  Laura Kanapienytė (*laurakanap*) - Lead Full Stack Engineer, Systems Engineer
 
 ## Feature Roadmap
 
@@ -41,7 +39,6 @@ Each version builds upon the functionality of the previous version.
 - Basic "***Guess Who?***" game logic.
 - Question submission.
 - True/False answer system.
-- Person/object selection.
 - More than one category: People, Animals, etc.
 
 **UI**:
@@ -118,12 +115,12 @@ Categories will be chosen from the following list:
 | 2      | Apps & Artificial Inteligence tools  | Facebook, Threads, ChatGPT, Claude                |
 | 3      | Cartoon Network                      | Ben Ten, Steven Universe, Buttercup               |
 | 4      | Celebrities                          | Dua Lipa, Keanu Reeves, Tom Holland               |
-| 5      | Children's Animation Characters       | Spongebob Squarepants, Hello Kitty, Mickey Mouse  |
+| 5      | Children's Animation Characters      | Spongebob Squarepants, Hello Kitty, Mickey Mouse  |
 | 6      | Countries                            | Lithuania, Sweden, Italy, Brazil                  |
 | 7      | Disney                               | Buzz, Stich, McQueen, Cruella de Vil              |
 | 8      | Games (characters)                   | Minecraft, Stardew Valley, Counter Strike, GTA    |
 | 9      | MARVEL x DC                          | Spider-man, Thor, Batman, Wonder Woman            |
-| 10     | Mythical creatures                   | Dragon, Cyclops, Goblin, Unicorn                   |
+| 10     | Mythical creatures                   | Dragon, Cyclops, Goblin, Unicorn                  |
 | 11     | People                               | Jeniffer, Alex, Jack, Abigail                     |
 | 12     | Pokémon                              | Pikachu, Eevee, Jigglypuff, Bulbasaur             |
 |        | *still thinking of different categories so that there is more variety |                  |
