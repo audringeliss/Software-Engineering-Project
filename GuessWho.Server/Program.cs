@@ -1,4 +1,6 @@
 using GuessWho.Server.Services;
+using Microsoft.EntityFrameworkCore;
+using GuessWho.Server.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,9 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<GameState>();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite("Data Source=guesswho.db"));
 
 var app = builder.Build();
 

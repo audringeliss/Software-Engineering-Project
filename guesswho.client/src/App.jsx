@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+import Auth from './components/Auth';
 import CardGrid from './components/CardGrid';
 import CategorySelector from './components/CategorySelector';
 import GameStatus from './components/GameStatus';
@@ -7,6 +8,9 @@ import QuestionPanel from './components/QuestionPanel';
 import QnaHistory from './components/QnaHistory';
 
 function App() {
+    // Authentication state
+    const [currentUser, setCurrentUser] = useState(null);
+
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
 
@@ -20,6 +24,9 @@ function App() {
     const [isLoadingCards, setIsLoadingCards] = useState(false);
 
     useEffect(() => {
+        // Only fetch categories if user is logged in
+        if (!currentUser) return;
+
         fetch('/api/cards/categories')
             .then(response => {
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -33,11 +40,11 @@ function App() {
                 console.error('Categories fetch error:', error);
                 setCategories(['animals', 'people', 'pokémon', 'disney', 'comics']);
             });
-    }, []);
+    }, [currentUser]);
 
     // Load category cards and initialize the backend GameController session
     useEffect(() => {
-        if (!selectedCategory) {
+        if (!selectedCategory || !currentUser) {
             setCards([]);
             return;
         }
@@ -68,7 +75,7 @@ function App() {
             })
             .catch(error => console.error('Cards fetch error:', error))
             .finally(() => setIsLoadingCards(false));
-    }, [selectedCategory]);
+    }, [selectedCategory, currentUser]);
 
     // Manual client-side card flipping (local toggle)
     const toggleFlip = (id) => {
@@ -98,7 +105,7 @@ function App() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     questionText: currentInput,
-                    targetAttribute: currentInput, // Or map to a specific attribute if desired
+                    targetAttribute: currentInput,
                     askedAt: new Date().toISOString()
                 })
             });
@@ -111,7 +118,6 @@ function App() {
     };
 
     // Submit answer to backend GameController (/api/game/answer)
-    // The backend processes the answer using GameEngine and returns updated cards
     const handleAnswerQuestion = async (isTrue) => {
         try {
             const response = await fetch(`/api/game/answer?isTrue=${isTrue}`, {
@@ -121,7 +127,6 @@ function App() {
             if (response.ok) {
                 const updatedCards = await response.json();
                 
-                // Identify which cards were flipped by the backend engine
                 const newlyEliminated = updatedCards
                     .filter(c => c.isFlipped || c.IsFlipped)
                     .map(c => c.id || c.Id);
@@ -141,11 +146,29 @@ function App() {
 
     const remainingCount = cards.length - eliminatedCards.length;
 
+    // IF USER IS NOT LOGGED IN, SHOW AUTH SCREEN
+    if (!currentUser) {
+        return (
+            <div className="game-app">
+                <header className="game-header">
+                    <h1 className="game-title">GUESS WHO?</h1>
+                </header>
+                <Auth onLoginSuccess={(username) => setCurrentUser(username)} />
+            </div>
+        );
+    }
+
     return (
         <div className="game-app">
             <header className="game-header">
                 {!selectedCategory ? (
-                    <h1 className="game-title">GUESS WHO?</h1>
+                    <div className="user-welcome-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '0 20px' }}>
+                        <h1 className="game-title" style={{ margin: 0 }}>GUESS WHO?</h1>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                            <span>👤 {currentUser}</span>
+                            <button onClick={() => setCurrentUser(null)} className="change-deck-btn">Log Out</button>
+                        </div>
+                    </div>
                 ) : (
                     <div className="game-nav-bar">
                         <div className="nav-buttons-group">
@@ -173,6 +196,11 @@ function App() {
                             {cards.length > 0 && (
                                 <span className="deck-count-pill">{remainingCount} / {cards.length} LEFT</span>
                             )}
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <span style={{ fontSize: '0.9rem' }}>👤 {currentUser}</span>
+                            <button onClick={() => setCurrentUser(null)} className="change-deck-btn" style={{ padding: '5px 10px', fontSize: '0.8rem' }}>Log Out</button>
                         </div>
                     </div>
                 )}
