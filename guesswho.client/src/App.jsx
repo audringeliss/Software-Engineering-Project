@@ -159,16 +159,35 @@ function App() {
     }
 
     return (
-        <div className="game-app">
-            <header className="game-header">
+        <div className="game-app" style={{ position: 'relative' }}>
+            {/* Dedicated Top-Right User Badge & Log Out */}
+            <div 
+                className="user-top-bar"
+                style={{
+                    position: 'absolute',
+                    top: '15px',
+                    right: '25px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    zIndex: 100
+                }}
+            >
+                <span style={{ color: '#e0e6ed', fontSize: '0.95rem', fontWeight: '500' }}>
+                    👤 {currentUser}
+                </span>
+                <button 
+                    onClick={() => setCurrentUser(null)} 
+                    className="change-deck-btn"
+                    style={{ padding: '6px 14px', fontSize: '0.85rem' }}
+                >
+                    Log Out
+                </button>
+            </div>
+
+            <header className="game-header" style={{ textAlign: 'center', paddingTop: '10px' }}>
                 {!selectedCategory ? (
-                    <div className="user-welcome-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '0 20px' }}>
-                        <h1 className="game-title" style={{ margin: 0 }}>GUESS WHO?</h1>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                            <span>👤 {currentUser}</span>
-                            <button onClick={() => setCurrentUser(null)} className="change-deck-btn">Log Out</button>
-                        </div>
-                    </div>
+                    <h1 className="game-title" style={{ margin: '10px 0 20px 0' }}>GUESS WHO?</h1>
                 ) : (
                     <div className="game-nav-bar">
                         <div className="nav-buttons-group">
@@ -196,11 +215,6 @@ function App() {
                             {cards.length > 0 && (
                                 <span className="deck-count-pill">{remainingCount} / {cards.length} LEFT</span>
                             )}
-                        </div>
-
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <span style={{ fontSize: '0.9rem' }}>👤 {currentUser}</span>
-                            <button onClick={() => setCurrentUser(null)} className="change-deck-btn" style={{ padding: '5px 10px', fontSize: '0.8rem' }}>Log Out</button>
                         </div>
                     </div>
                 )}
