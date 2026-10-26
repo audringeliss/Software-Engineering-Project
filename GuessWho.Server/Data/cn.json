@@ -1,0 +1,183 @@
+[
+{
+    "id": "1",
+    "name": "Ben Tennyson",
+    "category": "CN",
+    "imageUrl": "/images/cn/bentennyson.jpg"
+  },
+  {
+    "id": "2",
+    "name": "BMO",
+    "category": "CN",
+    "imageUrl": "/images/cn/bmo.jpg"
+  },
+  {
+    "id": "3",
+    "name": "Courage",
+    "category": "CN",
+    "imageUrl": "/images/cn/courage.jpg"
+  },
+  {
+    "id": "4",
+    "name": "Finn",
+    "category": "CN",
+    "imageUrl": "/images/cn/finn.jpg"
+  },
+  {
+    "id": "5",
+    "name": "Garnet",
+    "category": "CN",
+    "imageUrl": "/images/cn/garnet.jpg"
+  },
+  {
+    "id": "6",
+    "name": "Ice Bear",
+    "category": "CN",
+    "imageUrl": "/images/cn/icebear.jpg"
+  },
+  {
+    "id": "7",
+    "name": "Johnny Bravo",
+    "category": "CN",
+    "imageUrl": "/images/cn/johnnybravo.jpg"
+  },
+  {
+    "id": "8",
+    "name": "Monroe",
+    "category": "CN",
+    "imageUrl": "/images/cn/monroe.jpg"
+  },
+  {
+    "id": "9",
+    "name": "Juniper Lee",
+    "category": "CN",
+    "imageUrl": "/images/cn/juniperlee.jpg"
+  },
+  {
+    "id": "10",
+    "name": "Numbuh 1",
+    "category": "CN",
+    "imageUrl": "/images/cn/numbuh1.jpg"
+  },
+  {
+    "id": "11",
+    "name": "Panda Bear",
+    "category": "CN",
+    "imageUrl": "/images/cn/pandabear.jpg"
+  },
+  {
+    "id": "12",
+    "name": "Ed",
+    "category": "CN",
+    "imageUrl": "/images/cn/ed.jpg"
+  },
+  {
+    "id": "13",
+    "name": "Mojo Jojo",
+    "category": "CN",
+    "imageUrl": "/images/cn/mojojojo.jpg"
+  },
+  {
+    "id": "14",
+    "name": "Plank",
+    "category": "CN",
+    "imageUrl": "/images/cn/plank.jpg"
+  },
+  {
+    "id": "15",
+    "name": "Steven Universe",
+    "category": "CN",
+    "imageUrl": "/images/cn/stevenuniverse.jpg"
+  },
+  {
+    "id": "16",
+    "name": "Rigby",
+    "category": "CN",
+    "imageUrl": "/images/cn/rigby.jpg"
+  },
+  {
+    "id": "17",
+    "name": "Peridot",
+    "category": "CN",
+    "imageUrl": "/images/cn/peridot.jpg"
+  },
+  {
+    "id": "18",
+    "name": "Blossom",
+    "category": "CN",
+    "imageUrl": "/images/cn/blossom.jpg"
+  },
+  {
+    "id": "19",
+    "name": "Chowder",
+    "category": "CN",
+    "imageUrl": "/images/cn/chowder.jpg"
+  },
+  {
+    "id": "20",
+    "name": "Fred Fredburger",
+    "category": "CN",
+    "imageUrl": "/images/cn/fredfredburger.jpg"
+  },
+  {
+    "id": "21",
+    "name": "Grim",
+    "category": "CN",
+    "imageUrl": "/images/cn/grim.jpg"
+  },
+  {
+    "id": "22",
+    "name": "Grizzly Bear",
+    "category": "CN",
+    "imageUrl": "/images/cn/grizzlybear.jpg"
+  },
+  {
+    "id": "23",
+    "name": "Jake",
+    "category": "CN",
+    "imageUrl": "/images/cn/jake.jpg"
+  },
+  {
+    "id": "24",
+    "name": "Buttercup",
+    "category": "CN",
+    "imageUrl": "/images/cn/buttercup.jpg"
+  },
+  {
+    "id": "25",
+    "name": "Numbuh 4",
+    "category": "CN",
+    "imageUrl": "/images/cn/numbuh4.jpg"
+  },
+    
+  {
+    "id": "26",
+    "name": "Bubbles",
+    "category": "CN",
+    "imageUrl": "/images/cn/bubbles.jpg"
+   },
+  {
+    "id": "27",
+    "name": "Mordecai",
+    "category": "CN",
+    "imageUrl": "/images/cn/mordecai.jpg"
+  },
+   {
+    "id": "28",
+     "name": "Mr. Maellard",
+    "category": "CN",
+    "imageUrl": "/images/cn/mrmaellard.jpg"
+   },
+  {
+    "id": "29",
+    "name": "Mung Daal",
+    "category": "CN",
+    "imageUrl": "/images/cn/mungdaal.jpg"
+  },
+  {
+    "id": "30",
+    "name": "Princess Bubblegum",
+    "category": "CN",
+    "imageUrl": "/images/cn/princessbubblegum.jpg"
+  }
+]
