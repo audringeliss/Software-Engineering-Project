@@ -3,6 +3,7 @@ function CategorySelector({ categories, selectedCategory, onCategoryChange }) {
         const name = String(catName).toLowerCase();
         if (name.includes('animal')) return { icon: '🦁', desc: 'Creatures & beasts' };
         if (name.includes('comic')) return { icon: '💥', desc: 'Heroes & villains' };
+        if (name.includes('cn')) return { icon: '📺', desc: 'Cartoon Network characters' };
         if (name.includes('disney')) return { icon: '🏰', desc: 'Magical characters' };
         if (name.includes('people')) return { icon: '👥', desc: 'Simple characters' };
         if (name.includes('pokémon') || name.includes('pokemon')) return { icon: '⚡', desc: 'Monsters & creatures' };
