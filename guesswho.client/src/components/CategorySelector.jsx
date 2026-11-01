@@ -9,6 +9,7 @@ function CategorySelector({ categories, selectedCategory, onCategoryChange }) {
         if (name.includes('pokémon') || name.includes('pokemon')) return { icon: '⚡', desc: 'Monsters & creatures' };
         if (name.includes('food')) return { icon: '🍔', desc: 'Delicious dishes' };
         if (name.includes('hobbies')) return { icon: '🎨', desc: 'Fun activities' };
+        if (name.includes('countries')) return { icon: '🌍', desc: 'Countries around the world' };
         return { icon: '✨', desc: 'Custom card deck' };
     };
 
