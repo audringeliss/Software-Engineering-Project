@@ -1,0 +1,152 @@
+[
+  {
+    "id": "1",
+    "name": "Lithuania",
+    "category": "countries",
+    "imageUrl": "/images/countries/lithuania.jpg"
+  }, 
+  {
+    "id": "2",
+    "name": "Germany",
+    "category": "countries",
+    "imageUrl": "/images/countries/germany.jpg"
+  }, 
+  {
+    "id": "3",
+    "name": "France",
+    "category": "countries",
+    "imageUrl": "/images/countries/france.jpg"
+  }, 
+  {
+    "id": "4",
+    "name": "Italy",
+    "category": "countries",
+    "imageUrl": "/images/countries/italy.jpg"
+  }, 
+  {
+    "id": "5",
+    "name": "China",
+    "category": "countries",
+    "imageUrl": "/images/countries/china.jpg"
+  }, 
+  {
+    "id": "6",
+    "name": "United Kingdom",
+    "category": "countries",
+    "imageUrl": "/images/countries/unitedkingdom.jpg"
+  }, 
+  {
+    "id": "7",
+    "name": "United States",
+    "category": "countries",
+    "imageUrl": "/images/countries/unitedstates.jpg"
+  }, 
+  {
+    "id": "8",
+    "name": "Brazil",
+    "category": "countries",
+    "imageUrl": "/images/countries/brazil.jpg"
+  }, 
+  {
+    "id": "9",
+    "name": "Croatia",
+    "category": "countries",
+    "imageUrl": "/images/countries/croatia.jpg"
+  }, 
+  {
+    "id": "10",
+    "name": "Japan",
+    "category": "countries",
+    "imageUrl": "/images/countries/japan.jpg"
+  }, 
+  {
+    "id": "11",
+    "name": "Ireland",
+    "category": "countries",
+    "imageUrl": "/images/countries/ireland.jpg"
+  }, 
+  {
+    "id": "12",
+    "name": "Latvia",
+    "category": "countries",
+    "imageUrl": "/images/countries/latvia.jpg"
+  }, 
+  {
+    "id": "13",
+    "name": "Egypt",
+    "category": "countries",
+    "imageUrl": "/images/countries/egypt.jpg"
+  }, 
+  {
+    "id": "14",
+    "name": "Sweden",
+    "category": "countries",
+    "imageUrl": "/images/countries/sweden.jpg"
+  }, 
+  {
+    "id": "15",
+    "name": "Norway",
+    "category": "countries",
+    "imageUrl": "/images/countries/norway.jpg"
+  }, 
+  {
+    "id": "16",
+    "name": "Australia",
+    "category": "countries",
+    "imageUrl": "/images/countries/australia.jpg"
+  }, 
+  {
+    "id": "17",
+    "name": "Belgium",
+    "category": "countries",
+    "imageUrl": "/images/countries/belgium.jpg"
+  }, 
+  {
+    "id": "18",
+    "name": "Estonia",
+    "category": "countries",
+    "imageUrl": "/images/countries/estonia.jpg"
+  }, 
+  {
+    "id": "19",
+    "name": "Netherlands",
+    "category": "countries",
+    "imageUrl": "/images/countries/netherlands.jpg"
+  }, 
+  {
+    "id": "20",
+    "name": "Greece",
+    "category": "countries",
+    "imageUrl": "/images/countries/greece.jpg"
+  }, 
+  {
+    "id": "21",
+    "name": "India",
+    "category": "countries",
+    "imageUrl": "/images/countries/india.jpg"
+  }, 
+  {
+    "id": "22",
+    "name": "Portugal",
+    "category": "countries",
+    "imageUrl": "/images/countries/portugal.jpg"
+  }, 
+  {
+    "id": "23",
+    "name": "Poland",
+    "category": "countries",
+    "imageUrl": "/images/countries/poland.jpg"
+  }, 
+  {
+    "id": "24",
+    "name": "Switzerland",
+    "category": "countries",
+    "imageUrl": "/images/countries/switzerland.jpg"
+  }, 
+  {
+    "id": "25",
+    "name": "Turkey",
+    "category": "countries",
+    "imageUrl": "/images/countries/turkey.jpg"
+  }
+]

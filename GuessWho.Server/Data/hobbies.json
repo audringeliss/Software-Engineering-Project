@@ -1,0 +1,153 @@
+[
+  { 
+    "id": "101", 
+    "name": "Yoga", 
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/yoga.jpg"
+  },
+  {
+    "id": "102",
+    "name": "Hiking",
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/hiking.jpg"
+  },
+  { 
+    "id": "103", 
+    "name": "Reading", 
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/reading.jpg"
+  },
+  {
+    "id": "104",
+    "name": "Rock Climbing",
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/rockclimbing.jpg"
+  },
+  { 
+    "id": "105", 
+    "name": "Painting", 
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/painting.jpg"
+  },
+  {
+    "id": "106",
+    "name": "Photography",
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/photography.jpg"
+  },
+  { 
+    "id": "107", 
+    "name": "Cooking", 
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/cooking.jpg"
+  },
+  {
+    "id": "108",
+    "name": "Gardening",
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/gardening.jpg"
+  },
+  { 
+    "id": "109", 
+    "name": "Dancing", 
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/dancing.jpg"
+  },
+  {
+    "id": "110",
+    "name": "Cycling",
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/cycling.jpg"
+  },
+  { 
+    "id": "111", 
+    "name": "Swimming", 
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/swimming.jpg"
+  },
+  {
+    "id": "112",
+    "name": "Writing",
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/writing.jpg"
+  },
+  { 
+    "id": "113", 
+    "name": "Camping", 
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/camping.jpg"
+  },
+  {
+    "id": "114",
+    "name": "Video Gaming",
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/videogames.jpg"
+  },
+  { 
+    "id": "115", 
+    "name": "Fishing", 
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/fishing.jpg"
+  },
+  {
+    "id": "116",
+    "name": "Watching Movies",
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/movies.jpg"
+  },
+  { 
+    "id": "117", 
+    "name": "Roller Skating", 
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/rollerskating.jpg"
+  },
+  {
+    "id": "118",
+    "name": "Surfing",
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/surfing.jpg"
+  },
+  { 
+    "id": "119", 
+    "name": "Football", 
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/football.jpg"
+  },
+  {
+    "id": "120",
+    "name": "Archery",
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/archery.jpg"
+  },
+  { 
+    "id": "121", 
+    "name": "Basketball", 
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/basketball.jpg"
+  },
+  {
+    "id": "122",
+    "name": "Running",
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/running.jpg"
+  },
+  { 
+    "id": "123", 
+    "name": "Singing", 
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/singing.jpg"
+  },
+  {
+    "id": "124",
+    "name": "Baking",
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/baking.jpg"
+  },
+  { 
+    "id": "125", 
+    "name": "Knitting", 
+    "category": "hobbies",
+    "imageUrl": "/images/hobbies/knitting.jpg"
+  }
+
+]

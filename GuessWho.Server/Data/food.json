@@ -1,0 +1,212 @@
+[
+{
+    "id": "1",
+    "name": "Burger",
+    "category": "food",
+    "imageUrl": "/images/food/burger.jpg"
+  },
+  {
+    "id": "2",
+    "name": "Coffee",
+    "category": "food",
+    "imageUrl": "/images/food/coffee.jpg"
+  },
+  {
+    "id": "3",
+    "name": "Donut",
+    "category": "food",
+    "imageUrl": "/images/food/donut.jpg"
+  },
+    {
+        "id": "4",
+        "name": "French fries",
+        "category": "food",
+        "imageUrl": "/images/food/frenchfries.jpg"
+    },
+    {
+        "id": "5",
+        "name": "Ice Cream",
+        "category": "food",
+        "imageUrl": "/images/food/icecream.jpg"
+    },
+    {
+        "id": "6",
+        "name": "Pizza",
+        "category": "food",
+        "imageUrl": "/images/food/pizza.jpg"
+    },
+    {
+        "id": "7",
+        "name": "Sushi",
+        "category": "food",
+        "imageUrl": "/images/food/sushi.jpg"
+    },
+    {
+        "id": "8",
+        "name": "Taco",
+        "category": "food",
+        "imageUrl": "/images/food/taco.jpg"
+    },
+    {
+        "id": "9",
+        "name": "Jelly",
+        "category": "food",
+        "imageUrl": "/images/food/jelly.jpg"
+    },
+    {
+        "id": "10",
+        "name": "Pancakes",
+        "category": "food",
+        "imageUrl": "/images/food/pancakes.jpg"
+    },
+    {
+        "id": "11",
+        "name": "Hot Dog",
+        "category": "food",
+        "imageUrl": "/images/food/hotdog.jpg"
+    },
+    {
+        "id": "12",
+        "name": "Cake",
+        "category": "food",
+        "imageUrl": "/images/food/cake.jpg"
+    },
+    {
+        "id": "13",
+        "name": "Fried Egg",
+        "category": "food",
+        "imageUrl": "/images/food/friedegg.jpg"
+    },
+    {
+        "id": "14",
+        "name": "Lasagna",
+        "category": "food",
+        "imageUrl": "/images/food/lasagna.jpg"
+    },
+    {
+        "id": "15",
+        "name": "Steak",
+        "category": "food",
+        "imageUrl": "/images/food/steak.jpg"
+    },
+    {
+        "id": "16",
+        "name": "Pasta",
+        "category": "food",
+        "imageUrl": "/images/food/pasta.jpg"
+    },
+    {
+        "id": "17",
+        "name": "Omelette",
+        "category": "food",
+        "imageUrl": "/images/food/omelette.jpg"
+    },
+    {
+        "id": "18",
+        "name": "Salad",
+        "category": "food",
+        "imageUrl": "/images/food/salad.jpg"
+    },
+    {
+        "id": "19",
+        "name": "Sandwich",
+        "category": "food",
+        "imageUrl": "/images/food/sandwich.jpg"
+    },
+    {
+        "id": "20",
+        "name": "Tea",
+        "category": "food",
+        "imageUrl": "/images/food/tea.jpg"
+    },
+    {
+        "id": "21",
+        "name": "Waffles",
+        "category": "food",
+        "imageUrl": "/images/food/waffles.jpg"
+    },
+    {
+        "id": "22",
+        "name": "Pretzel",
+        "category": "food",
+        "imageUrl": "/images/food/pretzel.jpg"
+    },
+    {
+        "id": "23",
+        "name": "Soda",
+        "category": "food",
+        "imageUrl": "/images/food/soda.jpg"
+    },
+    {
+        "id": "24",
+        "name": "Smores",
+        "category": "food",
+        "imageUrl": "/images/food/smores.jpg"
+    },
+    {
+        "id": "25",
+        "name": "Mac and Cheese",
+        "category": "food",
+        "imageUrl": "/images/food/macandcheese.jpg"
+    },
+    {
+        "id": "26",
+        "name": "Pink Cold Soup",
+        "category": "food",
+        "imageUrl": "/images/food/pinkcoldsoup.jpg"
+    },
+    {
+        "id": "27",
+        "name": "Fruit Tart",
+        "category": "food",
+        "imageUrl": "/images/food/fruittart.jpg"
+    },
+    {
+        "id": "28",
+        "name": "Churros",
+        "category": "food",
+        "imageUrl": "/images/food/churros.jpg"
+    },
+    {
+        "id": "29",
+        "name": "Cookies",
+        "category": "food",
+        "imageUrl": "/images/food/cookies.jpg"
+    },
+    {
+        "id": "30",
+        "name": "Crepes",
+        "category": "food",
+        "imageUrl": "/images/food/crepes.jpg"
+    },
+    {
+        "id": "31",
+        "name": "Fried Chicken",
+        "category": "food",
+        "imageUrl": "/images/food/friedchicken.jpg"
+    },
+    {
+        "id": "32",
+        "name": "Cupcake",
+        "category": "food",
+        "imageUrl": "/images/food/cupcake.jpg"
+    },
+    {
+        "id": "33",
+        "name": "Fried Rice",
+        "category": "food",
+        "imageUrl": "/images/food/friedrice.jpg"
+    },
+    {
+        "id": "34",
+        "name": "Milkshake",
+        "category": "food",
+        "imageUrl": "/images/food/milkshake.jpg"
+    },
+    {
+        "id": "35",
+        "name": "Juice",
+        "category": "food",
+        "imageUrl": "/images/food/juice.jpg"
+    }
+]
