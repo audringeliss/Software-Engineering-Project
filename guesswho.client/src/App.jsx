@@ -1,30 +1,48 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import Auth from './components/Auth';
 import CardGrid from './components/CardGrid';
 import CategorySelector from './components/CategorySelector';
 import GameStatus from './components/GameStatus';
-import QuestionPanel from './components/QuestionPanel';
 import QnaHistory from './components/QnaHistory';
+import QuestionPanel from './components/QuestionPanel';
+import RoomLobby from './components/RoomLobby';
+
+const ROOM_SESSION_KEY = 'guesswhoRoomSession';
+
+function normalizeCards(cards) {
+    return cards.map(card => ({
+        ...card,
+        id: String(card.id ?? card.Id),
+        isFlipped: card.isFlipped ?? card.IsFlipped ?? false,
+    }));
+}
+
+function getSavedRoomSession() {
+    try {
+        return JSON.parse(localStorage.getItem(ROOM_SESSION_KEY)) || null;
+    } catch (error) {
+        console.error('Could not read the saved room session:', error);
+        localStorage.removeItem(ROOM_SESSION_KEY);
+        return null;
+    }
+}
 
 function App() {
-    // Authentication state
     const [currentUser, setCurrentUser] = useState(null);
-
+    const [roomSession, setRoomSession] = useState(getSavedRoomSession);
+    const [roomState, setRoomState] = useState(null);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
-
     const [cards, setCards] = useState([]);
-    const [eliminatedCards, setEliminatedCards] = useState([]);
-
+    const [selectedTargetId, setSelectedTargetId] = useState(null);
     const [questionInput, setQuestionInput] = useState('');
-    const [pendingQuestion, setPendingQuestion] = useState(null);
-    const [qnaHistory, setQnaHistory] = useState([]);
-
+    const [gameError, setGameError] = useState('');
     const [isLoadingCards, setIsLoadingCards] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const roomStateVersion = useRef(0);
 
     useEffect(() => {
-        // Only fetch categories if user is logged in
         if (!currentUser) return;
 
         fetch('/api/cards/categories')
@@ -32,221 +50,398 @@ function App() {
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 return response.json();
             })
-            .then(data => {
-                const catsArray = Array.isArray(data) ? data : data.categories || [];
-                setCategories(catsArray);
-            })
+            .then(data => setCategories(Array.isArray(data) ? data : data.categories || []))
             .catch(error => {
                 console.error('Categories fetch error:', error);
-                setCategories(['animals', 'people', 'pokémon', 'disney', 'comics', 'cn', 'food', 'hobbies', 'countries']);
+                setGameError('Could not load the available decks.');
             });
     }, [currentUser]);
 
-    // Load category cards and initialize the backend GameController session
-    useEffect(() => {
-        if (!selectedCategory || !currentUser) {
-            setCards([]);
-            return;
-        }
+    const activeRoomSession = roomSession?.playerName === currentUser ? roomSession : null;
 
-        setIsLoadingCards(true);
+    useEffect(() => {
+        if (!activeRoomSession) return;
+
+        let isActive = true;
+        let timeoutId;
+        const refreshRoom = async () => {
+            const requestedVersion = roomStateVersion.current;
+            try {
+                const response = await fetch(
+                    `/api/rooms/${encodeURIComponent(activeRoomSession.roomCode)}/state?playerId=${encodeURIComponent(activeRoomSession.playerId)}`
+                );
+                if (!response.ok) {
+                    throw new Error(`Room state request failed: HTTP ${response.status}`);
+                }
+
+                const state = await response.json();
+                if (!isActive || requestedVersion !== roomStateVersion.current) return;
+
+                setRoomState(state);
+                setGameError('');
+                if (state.status === 'Playing') {
+                    setSelectedCategory(state.category);
+                    setCards(normalizeCards(state.board));
+                }
+            } catch (error) {
+                if (!isActive) return;
+                console.error('Room state refresh failed:', error);
+                setGameError('Could not connect to this room. It may have expired or the server may be unavailable.');
+            } finally {
+                if (isActive) {
+                    timeoutId = window.setTimeout(refreshRoom, 1200);
+                }
+            }
+        };
+
+        refreshRoom();
+        return () => {
+            isActive = false;
+            window.clearTimeout(timeoutId);
+        };
+    }, [activeRoomSession]);
+
+    useEffect(() => {
+        if (!selectedCategory || activeRoomSession?.role !== 'creator' || roomState?.status === 'Playing') return;
+
+        let isActive = true;
         fetch(`/api/cards?category=${encodeURIComponent(selectedCategory)}`)
             .then(response => {
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 return response.json();
             })
-            .then(async data => {
-                const cardsArray = Array.isArray(data) ? data : data.cards || data.Cards || [];
-                setCards(cardsArray);
-                setEliminatedCards([]);
-                setQnaHistory([]);
-                setPendingQuestion(null);
-
-                // Pick a random target card for the game session
-                if (cardsArray.length > 0) {
-                    const randomTarget = cardsArray[Math.floor(Math.random() * cardsArray.length)];
-                    const targetId = randomTarget.id || randomTarget.Id;
-
-                    // Initialize backend GameController session
-                    await fetch(`/api/game/start?category=${encodeURIComponent(selectedCategory)}&targetId=${encodeURIComponent(targetId)}`, {
-                        method: 'POST'
-                    });
-                }
+            .then(data => {
+                if (!isActive) return;
+                const deck = Array.isArray(data) ? data : data.cards || data.Cards || [];
+                setCards(normalizeCards(deck));
+                setSelectedTargetId(null);
             })
-            .catch(error => console.error('Cards fetch error:', error))
-            .finally(() => setIsLoadingCards(false));
-    }, [selectedCategory, currentUser]);
+            .catch(error => {
+                if (!isActive) return;
+                console.error('Cards fetch error:', error);
+                setGameError('Could not load this deck. Please choose another category and try again.');
+            })
+            .finally(() => {
+                if (isActive) setIsLoadingCards(false);
+            });
 
-    // Manual client-side card flipping (local toggle)
-    const toggleFlip = (id) => {
-        setEliminatedCards(prev =>
-            prev.includes(id)
-                ? prev.filter(cardId => cardId !== id)
-                : [...prev, id]
-        );
+        return () => {
+            isActive = false;
+        };
+    }, [selectedCategory, activeRoomSession, roomState?.status]);
+
+    useEffect(() => {
+        if (currentUser && roomSession && roomSession.playerName !== currentUser) {
+            localStorage.removeItem(ROOM_SESSION_KEY);
+        }
+    }, [currentUser, roomSession]);
+
+    const enterRoom = (membership) => {
+        const session = { ...membership, playerName: currentUser };
+        roomStateVersion.current += 1;
+        localStorage.setItem(ROOM_SESSION_KEY, JSON.stringify(session));
+        setRoomSession(session);
+        setRoomState(null);
+        setSelectedCategory('');
+        setCards([]);
+        setIsLoadingCards(false);
+        setSelectedTargetId(null);
+        setGameError('');
     };
 
-    // Reset current game state
-    const handleResetBoard = () => {
-        setEliminatedCards([]);
-        setQnaHistory([]);
-        setPendingQuestion(null);
+    const leaveRoom = () => {
+        roomStateVersion.current += 1;
+        localStorage.removeItem(ROOM_SESSION_KEY);
+        setRoomSession(null);
+        setRoomState(null);
+        setSelectedCategory('');
+        setCards([]);
+        setSelectedTargetId(null);
         setQuestionInput('');
+        setGameError('');
     };
 
-    // Send question to backend GameController (/api/game/ask)
-    const handleSendQuestion = async () => {
-        if (!questionInput.trim()) return;
+    const chooseCategory = (category) => {
+        setSelectedCategory(category);
+        setSelectedTargetId(null);
+        setCards([]);
+        setIsLoadingCards(true);
+        setGameError('');
+    };
 
-        const currentInput = questionInput;
+    const applyRoomState = (state) => {
+        roomStateVersion.current += 1;
+        setRoomState(state);
+        if (state.status === 'Playing') {
+            setSelectedCategory(state.category);
+            setCards(normalizeCards(state.board));
+        }
+    };
+
+    const startGame = async () => {
+        if (!selectedTargetId || !activeRoomSession) return;
+
+        setIsSubmitting(true);
+        setGameError('');
         try {
-            await fetch('/api/game/ask', {
+            const response = await fetch(`/api/rooms/${encodeURIComponent(activeRoomSession.roomCode)}/start`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    questionText: currentInput,
-                    targetAttribute: currentInput,
-                    askedAt: new Date().toISOString()
-                })
+                    playerId: activeRoomSession.playerId,
+                    category: selectedCategory,
+                    targetId: selectedTargetId,
+                }),
             });
+            if (!response.ok) {
+                const message = await response.text();
+                throw new Error(message || `HTTP error! status: ${response.status}`);
+            }
+            applyRoomState(await response.json());
+        } catch (error) {
+            console.error('Error starting room game:', error);
+            setGameError(error.message || 'Could not start the game. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
-            setPendingQuestion(currentInput);
+    const handleSendQuestion = async () => {
+        const question = questionInput.trim();
+        if (!question || !activeRoomSession) return;
+
+        setIsSubmitting(true);
+        try {
+            const response = await fetch(`/api/rooms/${encodeURIComponent(activeRoomSession.roomCode)}/questions`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ playerId: activeRoomSession.playerId, questionText: question }),
+            });
+            if (!response.ok) {
+                throw new Error(await response.text() || `HTTP error! status: ${response.status}`);
+            }
+            applyRoomState(await response.json());
             setQuestionInput('');
         } catch (error) {
-            console.error('Error asking question:', error);
+            console.error('Error sending room question:', error);
+            setGameError(error.message || 'Could not send your question.');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
-    // Submit answer to backend GameController (/api/game/answer)
     const handleAnswerQuestion = async (isTrue) => {
+        if (!activeRoomSession) return;
+
+        setIsSubmitting(true);
         try {
-            const response = await fetch(`/api/game/answer?isTrue=${isTrue}`, {
-                method: 'POST'
+            const response = await fetch(`/api/rooms/${encodeURIComponent(activeRoomSession.roomCode)}/answers`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ playerId: activeRoomSession.playerId, isTrue }),
             });
-
-            if (response.ok) {
-                const updatedCards = await response.json();
-                
-                const newlyEliminated = updatedCards
-                    .filter(c => c.isFlipped || c.IsFlipped)
-                    .map(c => c.id || c.Id);
-
-                setEliminatedCards(newlyEliminated);
+            if (!response.ok) {
+                throw new Error(await response.text() || `HTTP error! status: ${response.status}`);
             }
+            applyRoomState(await response.json());
         } catch (error) {
-            console.error('Error processing answer on backend:', error);
+            console.error('Error answering room question:', error);
+            setGameError(error.message || 'Could not submit the answer.');
+        } finally {
+            setIsSubmitting(false);
         }
-
-        setQnaHistory(prev => [...prev, {
-            question: pendingQuestion,
-            answer: isTrue ? 'True' : 'False'
-        }]);
-        setPendingQuestion(null);
     };
 
-    const remainingCount = cards.length - eliminatedCards.length;
+    const toggleFlip = async (cardId) => {
+        if (!activeRoomSession) return;
 
-    // IF USER IS NOT LOGGED IN, SHOW AUTH SCREEN
+        try {
+            const response = await fetch(`/api/rooms/${encodeURIComponent(activeRoomSession.roomCode)}/cards/flip`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ playerId: activeRoomSession.playerId, cardId }),
+            });
+            if (!response.ok) {
+                throw new Error(await response.text() || `HTTP error! status: ${response.status}`);
+            }
+            applyRoomState(await response.json());
+        } catch (error) {
+            console.error('Error updating room board:', error);
+            setGameError(error.message || 'Could not update the board.');
+        }
+    };
+
+    const resetBoard = async () => {
+        if (!activeRoomSession) return;
+
+        setIsSubmitting(true);
+        try {
+            const response = await fetch(
+                `/api/rooms/${encodeURIComponent(activeRoomSession.roomCode)}/reset?playerId=${encodeURIComponent(activeRoomSession.playerId)}`,
+                { method: 'POST' }
+            );
+            if (!response.ok) {
+                throw new Error(await response.text() || `HTTP error! status: ${response.status}`);
+            }
+            applyRoomState(await response.json());
+        } catch (error) {
+            console.error('Error resetting room game:', error);
+            setGameError(error.message || 'Could not reset the game.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const copyRoomCode = async () => {
+        try {
+            await navigator.clipboard.writeText(activeRoomSession.roomCode);
+        } catch (error) {
+            console.error('Could not copy room code:', error);
+            setGameError('Could not copy the room code. Select and copy it manually.');
+        }
+    };
+
     if (!currentUser) {
         return (
             <div className="game-app">
                 <header className="game-header">
                     <h1 className="game-title">GUESS WHO?</h1>
                 </header>
-                <Auth onLoginSuccess={(username) => setCurrentUser(username)} />
+                <Auth onLoginSuccess={setCurrentUser} />
             </div>
         );
     }
 
+    const isCreator = activeRoomSession?.role === 'creator';
+    const isPlaying = roomState?.status === 'Playing';
+    const remainingCount = cards.filter(card => !card.isFlipped).length;
+
     return (
-        <div className="game-app" style={{ position: 'relative' }}>
-            {/* Dedicated Top-Right User Badge & Log Out */}
-            <div 
-                className="user-top-bar"
-                style={{
-                    position: 'absolute',
-                    top: '15px',
-                    right: '25px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    zIndex: 100
-                }}
-            >
-                <span style={{ color: '#e0e6ed', fontSize: '0.95rem', fontWeight: '500' }}>
-                    👤 {currentUser}
-                </span>
-                <button 
-                    onClick={() => setCurrentUser(null)} 
-                    className="change-deck-btn"
-                    style={{ padding: '6px 14px', fontSize: '0.85rem' }}
-                >
+        <div className="game-app">
+            <div className="user-top-bar">
+                <span>👤 {currentUser}</span>
+                <button type="button" className="change-deck-btn" onClick={() => setCurrentUser(null)}>
                     Log Out
                 </button>
             </div>
 
-            <header className="game-header" style={{ textAlign: 'center', paddingTop: '10px' }}>
-                {!selectedCategory ? (
-                    <h1 className="game-title" style={{ margin: '10px 0 20px 0' }}>GUESS WHO?</h1>
-                ) : (
-                    <div className="game-nav-bar">
-                        <div className="nav-buttons-group">
-                            <button 
-                                type="button" 
-                                className="change-deck-btn"
-                                onClick={() => setSelectedCategory('')}
-                            >
-                                <span className="btn-icon">←</span> Choose Different Deck
-                            </button>
-
-                            <button 
-                                type="button" 
-                                className="reset-board-btn"
-                                onClick={handleResetBoard}
-                                title="Reset game board"
-                            >
-                                🔄 Reset Board
-                            </button>
-                        </div>
-
-                        <div className="active-deck-badge">
-                            <span className="deck-label">PLAYING:</span>
-                            <span className="deck-name">{selectedCategory.toUpperCase()}</span>
-                            {cards.length > 0 && (
-                                <span className="deck-count-pill">{remainingCount} / {cards.length} LEFT</span>
-                            )}
-                        </div>
-                    </div>
-                )}
+            <header className="game-header">
+                <h1 className="game-title">GUESS WHO?</h1>
             </header>
 
-            {!selectedCategory ? (
-                <CategorySelector
-                    categories={categories}
-                    selectedCategory={selectedCategory}
-                    onCategoryChange={setSelectedCategory}
-                />
-            ) : isLoadingCards ? (
-                <GameStatus
-                    selectedCategory={selectedCategory}
-                    isLoadingCards={isLoadingCards}
-                />
+            {gameError && <p className="game-error" role="alert">{gameError}</p>}
+
+            {!activeRoomSession ? (
+                <RoomLobby playerName={currentUser} onRoomReady={enterRoom} />
             ) : (
                 <>
-                    <QuestionPanel
-                        questionInput={questionInput}
-                        pendingQuestion={pendingQuestion}
-                        onQuestionChange={setQuestionInput}
-                        onSendQuestion={handleSendQuestion}
-                        onAnswerQuestion={handleAnswerQuestion}
-                    />
-                    <QnaHistory qnaHistory={qnaHistory} />
-                    <CardGrid
-                        cards={cards}
-                        eliminatedCards={eliminatedCards}
-                        onToggleCard={toggleFlip}
-                        selectedCategory={selectedCategory}
-                    />
+                    <section className="panel room-banner">
+                        <div>
+                            <span className="deck-label">ROOM CODE</span>
+                            <strong className="room-code">{activeRoomSession.roomCode}</strong>
+                            <span className="room-banner__players">
+                                {roomState?.creatorName || currentUser}
+                                {roomState?.joinerName ? ` and ${roomState.joinerName}` : ' — waiting for a second player'}
+                            </span>
+                        </div>
+                        <div className="room-banner__actions">
+                            <button type="button" className="change-deck-btn" onClick={copyRoomCode}>Copy code</button>
+                            {isPlaying && <span className="deck-count-pill">{remainingCount} / {cards.length} LEFT</span>}
+                            {isPlaying && isCreator && (
+                                <button type="button" className="reset-board-btn" onClick={resetBoard} disabled={isSubmitting}>
+                                    Reset Board
+                                </button>
+                            )}
+                            <button type="button" className="reset-board-btn" onClick={leaveRoom}>Leave room</button>
+                        </div>
+                    </section>
+
+                    {!roomState ? (
+                        gameError
+                            ? <section className="panel room-waiting"><h2>Room unavailable</h2><p>{gameError}</p></section>
+                            : <section className="panel room-waiting" aria-live="polite">
+                                <h2>Connecting to room</h2>
+                                <p>Loading the latest room state...</p>
+                            </section>
+                    ) : roomState.status === 'WaitingForPlayer' ? (
+                        <section className="panel room-waiting">
+                            <h2>Waiting for a second player</h2>
+                            <p>Share the room code above. Your friend can join from another browser or device.</p>
+                        </section>
+                    ) : roomState.status === 'WaitingForTarget' && isCreator ? (
+                        <>
+                            {!selectedCategory ? (
+                                <CategorySelector
+                                    categories={categories}
+                                    selectedCategory={selectedCategory}
+                                    onCategoryChange={chooseCategory}
+                                />
+                            ) : isLoadingCards ? (
+                                <GameStatus selectedCategory={selectedCategory} isLoadingCards />
+                            ) : (
+                                <>
+                                    <section className="panel target-selection">
+                                        <div className="panel-heading">
+                                            <div>
+                                                <h2>Choose your secret character</h2>
+                                                <p>Your friend will try to guess this character. Keep your choice secret.</p>
+                                            </div>
+                                        </div>
+                                        <div className="target-selection__actions">
+                                            <p aria-live="polite">
+                                                {selectedTargetId ? 'Character selected.' : 'Choose one card from the deck below.'}
+                                            </p>
+                                            <button
+                                                type="button"
+                                                className="primary-button"
+                                                disabled={!selectedTargetId || isSubmitting}
+                                                onClick={startGame}
+                                            >
+                                                {isSubmitting ? 'Starting...' : 'Confirm & Start'}
+                                            </button>
+                                        </div>
+                                    </section>
+                                    <CardGrid
+                                        cards={cards}
+                                        selectedCategory={selectedCategory}
+                                        selectionMode
+                                        selectedCardId={selectedTargetId}
+                                        onSelectCard={setSelectedTargetId}
+                                    />
+                                </>
+                            )}
+                        </>
+                    ) : roomState.status === 'WaitingForTarget' ? (
+                        <section className="panel room-waiting">
+                            <h2>Waiting for {roomState.creatorName}</h2>
+                            <p>The room creator is choosing a deck and secret character.</p>
+                        </section>
+                    ) : (
+                        <>
+                            <div className="room-role-notice">
+                                {isCreator
+                                    ? 'You chose the secret character. Answer your friend’s questions.'
+                                    : 'Ask questions to figure out the secret character.'}
+                            </div>
+                            <QuestionPanel
+                                questionInput={questionInput}
+                                pendingQuestion={roomState.pendingQuestion}
+                                onQuestionChange={setQuestionInput}
+                                onSendQuestion={handleSendQuestion}
+                                onAnswerQuestion={handleAnswerQuestion}
+                                canAsk={!isCreator}
+                                canAnswer={isCreator}
+                            />
+                            <QnaHistory qnaHistory={roomState.questionHistory || []} />
+                            <CardGrid
+                                cards={cards}
+                                eliminatedCards={cards.filter(card => card.isFlipped).map(card => card.id)}
+                                onToggleCard={toggleFlip}
+                                canToggleCards={!isCreator}
+                                selectedCategory={selectedCategory}
+                            />
+                        </>
+                    )}
                 </>
             )}
         </div>

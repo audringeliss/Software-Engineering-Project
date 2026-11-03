@@ -10,33 +10,39 @@ public class GameController : ControllerBase
 {
     private readonly GameState _gameState;
     private readonly CardDataLoader _dataLoader;
-    private readonly IWebHostEnvironment _env;
 
-    public GameController(GameState gameState, CardDataLoader dataLoader, IWebHostEnvironment env)
+    public GameController(GameState gameState, CardDataLoader dataLoader)
     {
         _gameState = gameState;
         _dataLoader = dataLoader;
-        _env = env;
     }
 
     [HttpPost("start")]
     public async Task<IActionResult> StartGame([FromQuery] string category, [FromQuery] string targetId)
     {
-        string filePath = Path.Combine(_env.ContentRootPath, "Data", "cards.json");
-        var allCards = await _dataLoader.LoadCardsFromFileAsync(filePath);
+        if (string.IsNullOrWhiteSpace(category) || string.IsNullOrWhiteSpace(targetId))
+        {
+            return BadRequest("Category and target card are required.");
+        }
 
-        _gameState.Board = allCards
-            .Where(c => c.Category.Equals(category, StringComparison.OrdinalIgnoreCase))
-            .ToList();
+        _gameState.Board = await _dataLoader.GetCategoryCardsAsync(category);
+        if (_gameState.Board.Count == 0)
+        {
+            return NotFound($"Category '{category}' has no cards.");
+        }
 
         _gameState.TargetCard = _gameState.Board.FirstOrDefault(c => c.Id == targetId);
+        if (_gameState.TargetCard == null)
+        {
+            return BadRequest("The selected target does not belong to this category.");
+        }
+
         _gameState.PendingQuestion = null;
         _gameState.PendingAttribute = null;
 
         return Ok(new
         {
             Message = "Game started",
-            Target = _gameState.TargetCard?.Name,
             BoardSize = _gameState.Board.Count
         });
     }

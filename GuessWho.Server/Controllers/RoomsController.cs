@@ -1,0 +1,283 @@
+using GuessWho.Server.Models;
+using GuessWho.Server.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GuessWho.Server.Controllers;
+
+[ApiController]
+[Route("api/rooms")]
+public sealed class RoomsController : ControllerBase
+{
+    private readonly GameRoomStore _rooms;
+    private readonly CardDataLoader _dataLoader;
+
+    public RoomsController(GameRoomStore rooms, CardDataLoader dataLoader)
+    {
+        _rooms = rooms;
+        _dataLoader = dataLoader;
+    }
+
+    [HttpPost]
+    [ProducesResponseType<RoomMembershipResponse>(StatusCodes.Status201Created)]
+    public IActionResult CreateRoom([FromBody] CreateRoomRequest request)
+    {
+        var room = _rooms.Create(request.PlayerName);
+        var response = new RoomMembershipResponse(room.Code, room.CreatorId, "creator");
+        return CreatedAtAction(
+            nameof(GetState),
+            new { roomCode = room.Code, playerId = room.CreatorId },
+            response);
+    }
+
+    [HttpPost("{roomCode}/join")]
+    [ProducesResponseType<RoomMembershipResponse>(StatusCodes.Status200OK)]
+    public IActionResult JoinRoom(string roomCode, [FromBody] JoinRoomRequest request)
+    {
+        var room = _rooms.Find(roomCode);
+        if (room is null)
+        {
+            return NotFound("Room not found.");
+        }
+
+        if (room.CreatorName.Equals(request.PlayerName.Trim(), StringComparison.OrdinalIgnoreCase))
+        {
+            return Conflict("The room creator cannot join as the second player.");
+        }
+
+        var playerId = _rooms.Join(room, request.PlayerName);
+        if (playerId is null)
+        {
+            return Conflict("This room already has two players.");
+        }
+
+        return Ok(new RoomMembershipResponse(room.Code, playerId, "joiner"));
+    }
+
+    [HttpGet("{roomCode}/state")]
+    [ProducesResponseType<RoomStateResponse>(StatusCodes.Status200OK)]
+    public IActionResult GetState(string roomCode, [FromQuery] string playerId)
+    {
+        var room = _rooms.Find(roomCode);
+        if (room is null)
+        {
+            return NotFound("Room not found.");
+        }
+
+        lock (room)
+        {
+            var role = GameRoomStore.GetRole(room, playerId);
+            if (role is null)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden);
+            }
+
+            return Ok(ToResponse(room, role));
+        }
+    }
+
+    [HttpPost("{roomCode}/start")]
+    [ProducesResponseType<RoomStateResponse>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> StartGame(
+        string roomCode,
+        [FromBody] StartRoomRequest request,
+        CancellationToken cancellationToken)
+    {
+        var room = _rooms.Find(roomCode);
+        if (room is null)
+        {
+            return NotFound("Room not found.");
+        }
+
+        lock (room)
+        {
+            if (GameRoomStore.GetRole(room, request.PlayerId) != "creator")
+            {
+                return StatusCode(StatusCodes.Status403Forbidden);
+            }
+
+            if (room.JoinerId is null)
+            {
+                return Conflict("Wait for the second player to join before starting.");
+            }
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Category) ||
+            Path.GetFileName(request.Category) != request.Category ||
+            string.IsNullOrWhiteSpace(request.TargetId))
+        {
+            return BadRequest("A valid category and target card are required.");
+        }
+
+        var board = await _dataLoader.GetCategoryCardsAsync(request.Category, cancellationToken);
+        if (board.Count == 0)
+        {
+            return NotFound($"Category '{request.Category}' has no cards.");
+        }
+
+        var target = board.FirstOrDefault(card => card.Id == request.TargetId);
+        if (target is null)
+        {
+            return BadRequest("The selected target does not belong to this category.");
+        }
+
+        lock (room)
+        {
+            room.Category = request.Category;
+            room.Board = board;
+            room.TargetCardId = target.Id;
+            room.PendingQuestion = null;
+            room.QuestionHistory.Clear();
+            room.Status = "Playing";
+            return Ok(ToResponse(room, "creator"));
+        }
+    }
+
+    [HttpPost("{roomCode}/questions")]
+    public IActionResult AskQuestion(string roomCode, [FromBody] AskRoomQuestionRequest request)
+    {
+        var room = _rooms.Find(roomCode);
+        if (room is null)
+        {
+            return NotFound("Room not found.");
+        }
+
+        lock (room)
+        {
+            if (GameRoomStore.GetRole(room, request.PlayerId) != "joiner")
+            {
+                return StatusCode(StatusCodes.Status403Forbidden);
+            }
+
+            if (room.Status != "Playing")
+            {
+                return Conflict("The game has not started.");
+            }
+
+            if (room.PendingQuestion is not null)
+            {
+                return Conflict("Answer the pending question before asking another.");
+            }
+
+            room.PendingQuestion = request.QuestionText.Trim();
+            return Ok(ToResponse(room, "joiner"));
+        }
+    }
+
+    [HttpPost("{roomCode}/answers")]
+    public IActionResult AnswerQuestion(string roomCode, [FromBody] AnswerRoomQuestionRequest request)
+    {
+        var room = _rooms.Find(roomCode);
+        if (room is null)
+        {
+            return NotFound("Room not found.");
+        }
+
+        lock (room)
+        {
+            if (GameRoomStore.GetRole(room, request.PlayerId) != "creator")
+            {
+                return StatusCode(StatusCodes.Status403Forbidden);
+            }
+
+            if (room.Status != "Playing" || room.PendingQuestion is null)
+            {
+                return Conflict("There is no question to answer.");
+            }
+
+            var question = room.PendingQuestion;
+            room.QuestionHistory.Add(new RoomQuestionHistoryResponse(
+                question,
+                request.IsTrue ? "True" : "False"));
+            room.PendingQuestion = null;
+            return Ok(ToResponse(room, "creator"));
+        }
+    }
+
+    [HttpPost("{roomCode}/cards/flip")]
+    public IActionResult FlipCard(string roomCode, [FromBody] FlipRoomCardRequest request)
+    {
+        var room = _rooms.Find(roomCode);
+        if (room is null)
+        {
+            return NotFound("Room not found.");
+        }
+
+        lock (room)
+        {
+            if (GameRoomStore.GetRole(room, request.PlayerId) != "joiner")
+            {
+                return StatusCode(StatusCodes.Status403Forbidden);
+            }
+
+            if (room.Status != "Playing")
+            {
+                return Conflict("The game has not started.");
+            }
+
+            var card = room.Board.FirstOrDefault(candidate => candidate.Id == request.CardId);
+            if (card is null)
+            {
+                return NotFound("Card not found in this room.");
+            }
+
+            card.IsFlipped = !card.IsFlipped;
+            return Ok(ToResponse(room, "joiner"));
+        }
+    }
+
+    [HttpPost("{roomCode}/reset")]
+    public IActionResult ResetGame(string roomCode, [FromQuery] string playerId)
+    {
+        var room = _rooms.Find(roomCode);
+        if (room is null)
+        {
+            return NotFound("Room not found.");
+        }
+
+        lock (room)
+        {
+            if (GameRoomStore.GetRole(room, playerId) != "creator")
+            {
+                return StatusCode(StatusCodes.Status403Forbidden);
+            }
+
+            if (room.Status != "Playing")
+            {
+                return Conflict("The game has not started.");
+            }
+
+            foreach (var card in room.Board)
+            {
+                card.IsFlipped = false;
+            }
+
+            room.PendingQuestion = null;
+            room.QuestionHistory.Clear();
+            return Ok(ToResponse(room, "creator"));
+        }
+    }
+
+    private static RoomStateResponse ToResponse(GameRoom room, string role)
+    {
+        var board = room.Board
+            .Select(card => new RoomCardResponse(
+                card.Id,
+                card.Name,
+                card.Category,
+                card.ImageUrl,
+                card.Attributes,
+                card.IsFlipped))
+            .ToList();
+
+        return new RoomStateResponse(
+            room.Code,
+            role,
+            room.CreatorName,
+            room.JoinerName,
+            room.Status,
+            room.Category,
+            board,
+            room.PendingQuestion,
+            room.QuestionHistory.ToList());
+    }
+}

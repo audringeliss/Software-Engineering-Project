@@ -77,6 +77,139 @@
     box-sizing: border-box;
 }
 
+.user-top-bar {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #e0e6ed;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.room-lobby {
+    max-width: 900px;
+}
+
+.room-lobby__options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.room-lobby__option {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+    border: 1px solid rgba(146, 170, 214, 0.15);
+    border-radius: 16px;
+    background: rgba(8, 15, 28, 0.7);
+}
+
+.room-lobby__option h3,
+.room-lobby__option p {
+    margin: 0;
+}
+
+.room-lobby__option h3 {
+    color: #f4f8ff;
+}
+
+.room-lobby__option p {
+    color: #8b9ab1;
+}
+
+.room-lobby__join {
+    display: flex;
+    gap: 10px;
+}
+
+.room-lobby__join input {
+    min-width: 0;
+    flex: 1;
+    padding: 12px;
+    border: 1px solid rgba(132, 155, 211, 0.2);
+    border-radius: 10px;
+    color: #f4f8ff;
+    background: rgba(7, 13, 26, 0.75);
+    font: inherit;
+    letter-spacing: 0.1em;
+}
+
+.room-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.room-code {
+    display: block;
+    margin-top: 4px;
+    color: #52d1ff;
+    font-size: 1.6rem;
+    letter-spacing: 0.15em;
+}
+
+.room-banner__players {
+    display: block;
+    margin-top: 4px;
+    color: #9db0cc;
+}
+
+.room-banner__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.room-waiting {
+    text-align: center;
+}
+
+.room-waiting h2 {
+    margin-top: 0;
+    color: #f4f8ff;
+}
+
+.room-waiting p,
+.room-role-notice {
+    color: #9db0cc;
+}
+
+.room-role-notice {
+    width: min(100%, 1100px);
+    margin: 0 auto 14px;
+}
+
+.target-selection {
+    margin-bottom: 12px;
+}
+
+.target-selection__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.target-selection__actions p {
+    margin: 0;
+    color: #9db0cc;
+}
+
+.game-error {
+    width: min(100%, 1100px);
+    margin: 0 auto 16px;
+    color: #ff9a9a;
+}
+
 .panel-heading {
     display: flex;
     align-items: center;
@@ -549,6 +682,26 @@
     align-items: stretch;
 }
 
+.card-container.is-selected .guess-card__face--front {
+    border-color: #52d1ff;
+    box-shadow: 0 0 0 3px rgba(82, 209, 255, 0.65), 0 0 28px rgba(82, 209, 255, 0.28);
+}
+
+.card-container.is-selected .guess-card__face--front::after {
+    content: 'YOUR SECRET CHARACTER';
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 2;
+    padding: 5px 9px;
+    border-radius: 999px;
+    color: #071321;
+    background: #52d1ff;
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+}
+
 .card-container {
     perspective: 1200px;
     min-height: clamp(220px, 29vw, 260px);
@@ -784,6 +937,25 @@
 
     .primary-button {
         width: 100%;
+    }
+
+    .user-top-bar {
+        position: static;
+        justify-content: flex-end;
+        margin-bottom: 12px;
+    }
+
+    .room-lobby__options {
+        grid-template-columns: 1fr;
+    }
+
+    .room-banner {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .room-banner__actions {
+        justify-content: flex-start;
     }
 
     .card-grid {

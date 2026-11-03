@@ -25,3 +25,71 @@ Accept: application/json
 ###
 POST {{HostAddress}}/api/game/answer?isTrue=false
 Accept: application/json
+
+### Create a two-player room. Copy the returned roomCode and playerId into the variables below.
+POST {{HostAddress}}/api/rooms
+Content-Type: application/json
+
+{
+  "playerName": "Player One"
+}
+
+### Join the room as the second player
+@roomCode = ABC234
+@creatorId = replace-with-creator-player-id
+@joinerId = replace-with-joiner-player-id
+POST {{HostAddress}}/api/rooms/{{roomCode}}/join
+Content-Type: application/json
+
+{
+  "playerName": "Player Two"
+}
+
+### Read room state as either room member
+GET {{HostAddress}}/api/rooms/{{roomCode}}/state?playerId={{creatorId}}
+Accept: application/json
+
+### Start a room game (creator only)
+POST {{HostAddress}}/api/rooms/{{roomCode}}/start
+Content-Type: application/json
+
+{
+  "playerId": "{{creatorId}}",
+  "category": "animals",
+  "targetId": "101"
+}
+
+### Ask a question (joining player only)
+POST {{HostAddress}}/api/rooms/{{roomCode}}/questions
+Content-Type: application/json
+
+{
+  "playerId": "{{joinerId}}",
+  "questionText": "Does it have a tail?"
+}
+
+### Answer the pending question (creator only)
+POST {{HostAddress}}/api/rooms/{{roomCode}}/answers
+Content-Type: application/json
+
+{
+  "playerId": "{{creatorId}}",
+  "isTrue": true
+}
+
+### Flip a card on the guesser's shared board
+POST {{HostAddress}}/api/rooms/{{roomCode}}/cards/flip
+Content-Type: application/json
+
+{
+  "playerId": "{{joinerId}}",
+  "cardId": "102"
+}
+
+### Reset the board and question history (creator only)
+POST {{HostAddress}}/api/rooms/{{roomCode}}/reset?playerId={{creatorId}}
+Accept: application/json
+
+### Nonexistent room returns 404
+GET {{HostAddress}}/api/rooms/NOTFOUND/state?playerId=unknown
+Accept: application/json

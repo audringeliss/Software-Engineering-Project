@@ -5,9 +5,11 @@ using GuessWho.Server.Database;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<CardDataLoader>();
 builder.Services.AddSingleton<GameState>();
+builder.Services.AddSingleton<GameRoomStore>();
 
 builder.Services.AddCors(options =>
 {
@@ -20,12 +22,15 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSingleton<GameState>();
-
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=guesswho.db"));
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
 
 app.UseHttpsRedirection();
 app.UseCors("AllowReactApp");
