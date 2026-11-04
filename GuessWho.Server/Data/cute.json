@@ -1,0 +1,182 @@
+[
+  {
+    "id": "1",
+    "name": "Appletun",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/appletun.jpg"
+  }, 
+  {
+    "id": "2",
+    "name": "Blissey",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/blissey.jpg"
+  },
+  {
+    "id": "3",
+    "name": "Axew",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/axew.jpg"
+  },
+  {
+    "id": "4",
+    "name": "Azurill",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/azurill.jpg"
+  },
+  {
+    "id": "5",
+    "name": "Ducklett",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/ducklett.jpg"
+  }, 
+  {
+    "id": "6",
+    "name": "Bounsweet",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/bounsweet.jpg"
+  },
+  {
+    "id": "7",
+    "name": "Golett",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/golett.jpg"
+  },
+  {
+    "id": "8",
+    "name": "Hatenna",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/hatenna.jpg"
+  },
+  {
+    "id": "9",
+    "name": "Jirachi",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/jirachi.jpg"
+  },
+  {
+    "id": "10",
+    "name": "Latias",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/latias.jpg"
+  }, 
+  {
+    "id": "11",
+    "name": "Manaphy",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/manaphy.jpg"
+  },
+  {
+    "id": "12",
+    "name": "Mantyke",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/mantyke.jpg"
+  },
+  {
+    "id": "13",
+    "name": "Minccino",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/minccino.jpg"
+  },
+  {
+    "id": "14",
+    "name": "Minun",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/minun.jpg"
+  },
+  {
+    "id": "15",
+    "name": "Munchlax",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/munchlax.jpg"
+  }, 
+  {
+    "id": "16",
+    "name": "Pachirisu",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/pachirisu.jpg"
+  },
+  {
+    "id": "17",
+    "name": "Pancham",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/pancham.jpg"
+  },
+  {
+    "id": "18",
+    "name": "Plusle",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/plusle.jpg"
+  },
+  {
+    "id": "19",
+    "name": "Scraggy",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/scraggy.jpg"
+  },
+  {
+    "id": "20",
+    "name": "Togepi",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/togepi.jpg"
+  },
+  {
+    "id": "21",
+    "name": "Snom",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/snom.jpg"
+  },
+  {
+    "id": "22",
+    "name": "Spheal",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/spheal.jpg"
+  },
+  {
+    "id": "23",
+    "name": "Snorlax",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/snorlax.jpg"
+  },
+  {
+    "id": "24",
+    "name": "Sunkern",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/sunkern.jpg"
+  },
+  {
+    "id": "25",
+    "name": "Swadloon",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/swadloon.jpg"
+  }, 
+  {
+    "id": "26",
+    "name": "Swirlix",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/swirlix.jpg"
+  },
+  {
+    "id": "27",
+    "name": "Togedemaru",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/togedemaru.jpg"
+  },
+  {
+    "id": "28",
+    "name": "Toxel",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/toxel.jpg"
+  },
+  {
+    "id": "29",
+    "name": "Uxie",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/uxie.jpg"
+  },
+  {
+    "id": "30",
+    "name": "Cosmog",
+    "category": "cute",
+    "imageUrl": "/images/pokemon3/cosmog.jpg"
+  }
+]
