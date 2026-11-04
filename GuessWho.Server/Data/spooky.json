@@ -1,0 +1,182 @@
+[
+{
+    "id": "1",
+    "name": "Ariados",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/ariados.jpg"
+  }, 
+  {
+    "id": "2",
+    "name": "Gengar",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/gengar.jpg"
+  },
+  {
+    "id": "3",
+    "name": "Houndoom",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/houndoom.jpg"
+  },
+  {
+    "id": "4",
+    "name": "Misdreavous",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/misdreavous.jpg"
+  },
+  {
+    "id": "5",
+    "name": "Gligar",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/gligar.jpg"
+  },
+  {
+    "id": "6",
+    "name": "Murkrow",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/murkrow.jpg"
+  },
+  {
+    "id": "7",
+    "name": "Dedenne",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/dedenne.jpg"
+  },
+  {
+    "id": "8",
+    "name": "Banette",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/banette.jpg"
+  },
+  {
+    "id": "9",
+    "name": "Espurr",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/espurr.jpg"
+  },
+  {
+    "id": "10",
+    "name": "Mewtwo",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/mewtwo.jpg"
+  }, 
+  {
+    "id": "11",
+    "name": "Gothitelle",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/gothitelle.jpg"
+  },
+  {
+    "id": "12",
+    "name": "Litwick",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/litwick.jpg"
+  }, 
+  {
+    "id": "13",
+    "name": "Lunatone",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/lunatone.jpg"
+  },
+  {
+    "id": "14",
+    "name": "Mimikyu",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/mimikyu.jpg"
+  }, 
+  {
+    "id": "15",
+    "name": "Drifloon",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/drifloon.jpg"
+  },
+  {
+    "id": "16",
+    "name": "Giratine",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/giratine.jpg"
+  },
+  {
+    "id": "17",
+    "name": "Espeon",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/espeon.jpg"
+  },
+  {
+    "id": "18",
+    "name": "Morpeko",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/morpeko.jpg"
+  }, 
+  {
+    "id": "19",
+    "name": "Sneasel",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/sneasel.jpg"
+  },
+  {
+    "id": "20",
+    "name": "Vulpix",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/vulpix.jpg"
+  }, 
+  {
+    "id": "21",
+    "name": "Pyukumuku",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/pyukumuku.jpg"
+  },
+  {
+    "id": "22",
+    "name": "Yamask",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/yamask.jpg"
+  }, 
+  {
+    "id": "23",
+    "name": "Zorua",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/zorua.jpg"
+  },
+  {
+    "id": "24",
+    "name": "Zubat",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/zubat.jpg"
+  }, 
+  {
+    "id": "25",
+    "name": "Phantump",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/phantump.jpg"
+  }, 
+  {
+    "id": "26",
+    "name": "Drowzee",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/drowzee.jpg"
+  },
+  {
+    "id": "27",
+    "name": "Duskull",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/duskull.jpg"
+  },
+  {
+    "id": "28",
+    "name": "Sweilous",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/sweilous.jpg"
+  },
+  {
+    "id": "29",
+    "name": "Umbreon",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/umbreon.jpg"
+  },
+  {
+    "id": "30",
+    "name": "Zekrom",
+    "category": "Pokemon",
+    "imageUrl": "/images/pokemon2/zekrom.jpg"
+  }
+]
