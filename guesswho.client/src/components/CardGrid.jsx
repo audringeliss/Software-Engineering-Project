@@ -1,4 +1,13 @@
-function CardGrid({ cards, eliminatedCards, onToggleCard, selectedCategory }) {
+function CardGrid({
+    cards,
+    eliminatedCards = [],
+    onToggleCard,
+    selectedCategory,
+    selectionMode = false,
+    selectedCardId,
+    onSelectCard,
+    canToggleCards = true,
+}) {
     if (cards.length === 0) {
         return (
             <section className="empty-state">
@@ -7,8 +16,6 @@ function CardGrid({ cards, eliminatedCards, onToggleCard, selectedCategory }) {
             </section>
         );
     }
-
-    const remainingCount = cards.length - eliminatedCards.length;
 
     return (
         <section className="card-board" aria-label="Card board">
@@ -19,20 +26,33 @@ function CardGrid({ cards, eliminatedCards, onToggleCard, selectedCategory }) {
                     const name = card.name || card.Name || 'Unknown';
                     const imageUrl = card.imageUrl || card.ImageUrl || '';
                     const isEliminated = eliminatedCards.includes(id);
+                    const isSelected = selectionMode && selectedCardId === id;
+                    const isInteractive = selectionMode || canToggleCards;
+                    const handleClick = selectionMode
+                        ? () => onSelectCard(id)
+                        : () => {
+                            if (canToggleCards) onToggleCard(id);
+                        };
 
                     return (
                         <div
                             key={id}
-                            onClick={() => onToggleCard(id)}
-                            className={`card-container ${isEliminated ? 'is-eliminated' : ''}`}
-                            role="button"
-                            tabIndex={0}
+                            onClick={isInteractive ? handleClick : undefined}
+                            className={`card-container ${isEliminated ? 'is-eliminated' : ''} ${isSelected ? 'is-selected' : ''}`}
+                            role={isInteractive ? 'button' : undefined}
+                            tabIndex={isInteractive ? 0 : undefined}
                             onKeyDown={(e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                    onToggleCard(id);
+                                if (isInteractive && (e.key === 'Enter' || e.key === ' ')) {
+                                    e.preventDefault();
+                                    handleClick();
                                 }
                             }}
-                            aria-label={`${name} ${isEliminated ? 'Eliminated' : 'Active'}`}
+                            aria-pressed={isInteractive ? (selectionMode ? isSelected : isEliminated) : undefined}
+                            aria-label={!isInteractive
+                                ? `${name} ${isEliminated ? 'Eliminated' : 'Active'}`
+                                : selectionMode
+                                    ? `${name} ${isSelected ? 'selected' : 'select as target'}`
+                                    : `${name} ${isEliminated ? 'Eliminated' : 'Active'}`}
                         >
                             <div className="guess-card">
                                 {/* Priekinė kortelės pusė */}

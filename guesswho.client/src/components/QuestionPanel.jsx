@@ -3,11 +3,13 @@ function QuestionPanel({
     pendingQuestion,
     onQuestionChange,
     onSendQuestion,
-    onAnswerQuestion
+    onAnswerQuestion,
+    canAsk = true,
+    canAnswer = true,
 }) {
     return (
         <div className="question-panel">
-            <section className="panel question-panel__ask">
+            {canAsk && <section className="panel question-panel__ask">
                 <div className="panel-heading">
                     <div>
                         <h2>Ask a question</h2>
@@ -44,9 +46,9 @@ function QuestionPanel({
                         Send
                     </button>
                 </div>
-            </section>
+            </section>}
 
-            <section className="panel question-panel__answer">
+            {canAnswer && <section className="panel question-panel__answer">
                 <div className="panel-heading">
                     <div>
                         <h2>Answer the question</h2>
@@ -72,7 +74,7 @@ function QuestionPanel({
                 ) : (
                     <p className="waiting-message">Waiting for a question...</p>
                 )}
-            </section>
+            </section>}
         </div>
     );
 }
