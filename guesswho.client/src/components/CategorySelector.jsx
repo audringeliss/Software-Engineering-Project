@@ -12,6 +12,7 @@ function CategorySelector({ categories, selectedCategory, onCategoryChange }) {
         if (name.includes('countries')) return { icon: '🌍', desc: 'Countries around the world' };
         if (name.includes('spooky')) return { icon: '👻', desc: 'Spooky Pokémon' };
         if (name.includes('cute')) return { icon: '💕', desc: 'Cute Pokémon' };
+        if (name.includes('apps')) return { icon: '📱', desc: 'Popular apps' };
         return { icon: '✨', desc: 'Custom card deck' };
     };
 
