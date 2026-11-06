@@ -1,0 +1,152 @@
+[
+  {
+    "id": "1",
+    "name": "Canva",
+    "category": "apps",
+    "imageUrl": "/images/apps/canva.jpg"
+  }, 
+  {
+    "id": "2",
+    "name": "ChatGPT",
+    "category": "apps",
+    "imageUrl": "/images/apps/chatgpt.jpg"
+  },
+  {
+    "id": "3",
+    "name": "Discord",
+    "category": "apps",
+    "imageUrl": "/images/apps/discord.jpg"
+  },
+  {
+    "id": "4",
+    "name": "Duolingo",
+    "category": "apps",
+    "imageUrl": "/images/apps/duolingo.jpg"
+  },
+  {
+    "id": "5",
+    "name": "Spotify",
+    "category": "apps",
+    "imageUrl": "/images/apps/spotify.jpg"
+  }, 
+  {
+    "id": "6",
+    "name": "Claude",
+    "category": "apps",
+    "imageUrl": "/images/apps/claude.jpg"
+  },
+  {
+    "id": "7",
+    "name": "Disney+",
+    "category": "apps",
+    "imageUrl": "/images/apps/disneyplus.jpg"
+  },
+  {
+    "id": "8",
+    "name": "Facebook",
+    "category": "apps",
+    "imageUrl": "/images/apps/facebook.jpg"
+  },
+  {
+    "id": "9",
+    "name": "HBO Max",
+    "category": "apps",
+    "imageUrl": "/images/apps/hbomax.jpg"
+  },
+  {
+    "id": "10",
+    "name": "Instagram",
+    "category": "apps",
+    "imageUrl": "/images/apps/instagram.jpg"
+  }, 
+  {
+    "id": "11",
+    "name": "LinkedIn",
+    "category": "apps",
+    "imageUrl": "/images/apps/linkedin.jpg"
+  },
+  {
+    "id": "12",
+    "name": "Netflix",
+    "category": "apps",
+    "imageUrl": "/images/apps/netflix.jpg"
+  },
+  {
+    "id": "13",
+    "name": "Messenger",
+    "category": "apps",
+    "imageUrl": "/images/apps/messenger.jpg"
+  },
+  {
+    "id": "14",
+    "name": "Pinterest",
+    "category": "apps",
+    "imageUrl": "/images/apps/pinterest.jpg"
+  },
+  {
+    "id": "15",
+    "name": "Reddit",
+    "category": "apps",
+    "imageUrl": "/images/apps/reddit.jpg"
+  }, 
+  {
+    "id": "16",
+    "name": "Snapchat",
+    "category": "apps",
+    "imageUrl": "/images/apps/snapchat.jpg"
+  },
+  {
+    "id": "17",
+    "name": "TikTok",
+    "category": "apps",
+    "imageUrl": "/images/apps/tiktok.jpg"
+  },
+  {
+    "id": "18",
+    "name": "Twitch",
+    "category": "apps",
+    "imageUrl": "/images/apps/twitch.jpg"
+  },
+  {
+    "id": "19",
+    "name": "X",
+    "category": "apps",
+    "imageUrl": "/images/apps/x.jpg"
+  },
+  {
+    "id": "20",
+    "name": "Steam",
+    "category": "apps",
+    "imageUrl": "/images/apps/steam.jpg"
+  }, 
+  {
+    "id": "21",
+    "name": "YouTube",
+    "category": "apps",
+    "imageUrl": "/images/apps/youtube.jpg"
+  }, 
+  {
+    "id": "22",
+    "name": "Telegram",
+    "category": "apps",
+    "imageUrl": "/images/apps/telegram.jpg"
+  },
+  {
+    "id": "23",
+    "name": "WhatsApp",
+    "category": "apps",
+    "imageUrl": "/images/apps/whatsapp.jpg"
+  },
+  {
+    "id": "24",
+    "name": "Viber",
+    "category": "apps",
+    "imageUrl": "/images/apps/viber.jpg"
+  },
+  {
+    "id": "25",
+    "name": "Spotify",
+    "category": "apps",
+    "imageUrl": "/images/apps/spotify.jpg"
+  }
+]
