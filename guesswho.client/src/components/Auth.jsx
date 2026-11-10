@@ -6,14 +6,59 @@ export default function Auth({ onLoginSuccess }) {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    
+    // Per-field validation error states
+    const [fieldErrors, setFieldErrors] = useState({});
+    const [generalError, setGeneralError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+
+    const validateForm = () => {
+        const errors = {};
+
+        if (!isLogin) {
+            // Username validation
+            if (!username.trim()) {
+                errors.username = 'Username is required.';
+            } else if (username.length < 3 || username.length > 20) {
+                errors.username = 'Username must be between 3 and 20 characters.';
+            } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                errors.username = 'Only letters, numbers, and underscores allowed.';
+            }
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email.trim()) {
+            errors.email = 'Email is required.';
+        } else if (!emailRegex.test(email)) {
+            errors.email = 'Invalid email address format.';
+        }
+
+        // Password validation
+        if (!password) {
+            errors.password = 'Password is required.';
+        } else if (!isLogin && password.length < 6) {
+            errors.password = 'Password must be at least 6 characters long.';
+        }
+
+        return errors;
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
+        setGeneralError('');
         setSuccessMessage('');
 
+        // 1. Client-side validation check
+        const errors = validateForm();
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
+            return;
+        }
+
+        setFieldErrors({});
+
+        // 2. Server request
         try {
             if (isLogin) {
                 const data = await loginUser(email, password);
@@ -25,8 +70,23 @@ export default function Auth({ onLoginSuccess }) {
                 setIsLogin(true);
             }
         } catch (err) {
-            setError(err.message || 'An unexpected error occurred.');
+            // Handle backend response errors (e.g., username/email taken)
+            const msg = err.message || '';
+            if (msg.toLowerCase().includes('username')) {
+                setFieldErrors({ username: msg });
+            } else if (msg.toLowerCase().includes('email')) {
+                setFieldErrors({ email: msg });
+            } else {
+                setGeneralError(msg || 'An unexpected error occurred.');
+            }
         }
+    };
+
+    const handleSwitchMode = () => {
+        setIsLogin(!isLogin);
+        setFieldErrors({});
+        setGeneralError('');
+        setSuccessMessage('');
     };
 
     return (
@@ -52,7 +112,7 @@ export default function Auth({ onLoginSuccess }) {
                 {isLogin ? 'Welcome Back!' : 'Create Account'}
             </h2>
             
-            {error && (
+            {generalError && (
                 <div style={{ 
                     background: 'rgba(211, 47, 47, 0.2)', 
                     border: '1px solid rgba(211, 47, 47, 0.4)', 
@@ -62,7 +122,7 @@ export default function Auth({ onLoginSuccess }) {
                     marginBottom: '20px',
                     fontSize: '0.9rem'
                 }}>
-                    {error}
+                    {generalError}
                 </div>
             )}
             
@@ -80,79 +140,116 @@ export default function Auth({ onLoginSuccess }) {
                 </div>
             )}
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
                 {!isLogin && (
                     <div style={{ marginBottom: '18px' }}>
-                        <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.9rem', color: '#b0c4de', fontWeight: '500' }}>Username</label>
+                        <label style={{ 
+                            display: 'block', 
+                            marginBottom: '6px', 
+                            fontSize: '0.9rem', 
+                            color: fieldErrors.username ? '#ff8a80' : '#b0c4de', 
+                            fontWeight: '500' 
+                        }}>
+                            Username
+                        </label>
                         <input 
                             type="text" 
                             value={username} 
-                            onChange={(e) => setUsername(e.target.value)} 
-                            required 
+                            onChange={(e) => {
+                                setUsername(e.target.value);
+                                if (fieldErrors.username) setFieldErrors({ ...fieldErrors, username: null });
+                            }} 
                             placeholder="Choose a username"
                             style={{ 
                                 width: '100%', 
                                 padding: '10px 14px', 
                                 boxSizing: 'border-box', 
                                 borderRadius: '8px', 
-                                border: '1px solid rgba(255, 255, 255, 0.15)',
-                                background: 'rgba(15, 20, 30, 0.6)',
+                                border: fieldErrors.username ? '1px solid #ff5252' : '1px solid rgba(255, 255, 255, 0.15)',
+                                background: fieldErrors.username ? 'rgba(255, 82, 82, 0.08)' : 'rgba(15, 20, 30, 0.6)',
                                 color: '#fff',
                                 fontSize: '0.95rem',
                                 outline: 'none'
                             }}
                         />
-                        <span style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '4px', display: 'block' }}>
-                            3-20 characters (letters, numbers, underscores)
-                        </span>
+                        {fieldErrors.username && (
+                            <span style={{ fontSize: '0.75rem', color: '#ff8a80', marginTop: '4px', display: 'block' }}>
+                                {fieldErrors.username}
+                            </span>
+                        )}
                     </div>
                 )}
                 
                 <div style={{ marginBottom: '18px' }}>
-                    <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.9rem', color: '#b0c4de', fontWeight: '500' }}>Email</label>
+                    <label style={{ 
+                        display: 'block', 
+                        marginBottom: '6px', 
+                        fontSize: '0.9rem', 
+                        color: fieldErrors.email ? '#ff8a80' : '#b0c4de', 
+                        fontWeight: '500' 
+                    }}>
+                        Email
+                    </label>
                     <input 
                         type="email" 
                         value={email} 
-                        onChange={(e) => setEmail(e.target.value)} 
-                        required 
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            if (fieldErrors.email) setFieldErrors({ ...fieldErrors, email: null });
+                        }} 
                         placeholder="Enter your email"
                         style={{ 
                             width: '100%', 
                             padding: '10px 14px', 
                             boxSizing: 'border-box', 
                             borderRadius: '8px', 
-                            border: '1px solid rgba(255, 255, 255, 0.15)',
-                            background: 'rgba(15, 20, 30, 0.6)',
+                            border: fieldErrors.email ? '1px solid #ff5252' : '1px solid rgba(255, 255, 255, 0.15)',
+                            background: fieldErrors.email ? 'rgba(255, 82, 82, 0.08)' : 'rgba(15, 20, 30, 0.6)',
                             color: '#fff',
                             fontSize: '0.95rem',
                             outline: 'none'
                         }}
                     />
+                    {fieldErrors.email && (
+                        <span style={{ fontSize: '0.75rem', color: '#ff8a80', marginTop: '4px', display: 'block' }}>
+                            {fieldErrors.email}
+                        </span>
+                    )}
                 </div>
 
                 <div style={{ marginBottom: '24px' }}>
-                    <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.9rem', color: '#b0c4de', fontWeight: '500' }}>Password</label>
+                    <label style={{ 
+                        display: 'block', 
+                        marginBottom: '6px', 
+                        fontSize: '0.9rem', 
+                        color: fieldErrors.password ? '#ff8a80' : '#b0c4de', 
+                        fontWeight: '500' 
+                    }}>
+                        Password
+                    </label>
                     <input 
                         type="password" 
                         value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
-                        required 
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                            if (fieldErrors.password) setFieldErrors({ ...fieldErrors, password: null });
+                        }} 
                         placeholder="Enter your password"
                         style={{ 
                             width: '100%', 
                             padding: '10px 14px', 
                             boxSizing: 'border-box', 
                             borderRadius: '8px', 
-                            border: '1px solid rgba(255, 255, 255, 0.15)',
-                            background: 'rgba(15, 20, 30, 0.6)',
+                            border: fieldErrors.password ? '1px solid #ff5252' : '1px solid rgba(255, 255, 255, 0.15)',
+                            background: fieldErrors.password ? 'rgba(255, 82, 82, 0.08)' : 'rgba(15, 20, 30, 0.6)',
                             color: '#fff',
                             fontSize: '0.95rem',
                             outline: 'none'
                         }}
                     />
-                    {!isLogin && (
-                        <span style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '4px', display: 'block' }}>
-                            Must be at least 6 characters long
+                    {fieldErrors.password && (
+                        <span style={{ fontSize: '0.75rem', color: '#ff8a80', marginTop: '4px', display: 'block' }}>
+                            {fieldErrors.password}
                         </span>
                     )}
                 </div>
@@ -176,7 +273,7 @@ export default function Auth({ onLoginSuccess }) {
             </form>
 
             <button 
-                onClick={() => setIsLogin(!isLogin)}
+                onClick={handleSwitchMode}
                 style={{ 
                     width: '100%', 
                     background: 'transparent', 
