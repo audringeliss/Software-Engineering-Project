@@ -126,6 +126,8 @@ public sealed class RoomsController : ControllerBase
             room.Board = board;
             room.ProposedCategory = null;
             room.ProposedCategoryByRole = null;
+            room.CreatorFlippedCardIds.Clear();
+            room.JoinerFlippedCardIds.Clear();
             room.Status = "SelectingTargets";
 
             return Ok(ToResponse(room, role));
@@ -233,7 +235,13 @@ public sealed class RoomsController : ControllerBase
             var card = room.Board.FirstOrDefault(c => c.Id == request.CardId);
             if (card is null) return NotFound("Card not found.");
 
-            card.IsFlipped = !card.IsFlipped;
+            // Toggle flip strictly inside the calling player's independent set
+            var flippedSet = role == "creator" ? room.CreatorFlippedCardIds : room.JoinerFlippedCardIds;
+            if (!flippedSet.Add(card.Id))
+            {
+                flippedSet.Remove(card.Id);
+            }
+
             return Ok(ToResponse(room, role));
         }
     }
@@ -249,7 +257,8 @@ public sealed class RoomsController : ControllerBase
             var role = GameRoomStore.GetRole(room, playerId);
             if (role is null) return StatusCode(StatusCodes.Status403Forbidden);
 
-            foreach (var card in room.Board) card.IsFlipped = false;
+            room.CreatorFlippedCardIds.Clear();
+            room.JoinerFlippedCardIds.Clear();
             room.CreatorTargetCardId = null;
             room.JoinerTargetCardId = null;
             room.PendingQuestion = null;
@@ -264,8 +273,17 @@ public sealed class RoomsController : ControllerBase
 
     private static RoomStateResponse ToResponse(GameRoom room, string role)
     {
+        // Select the flipped set belonging to the requesting player's role
+        var myFlippedCards = role == "creator" ? room.CreatorFlippedCardIds : room.JoinerFlippedCardIds;
+
         var board = room.Board
-            .Select(card => new RoomCardResponse(card.Id, card.Name, card.Category, card.ImageUrl, card.Attributes, card.IsFlipped))
+            .Select(card => new RoomCardResponse(
+                card.Id, 
+                card.Name, 
+                card.Category, 
+                card.ImageUrl, 
+                card.Attributes, 
+                myFlippedCards.Contains(card.Id))) // Reflect player's private flip status
             .ToList();
 
         bool hasSelectedTarget = role == "creator" ? !string.IsNullOrEmpty(room.CreatorTargetCardId) : !string.IsNullOrEmpty(room.JoinerTargetCardId);
