@@ -60,17 +60,24 @@ function App() {
             const requestedVersion = roomStateVersion.current;
             try {
                 const res = await fetch(`/api/rooms/${encodeURIComponent(activeRoomSession.roomCode)}/state?playerId=${encodeURIComponent(activeRoomSession.playerId)}`);
-                if (!res.ok) throw new Error();
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
                 const state = await res.json();
                 if (!isActive || requestedVersion !== roomStateVersion.current) return;
 
                 setRoomState(state);
                 if (state.category) setSelectedCategory(state.category);
                 if (state.board?.length > 0) setCards(normalizeCards(state.board));
-            } catch {
-                if (isActive) setGameError('Connection error to room.');
+
+                // Clear lingering polling error when room state updates successfully
+                setGameError('');
+            } catch (err) {
+                if (isActive) {
+                    console.error('Room state refresh failed:', err);
+                }
             } finally {
-                if (isActive) timeoutId = window.setTimeout(refreshRoom, 1200);
+                if (isActive) {
+                    timeoutId = window.setTimeout(refreshRoom, 1200);
+                }
             }
         };
 
@@ -84,6 +91,7 @@ function App() {
     const applyRoomState = (state) => {
         roomStateVersion.current += 1;
         setRoomState(state);
+        setGameError('');
         if (state.category) setSelectedCategory(state.category);
         if (state.board) setCards(normalizeCards(state.board));
     };
@@ -97,6 +105,7 @@ function App() {
         setSelectedCategory('');
         setCards([]);
         setSelectedTargetId(null);
+        setGameError('');
     };
 
     const leaveRoom = () => {
@@ -107,6 +116,8 @@ function App() {
         setSelectedCategory('');
         setCards([]);
         setSelectedTargetId(null);
+        setQuestionInput('');
+        setGameError('');
     };
 
     const handleProposeCategory = async (category) => {
@@ -160,6 +171,7 @@ function App() {
     const handleSendQuestion = async () => {
         const question = questionInput.trim();
         if (!question || !activeRoomSession) return;
+        setIsSubmitting(true);
         try {
             const res = await fetch(`/api/rooms/${encodeURIComponent(activeRoomSession.roomCode)}/questions`, {
                 method: 'POST',
@@ -171,11 +183,14 @@ function App() {
             setQuestionInput('');
         } catch (err) {
             setGameError(err.message || 'Question submission failed.');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     const handleAnswerQuestion = async (isTrue) => {
         if (!activeRoomSession) return;
+        setIsSubmitting(true);
         try {
             const res = await fetch(`/api/rooms/${encodeURIComponent(activeRoomSession.roomCode)}/answers`, {
                 method: 'POST',
@@ -186,6 +201,8 @@ function App() {
             applyRoomState(await res.json());
         } catch (err) {
             setGameError(err.message || 'Answer submission failed.');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -201,6 +218,32 @@ function App() {
             applyRoomState(await res.json());
         } catch (err) {
             setGameError(err.message || 'Card flip failed.');
+        }
+    };
+
+    const resetBoard = async () => {
+        if (!activeRoomSession) return;
+        setIsSubmitting(true);
+        try {
+            const res = await fetch(
+                `/api/rooms/${encodeURIComponent(activeRoomSession.roomCode)}/reset?playerId=${encodeURIComponent(activeRoomSession.playerId)}`,
+                { method: 'POST' }
+            );
+            if (!res.ok) throw new Error(await res.text());
+            applyRoomState(await res.json());
+            setSelectedTargetId(null);
+        } catch (err) {
+            setGameError(err.message || 'Could not reset the game.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const copyRoomCode = async () => {
+        try {
+            await navigator.clipboard.writeText(activeRoomSession.roomCode);
+        } catch {
+            setGameError('Could not copy room code.');
         }
     };
 
@@ -228,7 +271,7 @@ function App() {
 
             <header className="game-header"><h1 className="game-title">GUESS WHO?</h1></header>
 
-            {gameError && <p className="game-error">{gameError}</p>}
+            {gameError && <p className="game-error" role="alert">{gameError}</p>}
 
             {!activeRoomSession ? (
                 <RoomLobby playerName={currentUser} onRoomReady={enterRoom} />
@@ -240,6 +283,7 @@ function App() {
             ) : !selectedCategory || roomState?.status === 'WaitingForCategory' || roomState?.status === 'CategoryProposed' ? (
                 <CategorySelector
                     categories={categories}
+                    selectedCategory={selectedCategory}
                     proposedCategory={roomState?.proposedCategory}
                     proposedCategoryByRole={roomState?.proposedCategoryByRole}
                     myRole={myRole}
@@ -255,7 +299,7 @@ function App() {
                         </div>
                         {!hasSelectedTarget && (
                             <button className="primary-button" disabled={!selectedTargetId || isSubmitting} onClick={submitTargetChoice}>
-                                Confirm & Start
+                                {isSubmitting ? 'Confirming...' : 'Confirm & Start'}
                             </button>
                         )}
                     </section>
@@ -269,6 +313,20 @@ function App() {
                 </>
             ) : (
                 <>
+                    <section className="panel room-banner" style={{ marginBottom: '16px' }}>
+                        <div>
+                            <span className="deck-label">ROOM CODE</span>
+                            <strong className="room-code">{activeRoomSession.roomCode}</strong>
+                        </div>
+                        <div className="room-banner__actions">
+                            <button type="button" className="change-deck-btn" onClick={copyRoomCode}>Copy code</button>
+                            <button type="button" className="reset-board-btn" onClick={resetBoard} disabled={isSubmitting}>
+                                Reset Game
+                            </button>
+                            <button type="button" className="reset-board-btn" onClick={leaveRoom}>Leave room</button>
+                        </div>
+                    </section>
+
                     <GameStatus
                         selectedCategory={selectedCategory}
                         hasSelectedTarget={hasSelectedTarget}
