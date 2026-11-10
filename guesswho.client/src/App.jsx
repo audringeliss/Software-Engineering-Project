@@ -68,7 +68,6 @@ function App() {
                 if (state.category) setSelectedCategory(state.category);
                 if (state.board?.length > 0) setCards(normalizeCards(state.board));
 
-                // Clear lingering polling error when room state updates successfully
                 setGameError('');
             } catch (err) {
                 if (isActive) {
@@ -239,14 +238,6 @@ function App() {
         }
     };
 
-    const copyRoomCode = async () => {
-        try {
-            await navigator.clipboard.writeText(activeRoomSession.roomCode);
-        } catch {
-            setGameError('Could not copy room code.');
-        }
-    };
-
     if (!currentUser) {
         return (
             <div className="game-app">
@@ -262,14 +253,56 @@ function App() {
     const myRole = roomState?.role || activeRoomSession?.role;
     const currentTurnRole = roomState?.currentTurnRole || 'creator';
 
+    // Filter history to display ONLY questions asked by the currently logged-in player's role
+    const myFilteredHistory = (roomState?.questionHistory || []).filter(
+        q => (q.askedByRole || q.AskedByRole || q.playerId || q.PlayerId) === myRole
+    );
+
     return (
         <div className="game-app">
-            <div className="user-top-bar">
-                <span>👤 {currentUser} ({myRole})</span>
-                <button type="button" className="change-deck-btn" onClick={() => setCurrentUser(null)}>Log Out</button>
+            <div className="game-nav-bar">
+                <div className="nav-left-group">
+                    {activeRoomSession && (
+                        <>
+                            {isPlaying && (
+                                <button type="button" className="reset-board-btn" onClick={resetBoard} disabled={isSubmitting}>
+                                    Reset Game
+                                </button>
+                            )}
+                            <button type="button" className="reset-board-btn" onClick={leaveRoom}>
+                                Leave Room
+                            </button>
+                        </>
+                    )}
+                </div>
+
+                <div className="nav-right-group">
+                    <span className="profile-badge">
+                        👤 {currentUser}
+                    </span>
+                    <button type="button" className="change-deck-btn" onClick={() => setCurrentUser(null)}>
+                        Log Out
+                    </button>
+                </div>
             </div>
 
-            <header className="game-header"><h1 className="game-title">GUESS WHO?</h1></header>
+            {isPlaying ? (
+                <div className="vs-scoreboard">
+                    <div className={`vs-player-card ${currentTurnRole === 'creator' ? 'vs-player-card--active' : ''}`}>
+                        <div className="vs-player-name">{roomState?.creatorName || 'Player 1'}</div>
+                        {currentTurnRole === 'creator' && <div className="vs-turn-indicator">🎯 Asking Turn</div>}
+                    </div>
+
+                    <div className="vs-divider">VS</div>
+
+                    <div className={`vs-player-card ${currentTurnRole === 'joiner' ? 'vs-player-card--active' : ''}`}>
+                        <div className="vs-player-name">{roomState?.joinerName || 'Player 2'}</div>
+                        {currentTurnRole === 'joiner' && <div className="vs-turn-indicator">🎯 Asking Turn</div>}
+                    </div>
+                </div>
+            ) : (
+                <header className="game-header"><h1 className="game-title">GUESS WHO?</h1></header>
+            )}
 
             {gameError && <p className="game-error" role="alert">{gameError}</p>}
 
@@ -313,27 +346,6 @@ function App() {
                 </>
             ) : (
                 <>
-                    <section className="panel room-banner" style={{ marginBottom: '16px' }}>
-                        <div>
-                            <span className="deck-label">ROOM CODE</span>
-                            <strong className="room-code">{activeRoomSession.roomCode}</strong>
-                        </div>
-                        <div className="room-banner__actions">
-                            <button type="button" className="change-deck-btn" onClick={copyRoomCode}>Copy code</button>
-                            <button type="button" className="reset-board-btn" onClick={resetBoard} disabled={isSubmitting}>
-                                Reset Game
-                            </button>
-                            <button type="button" className="reset-board-btn" onClick={leaveRoom}>Leave room</button>
-                        </div>
-                    </section>
-
-                    <GameStatus
-                        selectedCategory={selectedCategory}
-                        hasSelectedTarget={hasSelectedTarget}
-                        bothTargetsSelected={bothTargetsSelected}
-                        myRole={myRole}
-                        currentTurnRole={currentTurnRole}
-                    />
                     <QuestionPanel
                         questionInput={questionInput}
                         pendingQuestion={roomState.pendingQuestion}
@@ -344,7 +356,7 @@ function App() {
                         onSendQuestion={handleSendQuestion}
                         onAnswerQuestion={handleAnswerQuestion}
                     />
-                    <QnaHistory qnaHistory={roomState.questionHistory || []} />
+                    <QnaHistory qnaHistory={myFilteredHistory} />
                     <CardGrid
                         cards={cards}
                         eliminatedCards={cards.filter(c => c.isFlipped).map(c => c.id)}
