@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using GuessWho.Server.Database;
 using GuessWho.Server.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace GuessWho.Server.Controllers;
 
@@ -70,13 +71,26 @@ public class AuthController : ControllerBase
 // Request Data Transfer Objects (DTOs)
 public class RegisterDto
 {
+    [Required(ErrorMessage = "Username is required.")]
+    [StringLength(20, MinimumLength = 3, ErrorMessage = "Username must be between 3 and 20 characters.")]
+    [RegularExpression(@"^[a-zA-Z0-9_]+$", ErrorMessage = "Username can only contain letters, numbers, and underscores.")]
     public string Username { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Email is required.")]
+    [EmailAddress(ErrorMessage = "Invalid email address format.")]
     public string Email { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Password is required.")]
+    [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long.")]
     public string Password { get; set; } = string.Empty;
 }
 
 public class LoginDto
 {
+    [Required(ErrorMessage = "Email is required.")]
+    [EmailAddress(ErrorMessage = "Invalid email address format.")]
     public string Email { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Password is required.")]
     public string Password { get; set; } = string.Empty;
 }

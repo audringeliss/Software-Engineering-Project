@@ -1,33 +1,40 @@
+import React from 'react';
+
 function QuestionPanel({
     questionInput,
     pendingQuestion,
+    pendingQuestionAskedByRole,
+    myRole,
+    currentTurnRole,
     onQuestionChange,
     onSendQuestion,
     onAnswerQuestion,
-    canAsk = true,
-    canAnswer = true,
 }) {
+    const isMyTurnToAsk = myRole === currentTurnRole && !pendingQuestion;
+    const isMyTurnToAnswer = pendingQuestion && pendingQuestionAskedByRole !== myRole;
+
     return (
         <div className="question-panel">
-            {canAsk && <section className="panel question-panel__ask">
+            {/* Ask Section */}
+            <section className="panel question-panel__ask" style={{ opacity: isMyTurnToAsk ? 1 : 0.6 }}>
                 <div className="panel-heading">
                     <div>
                         <h2>Ask a question</h2>
-                        <p>Type a yes-or-no question about the cards.</p>
+                        <p>{isMyTurnToAsk ? "It's your turn to ask!" : "Waiting for turn or pending answer..."}</p>
                     </div>
                 </div>
                 <div className="question-input-group">
                     <input
                         type="text"
-                        placeholder="e.g. Does your person have glasses?"
+                        placeholder="e.g. Does your character have glasses?"
                         value={questionInput}
                         onChange={(event) => onQuestionChange(event.target.value)}
                         onKeyDown={(event) => {
-                            if (event.key === 'Enter' && questionInput.trim() && pendingQuestion === null) {
+                            if (event.key === 'Enter' && questionInput.trim() && isMyTurnToAsk) {
                                 onSendQuestion();
                             }
                         }}
-                        disabled={pendingQuestion !== null}
+                        disabled={!isMyTurnToAsk}
                         style={{
                             flex: 1,
                             padding: '12px 14px',
@@ -41,22 +48,23 @@ function QuestionPanel({
                     <button
                         className="primary-button"
                         onClick={onSendQuestion}
-                        disabled={pendingQuestion !== null || !questionInput.trim()}
+                        disabled={!isMyTurnToAsk || !questionInput.trim()}
                     >
                         Send
                     </button>
                 </div>
-            </section>}
+            </section>
 
-            {canAnswer && <section className="panel question-panel__answer">
+            {/* Answer Section */}
+            <section className="panel question-panel__answer" style={{ opacity: isMyTurnToAnswer ? 1 : 0.6 }}>
                 <div className="panel-heading">
                     <div>
                         <h2>Answer the question</h2>
-                        <p>Select whether the answer is true or false.</p>
+                        <p>Answer your opponent's question accurately.</p>
                     </div>
                 </div>
 
-                {pendingQuestion ? (
+                {isMyTurnToAnswer ? (
                     <div className="answer-section">
                         <p className="pending-question">
                             <span>Question received</span>
@@ -72,9 +80,11 @@ function QuestionPanel({
                         </div>
                     </div>
                 ) : (
-                    <p className="waiting-message">Waiting for a question...</p>
+                    <p className="waiting-message">
+                        {pendingQuestion ? "Waiting for opponent to answer..." : "No pending questions."}
+                    </p>
                 )}
-            </section>}
+            </section>
         </div>
     );
 }

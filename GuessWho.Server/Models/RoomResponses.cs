@@ -1,9 +1,7 @@
 namespace GuessWho.Server.Models;
 
-/// <summary>Credentials and role assigned when entering a room.</summary>
 public sealed record RoomMembershipResponse(string RoomCode, string PlayerId, string Role);
 
-/// <summary>A card displayed on the shared room board.</summary>
 public sealed record RoomCardResponse(
     string Id,
     string Name,
@@ -12,10 +10,8 @@ public sealed record RoomCardResponse(
     IReadOnlyList<string> Attributes,
     bool IsFlipped);
 
-/// <summary>A question and answer already completed in the room.</summary>
-public sealed record RoomQuestionHistoryResponse(string Question, string Answer);
+public sealed record RoomQuestionHistoryResponse(string Question, string Answer, string AskedByRole);
 
-/// <summary>Current public game state visible to either room member.</summary>
 public sealed record RoomStateResponse(
     string RoomCode,
     string Role,
@@ -23,6 +19,12 @@ public sealed record RoomStateResponse(
     string? JoinerName,
     string Status,
     string? Category,
+    string? ProposedCategory,
+    string? ProposedCategoryByRole,
+    bool HasSelectedTarget,
+    bool BothTargetsSelected,
+    string CurrentTurnRole,
     IReadOnlyList<RoomCardResponse> Board,
     string? PendingQuestion,
+    string? PendingQuestionAskedByRole,
     IReadOnlyList<RoomQuestionHistoryResponse> QuestionHistory);
