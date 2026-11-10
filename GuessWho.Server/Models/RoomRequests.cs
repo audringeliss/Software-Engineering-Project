@@ -14,12 +14,21 @@ public sealed record JoinRoomRequest
     public required string PlayerName { get; init; }
 }
 
-public sealed record SelectCategoryRequest
+public sealed record ProposeCategoryRequest
 {
     [Required]
     public required string PlayerId { get; init; }
+
     [Required]
     public required string Category { get; init; }
+}
+
+public sealed record RespondCategoryRequest
+{
+    [Required]
+    public required string PlayerId { get; init; }
+
+    public required bool Accept { get; init; }
 }
 
 public sealed record SelectTargetRequest

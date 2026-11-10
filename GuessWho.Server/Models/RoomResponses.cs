@@ -19,6 +19,8 @@ public sealed record RoomStateResponse(
     string? JoinerName,
     string Status,
     string? Category,
+    string? ProposedCategory,
+    string? ProposedCategoryByRole,
     bool HasSelectedTarget,
     bool BothTargetsSelected,
     string CurrentTurnRole,
