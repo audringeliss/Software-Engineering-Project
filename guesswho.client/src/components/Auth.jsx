@@ -17,15 +17,15 @@ export default function Auth({ onLoginSuccess }) {
         try {
             if (isLogin) {
                 const data = await loginUser(email, password);
-                setSuccessMessage(data.message);
+                setSuccessMessage(data.message || 'Login successful!');
                 onLoginSuccess(data.username);
             } else {
                 const data = await registerUser(username, email, password);
-                setSuccessMessage('Registration successful! Please log in.');
+                setSuccessMessage(data.message || 'Registration successful! Please log in.');
                 setIsLogin(true);
             }
         } catch (err) {
-            setError(err.message);
+            setError(err.message || 'An unexpected error occurred.');
         }
     };
 
@@ -102,6 +102,9 @@ export default function Auth({ onLoginSuccess }) {
                                 outline: 'none'
                             }}
                         />
+                        <span style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '4px', display: 'block' }}>
+                            3-20 characters (letters, numbers, underscores)
+                        </span>
                     </div>
                 )}
                 
@@ -147,6 +150,11 @@ export default function Auth({ onLoginSuccess }) {
                             outline: 'none'
                         }}
                     />
+                    {!isLogin && (
+                        <span style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '4px', display: 'block' }}>
+                            Must be at least 6 characters long
+                        </span>
+                    )}
                 </div>
 
                 <button type="submit" style={{ 
