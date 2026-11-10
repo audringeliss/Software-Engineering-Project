@@ -11,13 +11,13 @@ public sealed class GameRoom
     public string? JoinerName { get; set; }
     public string Status { get; set; } = "WaitingForPlayer";
     public string? Category { get; set; }
-    
+
     // Category proposal states
     public string? ProposedCategory { get; set; }
     public string? ProposedCategoryByRole { get; set; }
 
     public List<Card> Board { get; set; } = new();
-    
+
     // Secret targets
     public string? TargetCardId { get; set; }
     public string? CreatorTargetCardId { get; set; }

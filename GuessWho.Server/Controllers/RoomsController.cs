@@ -278,11 +278,11 @@ public sealed class RoomsController : ControllerBase
 
         var board = room.Board
             .Select(card => new RoomCardResponse(
-                card.Id, 
-                card.Name, 
-                card.Category, 
-                card.ImageUrl, 
-                card.Attributes, 
+                card.Id,
+                card.Name,
+                card.Category,
+                card.ImageUrl,
+                card.Attributes,
                 myFlippedCards.Contains(card.Id))) // Reflect player's private flip status
             .ToList();
 
