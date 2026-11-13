@@ -346,16 +346,48 @@ function App() {
                 </>
             ) : (
                 <>
-                    <QuestionPanel
-                        questionInput={questionInput}
-                        pendingQuestion={roomState.pendingQuestion}
-                        pendingQuestionAskedByRole={roomState.pendingQuestionAskedByRole}
-                        myRole={myRole}
-                        currentTurnRole={currentTurnRole}
-                        onQuestionChange={setQuestionInput}
-                        onSendQuestion={handleSendQuestion}
-                        onAnswerQuestion={handleAnswerQuestion}
-                    />
+                    {/* Render Ask Panel ONLY if it's your turn to ask and there is no pending question */}
+                    {currentTurnRole === myRole && !roomState.pendingQuestion && (
+                        <div className="panel-container">
+                            <QuestionPanel
+                                questionInput={questionInput}
+                                pendingQuestion={roomState.pendingQuestion}
+                                pendingQuestionAskedByRole={roomState.pendingQuestionAskedByRole}
+                                myRole={myRole}
+                                currentTurnRole={currentTurnRole}
+                                onQuestionChange={setQuestionInput}
+                                onSendQuestion={handleSendQuestion}
+                                onAnswerQuestion={handleAnswerQuestion}
+                                myTargetCard={roomState?.myTargetCard}
+                            />
+                        </div>
+                    )}
+
+                    {/* Render Answer Panel ONLY if there is a pending question asked BY the opponent */}
+                    {roomState.pendingQuestion && roomState.pendingQuestionAskedByRole !== myRole && (
+                        <div className="panel-container">
+                            <QuestionPanel
+                                questionInput={questionInput}
+                                pendingQuestion={roomState.pendingQuestion}
+                                pendingQuestionAskedByRole={roomState.pendingQuestionAskedByRole}
+                                myRole={myRole}
+                                currentTurnRole={currentTurnRole}
+                                onQuestionChange={setQuestionInput}
+                                onSendQuestion={handleSendQuestion}
+                                onAnswerQuestion={handleAnswerQuestion}
+                            />
+                        </div>
+                    )}
+
+                    {/* Clean status message when waiting for the other player */}
+                    {((currentTurnRole !== myRole && !roomState.pendingQuestion) || 
+                      (roomState.pendingQuestion && roomState.pendingQuestionAskedByRole === myRole)) && (
+                        <section className="panel waiting-panel">
+                            <h2>Waiting for opponent...</h2>
+                            <p>{currentTurnRole === myRole ? 'Waiting for them to answer your question.' : 'It is the opponent\'s turn to ask.'}</p>
+                        </section>
+                    )}
+
                     <QnaHistory qnaHistory={myFilteredHistory} />
                     <CardGrid
                         cards={cards}

@@ -9,6 +9,7 @@ function QuestionPanel({
     onQuestionChange,
     onSendQuestion,
     onAnswerQuestion,
+    myTargetCard,
 }) {
     const isMyTurnToAsk = myRole === currentTurnRole && !pendingQuestion;
     const isMyTurnToAnswer = pendingQuestion && pendingQuestionAskedByRole !== myRole;
@@ -66,6 +67,30 @@ function QuestionPanel({
 
                 {isMyTurnToAnswer ? (
                     <div className="answer-section">
+                        {/* Target Card Reminder Preview */}
+                        {myTargetCard && (
+                            <div className="target-reminder-banner" style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '15px',
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                padding: '10px 14px',
+                                borderRadius: '8px',
+                                marginBottom: '15px',
+                                border: '1px solid rgba(255, 255, 255, 0.1)'
+                            }}>
+                                <img
+                                    src={myTargetCard.imageUrl}
+                                    alt={myTargetCard.name}
+                                    style={{ width: '45px', height: '45px', borderRadius: '6px', objectFit: 'cover' }}
+                                />
+                                <div>
+                                    <span style={{ fontSize: '12px', opacity: 0.7, display: 'block' }}>Your Secret Target:</span>
+                                    <strong style={{ fontSize: '15px' }}>{myTargetCard.name}</strong>
+                                </div>
+                            </div>
+                        )}
+
                         <p className="pending-question">
                             <span>Question received</span>
                             <strong>“{pendingQuestion}”</strong>
