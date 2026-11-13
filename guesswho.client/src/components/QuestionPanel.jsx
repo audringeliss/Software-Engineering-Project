@@ -99,7 +99,7 @@ function QuestionPanel({
                                     padding: '16px',
                                     borderRadius: '12px',
                                     marginBottom: '20px',
-                                    border: '1px solid rgba(255, 255, 255, 0.08)'
+                                    border: '1px solid rgba(255, 255, 255, 0.85)'
                                 }}>
                                     <img
                                         src={myTargetCard.imageUrl}
