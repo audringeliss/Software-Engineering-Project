@@ -30,5 +30,6 @@ public sealed record RoomStateResponse(
     List<RoomQuestionHistoryResponse> QuestionHistory,
     int CreatorOpenCardsCount,
     int JoinerOpenCardsCount,
-    int TotalCardsCount
+    int TotalCardsCount,
+    RoomCardResponse? MyTargetCard
 );

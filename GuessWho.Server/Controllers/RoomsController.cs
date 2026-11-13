@@ -285,7 +285,25 @@ public sealed class RoomsController : ControllerBase
                 myFlippedCards.Contains(card.Id)))
             .ToList();
 
-        // Calculate open (unflipped) cards for each player
+        // Find the calling player's target card ID and object
+        string? myTargetId = role == "creator" ? room.CreatorTargetCardId : room.JoinerTargetCardId;
+        RoomCardResponse? myTargetCard = null;
+        if (!string.IsNullOrEmpty(myTargetId))
+        {
+            var rawTarget = room.Board.FirstOrDefault(c => c.Id == myTargetId);
+            if (rawTarget is not null)
+            {
+                myTargetCard = new RoomCardResponse(
+                    rawTarget.Id,
+                    rawTarget.Name,
+                    rawTarget.Category,
+                    rawTarget.ImageUrl,
+                    rawTarget.Attributes,
+                    false
+                );
+            }
+        }
+
         int totalCards = room.Board.Count;
         int creatorOpenCards = totalCards - room.CreatorFlippedCardIds.Count;
         int joinerOpenCards = totalCards - room.JoinerFlippedCardIds.Count;
@@ -311,6 +329,8 @@ public sealed class RoomsController : ControllerBase
             room.QuestionHistory.ToList(),
             creatorOpenCards,
             joinerOpenCards,
-            totalCards);
+            totalCards,
+            myTargetCard
+        );
     }
 }
