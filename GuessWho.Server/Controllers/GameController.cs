@@ -53,7 +53,6 @@ public class GameController : ControllerBase
         if (_gameState.Board.Count == 0) return BadRequest("Game has not been started.");
 
         _gameState.PendingQuestion = request.QuestionText;
-        _gameState.PendingAttribute = request.TargetAttribute;
 
         return Ok(new { Message = "Question submitted", Question = request.QuestionText });
     }
