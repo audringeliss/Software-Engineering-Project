@@ -7,6 +7,7 @@ import GameStatus from './components/GameStatus';
 import QnaHistory from './components/QnaHistory';
 import QuestionPanel from './components/QuestionPanel';
 import RoomLobby from './components/RoomLobby';
+import GuessModal from './components/GuessModal';
 
 const ROOM_SESSION_KEY = 'guesswhoRoomSession';
 
@@ -39,6 +40,7 @@ function App() {
     const [questionInput, setQuestionInput] = useState('');
     const [gameError, setGameError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showGuessModal, setShowGuessModal] = useState(false);
     const roomStateVersion = useRef(0);
 
     useEffect(() => {
@@ -205,6 +207,25 @@ function App() {
         }
     };
 
+    const handleGuessSubmit = async (selectedCard) => {
+        if (!activeRoomSession) return;
+        setIsSubmitting(true);
+        try {
+            const res = await fetch(`/api/rooms/${encodeURIComponent(activeRoomSession.roomCode)}/guess`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ playerId: activeRoomSession.playerId, cardId: selectedCard.id }),
+            });
+            if (!res.ok) throw new Error(await res.text());
+            applyRoomState(await res.json());
+            setShowGuessModal(false);
+        } catch (err) {
+            setGameError(err.message || 'Guess submission failed.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     const toggleFlip = async (cardId) => {
         if (!activeRoomSession) return;
         try {
@@ -306,6 +327,16 @@ function App() {
 
             {gameError && <p className="game-error" role="alert">{gameError}</p>}
 
+            {/* Game Over Banner */}
+            {roomState?.status === 'GameOver' && (
+                <div className="panel" style={{ textAlign: 'center', backgroundColor: '#1e293b', border: '2px solid #22c55e', padding: '24px', margin: '20px 0' }}>
+                    <h2 style={{ color: '#22c55e', fontSize: '24px', marginBottom: '8px' }}>Game Over!</h2>
+                    <p style={{ fontSize: '18px', color: '#fff' }}>
+                        {roomState.winnerRole === myRole ? '🎉 You won the game by guessing correctly!' : '😢 Opponent guessed correctly. You lost!'}
+                    </p>
+                </div>
+            )}
+
             {!activeRoomSession ? (
                 <RoomLobby playerName={currentUser} onRoomReady={enterRoom} />
             ) : roomState?.status === 'WaitingForPlayer' ? (
@@ -346,6 +377,37 @@ function App() {
                 </>
             ) : (
                 <>
+                    {/* Make a Guess Button */}
+                    {roomState?.status !== 'GameOver' && (
+                        <div style={{ display: 'flex', justifyContent: 'center', margin: '16px 0' }}>
+                            <button
+                                type="button"
+                                onClick={() => setShowGuessModal(true)}
+                                style={{
+                                    padding: '12px 24px',
+                                    backgroundColor: '#dc2626',
+                                    color: '#fff',
+                                    border: 'none',
+                                    borderRadius: '10px',
+                                    fontWeight: '600',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 4px 12px rgba(220, 38, 38, 0.4)'
+                                }}
+                            >
+                                Make a Final Guess!
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Guess Modal Overlay */}
+                    {showGuessModal && (
+                        <GuessModal
+                            opponentCards={cards}
+                            onGuessSubmit={handleGuessSubmit}
+                            onClose={() => setShowGuessModal(false)}
+                        />
+                    )}
+
                     {/* Render Ask Panel ONLY if it's your turn to ask and there is no pending question */}
                     {currentTurnRole === myRole && !roomState.pendingQuestion && (
                         <div className="panel-container">
@@ -363,7 +425,6 @@ function App() {
                         </div>
                     )}
 
-                    {/* Render Answer Panel ONLY if there is a pending question asked BY the opponent */}
                     {/* Render Answer Panel ONLY if there is a pending question asked BY the opponent */}
                     {roomState.pendingQuestion && roomState.pendingQuestionAskedByRole !== myRole && (
                         <div className="panel-container">
