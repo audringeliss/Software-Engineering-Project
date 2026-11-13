@@ -26,9 +26,6 @@ Obj/
 
 # db files
 
-*.db
-*.db-wal
-*.db-shm
 *.db*
 
 # Visual Studio 2015 cache/options directory
