@@ -230,9 +230,8 @@ function App() {
             );
             if (!res.ok) throw new Error(await res.text());
             applyRoomState(await res.json());
-            setSelectedTargetId(null);
         } catch (err) {
-            setGameError(err.message || 'Could not reset the game.');
+            setGameError(err.message || 'Could not reset the board.');
         } finally {
             setIsSubmitting(false);
         }
@@ -253,7 +252,6 @@ function App() {
     const myRole = roomState?.role || activeRoomSession?.role;
     const currentTurnRole = roomState?.currentTurnRole || 'creator';
 
-    // Filter history to display ONLY questions asked by the currently logged-in player's role
     const myFilteredHistory = (roomState?.questionHistory || []).filter(
         q => (q.askedByRole || q.AskedByRole || q.playerId || q.PlayerId) === myRole
     );
@@ -266,7 +264,7 @@ function App() {
                         <>
                             {isPlaying && (
                                 <button type="button" className="reset-board-btn" onClick={resetBoard} disabled={isSubmitting}>
-                                    Reset Game
+                                    Reset Board
                                 </button>
                             )}
                             <button type="button" className="reset-board-btn" onClick={leaveRoom}>
@@ -290,6 +288,7 @@ function App() {
                 <div className="vs-scoreboard">
                     <div className={`vs-player-card ${currentTurnRole === 'creator' ? 'vs-player-card--active' : ''}`}>
                         <div className="vs-player-name">{roomState?.creatorName || 'Player 1'}</div>
+                        <div className="vs-card-count">🃏 {roomState?.creatorOpenCardsCount ?? 0} / {roomState?.totalCardsCount ?? 0} cards</div>
                         {currentTurnRole === 'creator' && <div className="vs-turn-indicator">🎯 Asking Turn</div>}
                     </div>
 
@@ -297,6 +296,7 @@ function App() {
 
                     <div className={`vs-player-card ${currentTurnRole === 'joiner' ? 'vs-player-card--active' : ''}`}>
                         <div className="vs-player-name">{roomState?.joinerName || 'Player 2'}</div>
+                        <div className="vs-card-count">🃏 {roomState?.joinerOpenCardsCount ?? 0} / {roomState?.totalCardsCount ?? 0} cards</div>
                         {currentTurnRole === 'joiner' && <div className="vs-turn-indicator">🎯 Asking Turn</div>}
                     </div>
                 </div>

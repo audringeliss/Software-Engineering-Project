@@ -16,7 +16,7 @@ public sealed record RoomStateResponse(
     string RoomCode,
     string Role,
     string CreatorName,
-    string? JoinerName,
+    string JoinerName,
     string Status,
     string? Category,
     string? ProposedCategory,
@@ -24,7 +24,11 @@ public sealed record RoomStateResponse(
     bool HasSelectedTarget,
     bool BothTargetsSelected,
     string CurrentTurnRole,
-    IReadOnlyList<RoomCardResponse> Board,
+    List<RoomCardResponse> Board,
     string? PendingQuestion,
     string? PendingQuestionAskedByRole,
-    IReadOnlyList<RoomQuestionHistoryResponse> QuestionHistory);
+    List<RoomQuestionHistoryResponse> QuestionHistory,
+    int CreatorOpenCardsCount,
+    int JoinerOpenCardsCount,
+    int TotalCardsCount
+);

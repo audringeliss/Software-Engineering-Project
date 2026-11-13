@@ -257,15 +257,15 @@ public sealed class RoomsController : ControllerBase
             var role = GameRoomStore.GetRole(room, playerId);
             if (role is null) return StatusCode(StatusCodes.Status403Forbidden);
 
-            room.CreatorFlippedCardIds.Clear();
-            room.JoinerFlippedCardIds.Clear();
-            room.CreatorTargetCardId = null;
-            room.JoinerTargetCardId = null;
-            room.PendingQuestion = null;
-            room.PendingQuestionAskedByRole = null;
-            room.QuestionHistory.Clear();
-            room.Status = "SelectingTargets";
-            room.CurrentTurnRole = "creator";
+            // Clear ONLY the calling player's flipped cards so they face up again
+            if (role == "creator")
+            {
+                room.CreatorFlippedCardIds.Clear();
+            }
+            else
+            {
+                room.JoinerFlippedCardIds.Clear();
+            }
 
             return Ok(ToResponse(room, role));
         }
@@ -273,7 +273,6 @@ public sealed class RoomsController : ControllerBase
 
     private static RoomStateResponse ToResponse(GameRoom room, string role)
     {
-        // Select the flipped set belonging to the requesting player's role
         var myFlippedCards = role == "creator" ? room.CreatorFlippedCardIds : room.JoinerFlippedCardIds;
 
         var board = room.Board
@@ -283,8 +282,13 @@ public sealed class RoomsController : ControllerBase
                 card.Category,
                 card.ImageUrl,
                 card.Attributes,
-                myFlippedCards.Contains(card.Id))) // Reflect player's private flip status
+                myFlippedCards.Contains(card.Id)))
             .ToList();
+
+        // Calculate open (unflipped) cards for each player
+        int totalCards = room.Board.Count;
+        int creatorOpenCards = totalCards - room.CreatorFlippedCardIds.Count;
+        int joinerOpenCards = totalCards - room.JoinerFlippedCardIds.Count;
 
         bool hasSelectedTarget = role == "creator" ? !string.IsNullOrEmpty(room.CreatorTargetCardId) : !string.IsNullOrEmpty(room.JoinerTargetCardId);
         bool bothTargetsSelected = !string.IsNullOrEmpty(room.CreatorTargetCardId) && !string.IsNullOrEmpty(room.JoinerTargetCardId);
@@ -304,6 +308,9 @@ public sealed class RoomsController : ControllerBase
             board,
             room.PendingQuestion,
             room.PendingQuestionAskedByRole,
-            room.QuestionHistory.ToList());
+            room.QuestionHistory.ToList(),
+            creatorOpenCards,
+            joinerOpenCards,
+            totalCards);
     }
 }
