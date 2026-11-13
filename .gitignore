@@ -24,11 +24,8 @@ Bin/
 obj/
 Obj/
 
-# db files
+# db files - is not working, need to fix
 
-*.db
-*.db-wal
-*.db-shm
 *.db*
 
 # Visual Studio 2015 cache/options directory
