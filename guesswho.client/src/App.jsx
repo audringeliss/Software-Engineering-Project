@@ -364,6 +364,7 @@ function App() {
                     )}
 
                     {/* Render Answer Panel ONLY if there is a pending question asked BY the opponent */}
+                    {/* Render Answer Panel ONLY if there is a pending question asked BY the opponent */}
                     {roomState.pendingQuestion && roomState.pendingQuestionAskedByRole !== myRole && (
                         <div className="panel-container">
                             <QuestionPanel
@@ -375,6 +376,7 @@ function App() {
                                 onQuestionChange={setQuestionInput}
                                 onSendQuestion={handleSendQuestion}
                                 onAnswerQuestion={handleAnswerQuestion}
+                                myTargetCard={roomState?.myTargetCard}
                             />
                         </div>
                     )}
