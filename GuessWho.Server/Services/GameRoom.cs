@@ -33,4 +33,7 @@ public sealed class GameRoom
     public string? PendingQuestionAskedByRole { get; set; }
 
     public List<RoomQuestionHistoryResponse> QuestionHistory { get; } = new();
+
+    // Game Over / Winner tracking for the guessing mechanic
+    public string? WinnerRole { get; set; }
 }
