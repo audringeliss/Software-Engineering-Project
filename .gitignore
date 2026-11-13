@@ -24,7 +24,7 @@ Bin/
 obj/
 Obj/
 
-# db files - is not working, need to fix
+# db files
 
 *.db*
 
