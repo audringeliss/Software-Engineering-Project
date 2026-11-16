@@ -132,6 +132,7 @@ Categories will be chosen from the following list:
 - ASP.NET Core - the main server-side framework responsible for the application logic and API.
 - C# - the main programming language used for the backend.
 - SignalR - built for ASP.NET Core and handles real-time, two-way WebSocket communication.
+- Entity Framework Core with SQLite - relational storage for accounts, rooms, players, game sessions, and question history. The database is stored at `GuessWho.Server\guesswho.db`; migrations are applied automatically when the server starts.
 
 **Frontend**:
 

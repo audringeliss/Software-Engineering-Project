@@ -28,6 +28,7 @@ public class GameHub : Hub
         {
             room.Status = "GameOver";
             room.WinnerRole = currentPlayerRole;
+            _roomStore.Save(room);
 
             await Clients.Group(roomCode).SendAsync("GameOver", new
             {

@@ -88,6 +88,7 @@ public class RoomsController : ControllerBase
         room.ProposedCategory = request.Category;
         room.ProposedCategoryByRole = role;
         room.Status = "CategoryProposed";
+        _roomStore.Save(room);
 
         return Ok(BuildRoomStateResponse(room, role));
     }
@@ -123,6 +124,7 @@ public class RoomsController : ControllerBase
             room.Status = "WaitingForCategory";
         }
 
+        _roomStore.Save(room);
         return Ok(BuildRoomStateResponse(room, role));
     }
 
@@ -150,6 +152,7 @@ public class RoomsController : ControllerBase
             room.CurrentTurnRole = "creator";
         }
 
+        _roomStore.Save(room);
         return Ok(BuildRoomStateResponse(room, role));
     }
 
@@ -164,6 +167,7 @@ public class RoomsController : ControllerBase
 
         room.PendingQuestion = request.QuestionText;
         room.PendingQuestionAskedByRole = role;
+        _roomStore.Save(room);
 
         return Ok(BuildRoomStateResponse(room, role));
     }
@@ -188,6 +192,7 @@ public class RoomsController : ControllerBase
 
         room.CurrentTurnRole = room.CurrentTurnRole == "creator" ? "joiner" : "creator";
 
+        _roomStore.Save(room);
         return Ok(BuildRoomStateResponse(room, role));
     }
 
@@ -218,6 +223,7 @@ public class RoomsController : ControllerBase
             room.CurrentTurnRole = role == "creator" ? "joiner" : "creator";
         }
 
+        _roomStore.Save(room);
         return Ok(BuildRoomStateResponse(room, role));
     }
 
@@ -245,6 +251,7 @@ public class RoomsController : ControllerBase
                 room.JoinerFlippedCardIds.Add(request.CardId);
         }
 
+        _roomStore.Save(room);
         return Ok(BuildRoomStateResponse(room, role));
     }
 
@@ -260,6 +267,7 @@ public class RoomsController : ControllerBase
         if (role == "creator") room.CreatorFlippedCardIds.Clear();
         else room.JoinerFlippedCardIds.Clear();
 
+        _roomStore.Save(room);
         return Ok(BuildRoomStateResponse(room, role));
     }
 
