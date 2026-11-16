@@ -24,6 +24,9 @@ Bin/
 obj/
 Obj/
 
+# Coverage Reports
+coveragereport/
+
 # db files
 
 *.db*

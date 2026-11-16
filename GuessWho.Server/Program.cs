@@ -2,8 +2,11 @@ using GuessWho.Server.Services;
 using Microsoft.EntityFrameworkCore;
 using GuessWho.Server.Database;
 using Microsoft.Data.Sqlite;
+using GuessWho.Server.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSignalR();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -53,7 +56,6 @@ using (var scope = app.Services.CreateScope())
             var hasUsersTable = reader.GetInt64(0) != 0;
             reader.Close();
 
-            // Earlier versions used EnsureCreated and left the initial schema without migration history.
             if (hasUsersTable)
             {
                 using var baselineCommand = connection.CreateCommand();
@@ -86,6 +88,8 @@ app.UseHttpsRedirection();
 app.UseCors("AllowReactApp");
 app.UseAuthorization();
 app.MapControllers();
+
+app.MapHub<GameHub>("/gamehub");
 
 app.Run();
 
