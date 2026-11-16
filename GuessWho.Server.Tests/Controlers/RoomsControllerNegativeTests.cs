@@ -172,4 +172,24 @@ public sealed class RoomsControllerNegativeTests : IClassFixture<WebApplicationF
 
         guessRes.EnsureSuccessStatusCode();
     }
+
+    [Fact]
+    public async Task JoinRoom_NonExistentCode_ReturnsStructuredJsonError()
+    {
+        var client = _factory.CreateClient();
+        var response = await client.PostAsJsonAsync("/api/rooms/NONEXISTENT/join", new JoinRoomRequest
+        {
+            Code = "NONEXISTENT",
+            PlayerName = "Guest"
+        });
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
+        var errorJson = await response.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
+
+        Assert.Equal("ROOM_NOT_FOUND", errorJson.GetProperty("error").GetString());
+        Assert.Equal(404, errorJson.GetProperty("statusCode").GetInt32());
+        Assert.True(errorJson.TryGetProperty("message", out _));
+        Assert.True(errorJson.TryGetProperty("timestamp", out _));
+    }
 }

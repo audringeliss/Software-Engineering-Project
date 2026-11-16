@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 using GuessWho.Server.Models;
 using GuessWho.Server.Services;
+using GuessWho.Server.Exceptions;
 
 namespace GuessWho.Server.Controllers;
 
@@ -41,26 +42,38 @@ public class RoomsController : ControllerBase
     [HttpPost("{code}/join")]
     public IActionResult JoinRoom(string? code, [FromBody] JoinRoomRequest request)
     {
-        string targetCode = !string.IsNullOrWhiteSpace(code) ? code : request.Code;
+        string targetCode = !string.IsNullOrWhiteSpace(code)
+            ? code
+            : (!string.IsNullOrWhiteSpace(request.Code) ? request.Code : request.RoomCode);
+
         if (string.IsNullOrWhiteSpace(targetCode))
         {
-            targetCode = request.RoomCode;
+            throw new RoomNotFoundException(string.Empty);
         }
 
-        var room = _roomStore.Find(targetCode);
-        if (room == null)
-        {
-            return NotFound("Room not found.");
-        }
+        // 1. Verify the room exists first to throw RoomNotFoundException (404) if missing
+        _ = _roomStore.Find(targetCode)
+            ?? throw new RoomNotFoundException(targetCode);
 
-        var joinerId = _roomStore.Join(room, request.PlayerName);
-        if (joinerId == null)
+        string? joinerId = null;
+
+        // 2. Execute atomically so the join state is persisted to SQLite via EF Core
+        var room = _roomStore.ExecuteAtomic(targetCode, baseRoom =>
         {
-            return BadRequest("Room is already full.");
+            if (baseRoom == null) return null;
+            joinerId = _roomStore.Join(baseRoom, request.PlayerName);
+            if (joinerId == null) return null;
+            return baseRoom;
+        });
+
+        // 3. If joinerId is null, the room was full -> throw RoomFullException (400)
+        if (room == null || joinerId == null)
+        {
+            throw new RoomFullException(targetCode);
         }
 
         var role = GameRoomStore.GetRole(room, joinerId);
-        return Ok(new RoomMembershipResponse(room.Code, joinerId, role ?? string.Empty));
+        return Ok(new RoomMembershipResponse(targetCode, joinerId, role ?? string.Empty));
     }
 
     [HttpGet("{code}/state")]
@@ -375,6 +388,8 @@ public class FlipCardRequest
 
 public class RoomMembershipResponse
 {
+    public RoomMembershipResponse() { }
+
     public RoomMembershipResponse(string roomCode, string playerId, string role)
     {
         RoomCode = roomCode;
