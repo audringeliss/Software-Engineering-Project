@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace GuessWho.Server.Database;
 
 public sealed class GameSessionEntity
@@ -17,6 +19,9 @@ public sealed class GameSessionEntity
     public string? PendingQuestion { get; set; }
     public string? PendingQuestionAskedByRole { get; set; }
     public string? WinnerRole { get; set; }
+
+    [NotMapped]
+    public DateTime LastActivityAt { get; set; } = DateTime.UtcNow;
 
     public GameRoomEntity Room { get; set; } = null!;
     public ICollection<QuestionHistoryEntity> QuestionHistory { get; set; } = new List<QuestionHistoryEntity>();
