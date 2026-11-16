@@ -79,196 +79,220 @@ public class RoomsController : ControllerBase
     [HttpPost("{code}/category/propose")]
     public IActionResult ProposeCategory(string code, [FromBody] ProposeCategoryRequest request)
     {
-        var room = _roomStore.Find(code);
-        if (room == null) return NotFound("Room not found.");
+        var response = _roomStore.ExecuteAtomic(code, room =>
+        {
+            var role = GameRoomStore.GetRole(room, request.PlayerId);
+            if (role == null) return null;
 
-        var role = GameRoomStore.GetRole(room, request.PlayerId);
-        if (role == null) return Unauthorized("Invalid player.");
+            room.ProposedCategory = request.Category;
+            room.ProposedCategoryByRole = role;
+            room.Status = "CategoryProposed";
 
-        room.ProposedCategory = request.Category;
-        room.ProposedCategoryByRole = role;
-        room.Status = "CategoryProposed";
-        _roomStore.Save(room);
+            return BuildRoomStateResponse(room, role);
+        });
 
-        return Ok(BuildRoomStateResponse(room, role));
+        if (response == null) return NotFound("Room not found or unauthorized.");
+        return Ok(response);
     }
 
     [HttpPost("{code}/category/respond")]
     public async Task<IActionResult> RespondCategory(string code, [FromBody] RespondCategoryRequest request)
     {
-        var room = _roomStore.Find(code);
-        if (room == null) return NotFound("Room not found.");
-
-        var role = GameRoomStore.GetRole(room, request.PlayerId);
-        if (role == null) return Unauthorized("Invalid player.");
-
-        if (request.Accept && room.ProposedCategory != null)
+        List<Card>? categoryCards = null;
+        if (request.Accept)
         {
-            room.Category = room.ProposedCategory;
-            room.Status = "SelectingTarget";
-
-            var categoryCards = await _cardLoader.GetCategoryCardsAsync(room.Category);
-            room.Board = categoryCards.Select(c => new Card
+            var tempRoom = _roomStore.Find(code);
+            if (tempRoom?.ProposedCategory != null)
             {
-                Id = c.Id,
-                Name = c.Name,
-                Category = c.Category,
-                ImageUrl = c.ImageUrl,
-                Attributes = c.Attributes
-            }).ToList();
-        }
-        else
-        {
-            room.ProposedCategory = null;
-            room.ProposedCategoryByRole = null;
-            room.Status = "WaitingForCategory";
+                var rawCards = await _cardLoader.GetCategoryCardsAsync(tempRoom.ProposedCategory);
+                categoryCards = rawCards.Select(c => new Card
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Category = c.Category,
+                    ImageUrl = c.ImageUrl,
+                    Attributes = c.Attributes
+                }).ToList();
+            }
         }
 
-        _roomStore.Save(room);
-        return Ok(BuildRoomStateResponse(room, role));
+        var response = _roomStore.ExecuteAtomic(code, room =>
+        {
+            var role = GameRoomStore.GetRole(room, request.PlayerId);
+            if (role == null) return null;
+
+            if (request.Accept && room.ProposedCategory != null && categoryCards != null)
+            {
+                room.Category = room.ProposedCategory;
+                room.Status = "SelectingTarget";
+                room.Board = categoryCards;
+            }
+            else
+            {
+                room.ProposedCategory = null;
+                room.ProposedCategoryByRole = null;
+                room.Status = "WaitingForCategory";
+            }
+
+            return BuildRoomStateResponse(room, role);
+        });
+
+        if (response == null) return NotFound("Room not found or unauthorized.");
+        return Ok(response);
     }
 
     [HttpPost("{code}/select-target")]
     public IActionResult SelectTarget(string code, [FromBody] SelectTargetRequest request)
     {
-        var room = _roomStore.Find(code);
-        if (room == null) return NotFound("Room not found.");
-
-        var role = GameRoomStore.GetRole(room, request.PlayerId);
-        if (role == null) return Unauthorized("Invalid player.");
-
-        if (role == "creator")
+        var response = _roomStore.ExecuteAtomic(code, room =>
         {
-            room.CreatorTargetCardId = request.TargetId;
-        }
-        else
-        {
-            room.JoinerTargetCardId = request.TargetId;
-        }
+            var role = GameRoomStore.GetRole(room, request.PlayerId);
+            if (role == null) return null;
 
-        if (!string.IsNullOrEmpty(room.CreatorTargetCardId) && !string.IsNullOrEmpty(room.JoinerTargetCardId))
-        {
-            room.Status = "Playing";
-            room.CurrentTurnRole = "creator";
-        }
+            if (role == "creator")
+            {
+                room.CreatorTargetCardId = request.TargetId;
+            }
+            else
+            {
+                room.JoinerTargetCardId = request.TargetId;
+            }
 
-        _roomStore.Save(room);
-        return Ok(BuildRoomStateResponse(room, role));
+            if (!string.IsNullOrEmpty(room.CreatorTargetCardId) && !string.IsNullOrEmpty(room.JoinerTargetCardId))
+            {
+                room.Status = "Playing";
+                room.CurrentTurnRole = "creator";
+            }
+
+            return BuildRoomStateResponse(room, role);
+        });
+
+        if (response == null) return NotFound("Room not found or unauthorized.");
+        return Ok(response);
     }
 
     [HttpPost("{code}/questions")]
     public IActionResult SubmitQuestion(string code, [FromBody] QuestionRequest request)
     {
-        var room = _roomStore.Find(code);
-        if (room == null) return NotFound("Room not found.");
+        var response = _roomStore.ExecuteAtomic(code, room =>
+        {
+            var role = GameRoomStore.GetRole(room, request.PlayerId);
+            if (role == null) return null;
 
-        var role = GameRoomStore.GetRole(room, request.PlayerId);
-        if (role == null) return Unauthorized("Invalid player.");
+            room.PendingQuestion = request.QuestionText;
+            room.PendingQuestionAskedByRole = role;
 
-        room.PendingQuestion = request.QuestionText;
-        room.PendingQuestionAskedByRole = role;
-        _roomStore.Save(room);
+            return BuildRoomStateResponse(room, role);
+        });
 
-        return Ok(BuildRoomStateResponse(room, role));
+        if (response == null) return NotFound("Room not found or unauthorized.");
+        return Ok(response);
     }
 
     [HttpPost("{code}/answers")]
     public IActionResult SubmitAnswer(string code, [FromBody] AnswerRequest request)
     {
-        var room = _roomStore.Find(code);
-        if (room == null) return NotFound("Room not found.");
+        var response = _roomStore.ExecuteAtomic(code, room =>
+        {
+            var role = GameRoomStore.GetRole(room, request.PlayerId);
+            if (role == null) return null;
 
-        var role = GameRoomStore.GetRole(room, request.PlayerId);
-        if (role == null) return Unauthorized("Invalid player.");
+            room.QuestionHistory.Add(new RoomQuestionHistoryResponse(
+                room.PendingQuestion ?? string.Empty,
+                request.IsTrue ? "True" : "False",
+                room.PendingQuestionAskedByRole ?? string.Empty
+            ));
 
-        room.QuestionHistory.Add(new RoomQuestionHistoryResponse(
-            room.PendingQuestion ?? string.Empty,
-            request.IsTrue ? "True" : "False",
-            room.PendingQuestionAskedByRole ?? string.Empty
-        ));
+            room.PendingQuestion = null;
+            room.PendingQuestionAskedByRole = null;
+            room.CurrentTurnRole = room.CurrentTurnRole == "creator" ? "joiner" : "creator";
 
-        room.PendingQuestion = null;
-        room.PendingQuestionAskedByRole = null;
+            return BuildRoomStateResponse(room, role);
+        });
 
-        room.CurrentTurnRole = room.CurrentTurnRole == "creator" ? "joiner" : "creator";
-
-        _roomStore.Save(room);
-        return Ok(BuildRoomStateResponse(room, role));
+        if (response == null) return NotFound("Room not found or unauthorized.");
+        return Ok(response);
     }
 
     [HttpPost("{code}/guess")]
     public IActionResult SubmitGuess(string code, [FromBody] GuessRequest request)
     {
-        var room = _roomStore.Find(code);
-        if (room == null) return NotFound("Room not found.");
-
-        var role = GameRoomStore.GetRole(room, request.PlayerId);
-        if (role == null) return Unauthorized("Invalid player.");
-
-        if (room.Status == "GameOver")
+        var response = _roomStore.ExecuteAtomic(code, room =>
         {
-            return BadRequest("Game is already over.");
-        }
+            var role = GameRoomStore.GetRole(room, request.PlayerId);
+            if (role == null) return null;
 
-        string? opponentTargetId = role == "creator" ? room.JoinerTargetCardId : room.CreatorTargetCardId;
-        bool isCorrect = request.CardId.Equals(opponentTargetId, StringComparison.OrdinalIgnoreCase);
+            if (room.Status == "GameOver")
+            {
+                return null;
+            }
 
-        if (isCorrect)
-        {
-            room.Status = "GameOver";
-            room.WinnerRole = role;
-        }
-        else
-        {
-            room.CurrentTurnRole = role == "creator" ? "joiner" : "creator";
-        }
+            string? opponentTargetId = role == "creator" ? room.JoinerTargetCardId : room.CreatorTargetCardId;
+            bool isCorrect = request.CardId.Equals(opponentTargetId, StringComparison.OrdinalIgnoreCase);
 
-        _roomStore.Save(room);
-        return Ok(BuildRoomStateResponse(room, role));
+            if (isCorrect)
+            {
+                room.Status = "GameOver";
+                room.WinnerRole = role;
+            }
+            else
+            {
+                room.CurrentTurnRole = role == "creator" ? "joiner" : "creator";
+            }
+
+            return BuildRoomStateResponse(room, role);
+        });
+
+        if (response == null) return BadRequest("Game is already over or unauthorized.");
+        return Ok(response);
     }
 
     [HttpPost("{code}/cards/flip")]
     public IActionResult FlipCard(string code, [FromBody] FlipCardRequest request)
     {
-        var room = _roomStore.Find(code);
-        if (room == null) return NotFound("Room not found.");
-
-        var role = GameRoomStore.GetRole(room, request.PlayerId);
-        if (role == null) return Unauthorized("Invalid player.");
-
-        if (role == "creator")
+        var response = _roomStore.ExecuteAtomic(code, room =>
         {
-            if (room.CreatorFlippedCardIds.Contains(request.CardId))
-                room.CreatorFlippedCardIds.Remove(request.CardId);
-            else
-                room.CreatorFlippedCardIds.Add(request.CardId);
-        }
-        else
-        {
-            if (room.JoinerFlippedCardIds.Contains(request.CardId))
-                room.JoinerFlippedCardIds.Remove(request.CardId);
-            else
-                room.JoinerFlippedCardIds.Add(request.CardId);
-        }
+            var role = GameRoomStore.GetRole(room, request.PlayerId);
+            if (role == null) return null;
 
-        _roomStore.Save(room);
-        return Ok(BuildRoomStateResponse(room, role));
+            if (role == "creator")
+            {
+                if (room.CreatorFlippedCardIds.Contains(request.CardId))
+                    room.CreatorFlippedCardIds.Remove(request.CardId);
+                else
+                    room.CreatorFlippedCardIds.Add(request.CardId);
+            }
+            else
+            {
+                if (room.JoinerFlippedCardIds.Contains(request.CardId))
+                    room.JoinerFlippedCardIds.Remove(request.CardId);
+                else
+                    room.JoinerFlippedCardIds.Add(request.CardId);
+            }
+
+            return BuildRoomStateResponse(room, role);
+        });
+
+        if (response == null) return NotFound("Room not found or unauthorized.");
+        return Ok(response);
     }
 
     [HttpPost("{code}/reset")]
     public IActionResult ResetBoard(string code, [FromQuery] string playerId)
     {
-        var room = _roomStore.Find(code);
-        if (room == null) return NotFound("Room not found.");
+        var response = _roomStore.ExecuteAtomic(code, room =>
+        {
+            var role = GameRoomStore.GetRole(room, playerId);
+            if (role == null) return null;
 
-        var role = GameRoomStore.GetRole(room, playerId);
-        if (role == null) return Unauthorized("Invalid player.");
+            if (role == "creator") room.CreatorFlippedCardIds.Clear();
+            else room.JoinerFlippedCardIds.Clear();
 
-        if (role == "creator") room.CreatorFlippedCardIds.Clear();
-        else room.JoinerFlippedCardIds.Clear();
+            return BuildRoomStateResponse(room, role);
+        });
 
-        _roomStore.Save(room);
-        return Ok(BuildRoomStateResponse(room, role));
+        if (response == null) return NotFound("Room not found or unauthorized.");
+        return Ok(response);
     }
 
     private static object BuildRoomStateResponse(GameRoom room, string role)
