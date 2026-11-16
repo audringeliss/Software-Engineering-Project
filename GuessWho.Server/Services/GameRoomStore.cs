@@ -205,6 +205,7 @@ public sealed class GameRoomStore
 
         var storedRooms = db.GameRooms
             .AsNoTracking()
+            .AsSplitQuery()
             .Include(room => room.Players)
             .Include(room => room.GameSession)
                 .ThenInclude(session => session!.QuestionHistory)
