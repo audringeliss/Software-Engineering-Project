@@ -20,7 +20,7 @@ public sealed class GameRoomStore
         RestoreRooms();
     }
 
-    private object GetRoomLock(string code) => 
+    private object GetRoomLock(string code) =>
         _roomLocks.GetOrAdd(code, _ => new object());
 
     public GameRoom Create(string creatorName)
@@ -215,8 +215,8 @@ public sealed class GameRoomStore
 
         // Perform cleanup filtering in-memory to prevent EF Core translation errors on unmapped properties
         var staleRoomCodes = storedRooms
-            .Where(room => room.GameSession != null && 
-                (room.CreatedAt < cutoffTime || 
+            .Where(room => room.GameSession != null &&
+                (room.CreatedAt < cutoffTime ||
                  (room.GameSession.Status == "GameOver" && room.CreatedAt < gameOverCutoff)))
             .Select(room => room.Code)
             .ToList();
