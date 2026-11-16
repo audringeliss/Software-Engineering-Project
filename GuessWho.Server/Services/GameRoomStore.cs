@@ -11,6 +11,7 @@ public sealed class GameRoomStore
 {
     private const string CodeCharacters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     private readonly ConcurrentDictionary<string, GameRoom> _rooms = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ConcurrentDictionary<string, object> _roomLocks = new(StringComparer.OrdinalIgnoreCase);
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
     public GameRoomStore(IDbContextFactory<AppDbContext> dbContextFactory)
@@ -18,6 +19,9 @@ public sealed class GameRoomStore
         _dbContextFactory = dbContextFactory;
         RestoreRooms();
     }
+
+    private object GetRoomLock(string code) => 
+        _roomLocks.GetOrAdd(code, _ => new object());
 
     public GameRoom Create(string creatorName)
     {
@@ -28,20 +32,27 @@ public sealed class GameRoomStore
             {
                 Code = code,
                 CreatorId = Guid.NewGuid().ToString("N"),
-                CreatorName = creatorName.Trim()
+                CreatorName = creatorName.Trim(),
+                CreatedAt = DateTime.UtcNow,
+                LastActivityAt = DateTime.UtcNow
             };
 
             if (_rooms.TryAdd(code, room))
             {
-                try
+                var roomLock = GetRoomLock(code);
+                lock (roomLock)
                 {
-                    Save(room);
-                    return room;
-                }
-                catch
-                {
-                    _rooms.TryRemove(code, out _);
-                    throw;
+                    try
+                    {
+                        Save(room);
+                        return room;
+                    }
+                    catch
+                    {
+                        _rooms.TryRemove(code, out _);
+                        _roomLocks.TryRemove(code, out _);
+                        throw;
+                    }
                 }
             }
         }
@@ -54,7 +65,8 @@ public sealed class GameRoomStore
 
     public string? Join(GameRoom room, string playerName)
     {
-        lock (room)
+        var roomLock = GetRoomLock(room.Code);
+        lock (roomLock)
         {
             if (room.JoinerId is not null)
             {
@@ -64,14 +76,37 @@ public sealed class GameRoomStore
             room.JoinerId = Guid.NewGuid().ToString("N");
             room.JoinerName = playerName.Trim();
             room.Status = "WaitingForTarget";
+            room.LastActivityAt = DateTime.UtcNow;
             Save(room);
             return room.JoinerId;
         }
     }
 
+    /// <summary>
+    /// Executes a mutation action and persists the room state atomically under a single lock per room.
+    /// </summary>
+    public T? ExecuteAtomic<T>(string code, Func<GameRoom, T> action)
+    {
+        var room = Find(code);
+        if (room == null) return default;
+
+        var roomLock = GetRoomLock(code);
+        lock (roomLock)
+        {
+            room = Find(code);
+            if (room == null) return default;
+
+            var result = action(room);
+            room.LastActivityAt = DateTime.UtcNow;
+            Save(room);
+            return result;
+        }
+    }
+
     public void Save(GameRoom room)
     {
-        lock (room)
+        var roomLock = GetRoomLock(room.Code);
+        lock (roomLock)
         {
             using var db = _dbContextFactory.CreateDbContext();
             using var transaction = db.Database.BeginTransaction();
@@ -87,7 +122,7 @@ public sealed class GameRoomStore
                 roomEntity = new GameRoomEntity
                 {
                     Code = room.Code,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = room.CreatedAt
                 };
                 db.GameRooms.Add(roomEntity);
             }
@@ -125,6 +160,7 @@ public sealed class GameRoomStore
             session.PendingQuestion = room.PendingQuestion;
             session.PendingQuestionAskedByRole = room.PendingQuestionAskedByRole;
             session.WinnerRole = room.WinnerRole;
+            session.LastActivityAt = room.LastActivityAt;
 
             var historyEntities = session.QuestionHistory.OrderBy(history => history.Sequence).ToList();
             for (var index = 0; index < room.QuestionHistory.Count; index++)
@@ -166,6 +202,7 @@ public sealed class GameRoomStore
     private void RestoreRooms()
     {
         using var db = _dbContextFactory.CreateDbContext();
+
         var storedRooms = db.GameRooms
             .AsNoTracking()
             .Include(room => room.Players)
@@ -173,7 +210,27 @@ public sealed class GameRoomStore
                 .ThenInclude(session => session!.QuestionHistory)
             .ToList();
 
-        foreach (var storedRoom in storedRooms)
+        var cutoffTime = DateTime.UtcNow.AddHours(-2);
+        var gameOverCutoff = DateTime.UtcNow.AddMinutes(-15);
+
+        // Perform cleanup filtering in-memory to prevent EF Core translation errors on unmapped properties
+        var staleRoomCodes = storedRooms
+            .Where(room => room.GameSession != null && 
+                (room.CreatedAt < cutoffTime || 
+                 (room.GameSession.Status == "GameOver" && room.CreatedAt < gameOverCutoff)))
+            .Select(room => room.Code)
+            .ToList();
+
+        if (staleRoomCodes.Count > 0)
+        {
+            var entitiesToRemove = db.GameRooms.Where(room => staleRoomCodes.Contains(room.Code)).ToList();
+            db.GameRooms.RemoveRange(entitiesToRemove);
+            db.SaveChanges();
+        }
+
+        var activeRooms = storedRooms.Where(room => !staleRoomCodes.Contains(room.Code)).ToList();
+
+        foreach (var storedRoom in activeRooms)
         {
             var creator = storedRoom.Players.Single(player => player.Role == "creator");
             var joiner = storedRoom.Players.SingleOrDefault(player => player.Role == "joiner");
@@ -183,6 +240,8 @@ public sealed class GameRoomStore
             var room = new GameRoom
             {
                 Code = storedRoom.Code,
+                CreatedAt = storedRoom.CreatedAt,
+                LastActivityAt = session.LastActivityAt,
                 CreatorId = creator.PlayerId,
                 CreatorName = creator.Name,
                 JoinerId = joiner?.PlayerId,

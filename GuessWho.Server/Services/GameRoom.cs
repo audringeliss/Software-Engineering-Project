@@ -5,6 +5,8 @@ namespace GuessWho.Server.Services;
 public sealed class GameRoom
 {
     public string Code { get; init; } = string.Empty;
+    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
+    public DateTime LastActivityAt { get; set; } = DateTime.UtcNow;
     public string CreatorId { get; init; } = string.Empty;
     public string CreatorName { get; init; } = string.Empty;
     public string? JoinerId { get; set; }
