@@ -61,4 +61,21 @@ public sealed class DatabasePersistenceTests
         Assert.Equal(new RoomQuestionHistoryResponse("Does it have fur?", "True", "creator"),
             Assert.Single(restoredRoom.QuestionHistory));
     }
+
+    [Fact]
+    public async Task DatabaseAppliesMigrationsSuccessfully()
+    {
+        using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync();
+
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        using var db = new AppDbContext(options);
+        await db.Database.MigrateAsync();
+
+        var usersTableExists = await db.Database.CanConnectAsync();
+        Assert.True(usersTableExists);
+    }
 }
