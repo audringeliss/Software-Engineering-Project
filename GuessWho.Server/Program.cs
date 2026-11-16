@@ -14,6 +14,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<CardDataLoader>();
 builder.Services.AddSingleton<GameState>();
 builder.Services.AddSingleton<GameRoomStore>();
+builder.Services.AddSingleton<RoomActionExecutor<GameRoom>>();
 
 builder.Services.AddCors(options =>
 {
