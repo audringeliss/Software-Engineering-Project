@@ -52,13 +52,19 @@ public sealed class RoomsControllerTests : IClassFixture<WebApplicationFactory<P
         var guest = await joinRes.Content.ReadFromJsonAsync<RoomMembershipResponse>();
         Assert.NotNull(guest);
 
-        // 3. Propose Category (uses an existing category from your data folder, e.g., "animals" or check your JSON files)
+        // 3. Propose Category (Change "animals" to match your actual JSON file name in the Data folder if needed)
+        string categoryName = "animals";
         var proposeRes = await client.PostAsJsonAsync($"/api/rooms/{host.RoomCode}/category/propose", new ProposeCategoryRequest
         {
             PlayerId = host.PlayerId,
-            Category = "animals"
+            Category = categoryName
         });
-        proposeRes.EnsureSuccessStatusCode();
+
+        if (!proposeRes.IsSuccessStatusCode)
+        {
+            var errorContent = await proposeRes.Content.ReadAsStringAsync();
+            Assert.Fail($"Category proposal failed with status {proposeRes.StatusCode}: {errorContent}");
+        }
 
         // 4. Respond (Accept Category)
         var respondRes = await client.PostAsJsonAsync($"/api/rooms/{host.RoomCode}/category/respond", new RespondCategoryRequest
@@ -80,7 +86,7 @@ public sealed class RoomsControllerTests : IClassFixture<WebApplicationFactory<P
         var hostTargetRes = await client.PostAsJsonAsync($"/api/rooms/{host.RoomCode}/select-target", new SelectTargetRequest
         {
             PlayerId = host.PlayerId,
-            Category = "animals",
+            Category = categoryName,
             TargetId = firstCardId
         });
         hostTargetRes.EnsureSuccessStatusCode();
@@ -88,7 +94,7 @@ public sealed class RoomsControllerTests : IClassFixture<WebApplicationFactory<P
         var guestTargetRes = await client.PostAsJsonAsync($"/api/rooms/{host.RoomCode}/select-target", new SelectTargetRequest
         {
             PlayerId = guest.PlayerId,
-            Category = "animals",
+            Category = categoryName,
             TargetId = secondCardId
         });
         guestTargetRes.EnsureSuccessStatusCode();
@@ -128,4 +134,3 @@ public sealed class RoomsControllerTests : IClassFixture<WebApplicationFactory<P
         guessRes.EnsureSuccessStatusCode();
     }
 }
-
