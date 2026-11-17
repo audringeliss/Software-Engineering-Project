@@ -11,9 +11,13 @@ builder.Services.AddSignalR();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+builder.Services.AddExceptionHandler<GameExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 builder.Services.AddScoped<CardDataLoader>();
 builder.Services.AddSingleton<GameState>();
 builder.Services.AddSingleton<GameRoomStore>();
+builder.Services.AddSingleton<RoomActionExecutor<GameRoom>>();
 
 builder.Services.AddCors(options =>
 {
@@ -78,6 +82,8 @@ using (var scope = app.Services.CreateScope())
 
     db.Database.Migrate();
 }
+
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {

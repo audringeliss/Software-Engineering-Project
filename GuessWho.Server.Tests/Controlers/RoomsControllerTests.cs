@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace GuessWho.Server.Tests.Controllers;
 
+[Collection("IntegrationTests")]
+
 public sealed class RoomsControllerTests : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
