@@ -408,6 +408,7 @@ function App() {
                     <div className={`vs-player-card ${currentTurnRole === 'creator' ? 'vs-player-card--active' : ''}`}>
                         <div className="vs-player-name">{roomState?.creatorName || 'Player 1'}</div>
                         <div className="vs-card-count">{roomState?.creatorOpenCardsCount ?? 0} / {roomState?.totalCardsCount ?? 0} cards</div>
+                        {currentTurnRole === 'creator' && <div className="vs-turn-indicator">Asking Turn</div>}
                     </div>
 
                     <div className="vs-divider">VS</div>
