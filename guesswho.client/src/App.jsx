@@ -10,6 +10,7 @@ import RoomLobby from './components/RoomLobby';
 import GuessModal from './components/GuessModal';
 
 const ROOM_SESSION_KEY = 'guesswhoRoomSession';
+const POPUP_DURATION_MS = 8000;
 
 function normalizeCards(cards) {
     if (!cards) return [];
@@ -41,7 +42,9 @@ function App() {
     const [gameError, setGameError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showGuessModal, setShowGuessModal] = useState(false);
+    const [answerPopup, setAnswerPopup] = useState(null);
     const roomStateVersion = useRef(0);
+    const prevMyHistoryCountRef = useRef(0);
 
     useEffect(() => {
         if (!currentUser) return;
@@ -89,6 +92,51 @@ function App() {
         };
     }, [activeRoomSession]);
 
+    useEffect(() => {
+        const history = roomState?.questionHistory || [];
+        const role = roomState?.role || activeRoomSession?.role;
+        const myQuestions = history.filter(
+            q => (q.askedByRole || q.AskedByRole || q.playerId || q.PlayerId) === role
+        );
+
+        if (!activeRoomSession || myQuestions.length === 0) {
+            prevMyHistoryCountRef.current = 0;
+            if (!activeRoomSession) setAnswerPopup(null);
+            return;
+        }
+
+        if (myQuestions.length > prevMyHistoryCountRef.current) {
+            const latest = myQuestions[myQuestions.length - 1];
+            const rawAnswer = latest.answer ?? latest.Answer ?? '';
+            const isTrue = String(rawAnswer).toLowerCase() === 'true';
+            const opponentName = role === 'creator'
+                ? (roomState?.joinerName || 'Opponent')
+                : (roomState?.creatorName || 'Opponent');
+
+            setAnswerPopup({
+                id: Date.now(),
+                question: latest.question ?? latest.Question ?? '',
+                answerLabel: isTrue ? 'TRUE' : 'FALSE',
+                isTrue,
+                opponentName,
+            });
+        }
+
+        prevMyHistoryCountRef.current = myQuestions.length;
+    }, [
+        roomState?.questionHistory,
+        roomState?.role,
+        roomState?.creatorName,
+        roomState?.joinerName,
+        activeRoomSession,
+    ]);
+
+    useEffect(() => {
+        if (!answerPopup) return;
+        const timer = window.setTimeout(() => setAnswerPopup(null), POPUP_DURATION_MS);
+        return () => window.clearTimeout(timer);
+    }, [answerPopup]);
+
     const applyRoomState = (state) => {
         roomStateVersion.current += 1;
         setRoomState(state);
@@ -100,17 +148,20 @@ function App() {
     const enterRoom = (membership) => {
         const session = { ...membership, playerName: currentUser };
         roomStateVersion.current += 1;
+        prevMyHistoryCountRef.current = 0;
         localStorage.setItem(ROOM_SESSION_KEY, JSON.stringify(session));
         setRoomSession(session);
         setRoomState(null);
         setSelectedCategory('');
         setCards([]);
         setSelectedTargetId(null);
+        setAnswerPopup(null);
         setGameError('');
     };
 
     const leaveRoom = () => {
         roomStateVersion.current += 1;
+        prevMyHistoryCountRef.current = 0;
         localStorage.removeItem(ROOM_SESSION_KEY);
         setRoomSession(null);
         setRoomState(null);
@@ -118,6 +169,7 @@ function App() {
         setCards([]);
         setSelectedTargetId(null);
         setQuestionInput('');
+        setAnswerPopup(null);
         setGameError('');
     };
 
@@ -279,6 +331,52 @@ function App() {
 
     return (
         <div className="game-app">
+            {/* Floating Pop-Up when Opponent Answers Your Question */}
+            {answerPopup && (
+                <div
+                    key={answerPopup.id}
+                    className={`answer-popup ${answerPopup.isTrue ? 'answer-popup--true' : 'answer-popup--false'}`}
+                    role="alertdialog"
+                    aria-live="assertive"
+                >
+                    <div className="answer-popup__header">
+                        <span className="answer-popup__tag">OPPONENT ANSWERED</span>
+                        <button
+                            type="button"
+                            className="answer-popup__close"
+                            onClick={() => setAnswerPopup(null)}
+                            aria-label="Close answer pop-up"
+                        >
+                            ✕
+                        </button>
+                    </div>
+
+                    <div className="answer-popup__body">
+                        <span className="answer-popup__verdict">
+                            {answerPopup.answerLabel}
+                        </span>
+                        <div className="answer-popup__details">
+                            <strong>{answerPopup.opponentName} replied:</strong>
+                            <p>"{answerPopup.question}"</p>
+                        </div>
+                    </div>
+
+                    <div className="answer-popup__footer">
+                        <button
+                            type="button"
+                            className="answer-popup__ack"
+                            onClick={() => setAnswerPopup(null)}
+                        >
+                            Got it
+                        </button>
+                    </div>
+
+                    <div className="answer-popup__progress-track" aria-hidden="true">
+                        <div className="answer-popup__progress-bar" />
+                    </div>
+                </div>
+            )}
+
             <div className="game-nav-bar">
                 <div className="nav-left-group">
                     {activeRoomSession && (
@@ -309,16 +407,15 @@ function App() {
                 <div className="vs-scoreboard">
                     <div className={`vs-player-card ${currentTurnRole === 'creator' ? 'vs-player-card--active' : ''}`}>
                         <div className="vs-player-name">{roomState?.creatorName || 'Player 1'}</div>
-                        <div className="vs-card-count">🃏 {roomState?.creatorOpenCardsCount ?? 0} / {roomState?.totalCardsCount ?? 0} cards</div>
-                        {currentTurnRole === 'creator' && <div className="vs-turn-indicator">🎯 Asking Turn</div>}
+                        <div className="vs-card-count">{roomState?.creatorOpenCardsCount ?? 0} / {roomState?.totalCardsCount ?? 0} cards</div>
                     </div>
 
                     <div className="vs-divider">VS</div>
 
                     <div className={`vs-player-card ${currentTurnRole === 'joiner' ? 'vs-player-card--active' : ''}`}>
                         <div className="vs-player-name">{roomState?.joinerName || 'Player 2'}</div>
-                        <div className="vs-card-count">🃏 {roomState?.joinerOpenCardsCount ?? 0} / {roomState?.totalCardsCount ?? 0} cards</div>
-                        {currentTurnRole === 'joiner' && <div className="vs-turn-indicator">🎯 Asking Turn</div>}
+                        <div className="vs-card-count">{roomState?.joinerOpenCardsCount ?? 0} / {roomState?.totalCardsCount ?? 0} cards</div>
+                        {currentTurnRole === 'joiner' && <div className="vs-turn-indicator">Asking Turn</div>}
                     </div>
                 </div>
             ) : (
@@ -332,7 +429,7 @@ function App() {
                 <div className="panel" style={{ textAlign: 'center', backgroundColor: '#1e293b', border: '2px solid #22c55e', padding: '24px', margin: '20px 0' }}>
                     <h2 style={{ color: '#22c55e', fontSize: '24px', marginBottom: '8px' }}>Game Over!</h2>
                     <p style={{ fontSize: '18px', color: '#fff' }}>
-                        {roomState.winnerRole === myRole ? '🎉 You won the game by guessing correctly!' : '😢 Opponent guessed correctly. You lost!'}
+                        {roomState.winnerRole === myRole ? 'You won the game by guessing correctly!' : 'Opponent guessed correctly. You lost!'}
                     </p>
                 </div>
             )}
@@ -443,11 +540,15 @@ function App() {
                     )}
 
                     {/* Clean status message when waiting for the other player */}
-                    {((currentTurnRole !== myRole && !roomState.pendingQuestion) || 
+                    {((currentTurnRole !== myRole && !roomState.pendingQuestion) ||
                       (roomState.pendingQuestion && roomState.pendingQuestionAskedByRole === myRole)) && (
                         <section className="panel waiting-panel">
                             <h2>Waiting for opponent...</h2>
-                            <p>{currentTurnRole === myRole ? 'Waiting for them to answer your question.' : 'It is the opponent\'s turn to ask.'}</p>
+                            <p>
+                                {roomState.pendingQuestion && roomState.pendingQuestionAskedByRole === myRole
+                                    ? `Waiting for opponent to answer: "${roomState.pendingQuestion}"`
+                                    : "It is the opponent's turn to ask."}
+                            </p>
                         </section>
                     )}
 
