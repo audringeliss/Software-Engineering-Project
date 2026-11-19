@@ -201,13 +201,24 @@ public class RoomsController : ControllerBase
             request.PlayerId,
             (room, role) =>
             {
-                if (room.Status == "GameOver")
+                if (room.Status != "Playing")
+                {
+                    return null;
+                }
+
+                if (!string.Equals(room.CurrentTurnRole, role, StringComparison.OrdinalIgnoreCase))
+                {
+                    return null;
+                }
+
+                if (!string.IsNullOrEmpty(room.PendingQuestion))
                 {
                     return null;
                 }
 
                 string? opponentTargetId = role == "creator" ? room.JoinerTargetCardId : room.CreatorTargetCardId;
-                bool isCorrect = request.CardId.Equals(opponentTargetId, StringComparison.OrdinalIgnoreCase);
+                bool isCorrect = !string.IsNullOrWhiteSpace(request.CardId) &&
+                                 request.CardId.Equals(opponentTargetId, StringComparison.OrdinalIgnoreCase);
 
                 if (isCorrect)
                 {
@@ -216,12 +227,13 @@ public class RoomsController : ControllerBase
                 }
                 else
                 {
+                    // Wrong guess switches the active turn to the opponent
                     room.CurrentTurnRole = role == "creator" ? "joiner" : "creator";
                 }
 
                 return BuildRoomStateResponse(room, role);
             },
-            errorMessage: "Game is already over or unauthorized.",
+            errorMessage: "You can only make a guess on your own turn during active play with no pending question.",
             returnBadRequestOnNull: true);
 
     [HttpPost("{code}/cards/flip")]
@@ -259,6 +271,7 @@ public class RoomsController : ControllerBase
     private static object BuildRoomStateResponse(GameRoom room, string role)
     {
         var flippedSet = role == "creator" ? room.CreatorFlippedCardIds : room.JoinerFlippedCardIds;
+        var opponentFlippedSet = role == "creator" ? room.JoinerFlippedCardIds : room.CreatorFlippedCardIds;
         var boardWithFlipState = room.Board.Select(c => new
         {
             c.Id,
@@ -293,6 +306,7 @@ public class RoomsController : ControllerBase
             TotalCardsCount = room.Board.Count,
             CreatorOpenCardsCount = room.Board.Count - room.CreatorFlippedCardIds.Count,
             JoinerOpenCardsCount = room.Board.Count - room.JoinerFlippedCardIds.Count,
+            OpponentFlippedCardIds = opponentFlippedSet,
             room.QuestionHistory
         };
     }
