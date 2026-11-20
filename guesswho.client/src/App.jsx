@@ -10,6 +10,7 @@ import GuessModal from './components/GuessModal';
 
 const ROOM_SESSION_KEY = 'guesswhoRoomSession';
 const POPUP_DURATION_MS = 8000;
+const WRONG_GUESS_SCREEN_MS = 4500;
 
 class ErrorBoundary extends Component {
     constructor(props) {
@@ -29,9 +30,9 @@ class ErrorBoundary extends Component {
         if (this.state.error) {
             return (
                 <div className="game-app">
-                    <section className="panel" style={{ maxWidth: 680, textAlign: 'center' }}>
+                    <section className="panel error-boundary-panel">
                         <h2>Render Error</h2>
-                        <p className="game-error" style={{ width: '100%' }}>
+                        <p className="game-error error-boundary-message">
                             {this.state.error?.message || 'An unexpected error occurred while rendering.'}
                         </p>
                         <button
@@ -81,15 +82,14 @@ function GuessWhoContent() {
     const [selectedTargetId, setSelectedTargetId] = useState(null);
     const [questionInput, setQuestionInput] = useState('');
     const [gameError, setGameError] = useState('');
-    const [turnNotice, setTurnNotice] = useState('');
+    const [wrongGuessScreen, setWrongGuessScreen] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showGuessModal, setShowGuessModal] = useState(false);
     const [showOpponentDeckModal, setShowOpponentDeckModal] = useState(false);
     const [answerPopup, setAnswerPopup] = useState(null);
     const roomStateVersion = useRef(0);
     const prevMyHistoryCountRef = useRef(0);
-    const prevTurnRoleRef = useRef(null);
-    const hadMyGuessAttemptRef = useRef(false);
+    const pendingWrongGuessCardRef = useRef(null);
 
     useEffect(() => {
         if (!currentUser) return;
@@ -148,39 +148,10 @@ function GuessWhoContent() {
     }, [activeRoomSession]);
 
     useEffect(() => {
-        const role = roomState?.role || activeRoomSession?.role;
-        const turnRole = roomState?.currentTurnRole;
-        const status = roomState?.status;
-
-        if (!activeRoomSession || !role || !turnRole || status !== 'Playing') {
-            prevTurnRoleRef.current = turnRole || null;
-            return;
-        }
-
-        if (
-            prevTurnRoleRef.current === role &&
-            turnRole !== role &&
-            !roomState?.pendingQuestion &&
-            hadMyGuessAttemptRef.current
-        ) {
-            setTurnNotice('Wrong guess! Turn switched to your opponent.');
-            hadMyGuessAttemptRef.current = false;
-        }
-
-        prevTurnRoleRef.current = turnRole;
-    }, [
-        roomState?.currentTurnRole,
-        roomState?.pendingQuestion,
-        roomState?.role,
-        roomState?.status,
-        activeRoomSession,
-    ]);
-
-    useEffect(() => {
-        if (!turnNotice) return;
-        const timer = window.setTimeout(() => setTurnNotice(''), 5000);
+        if (!wrongGuessScreen) return;
+        const timer = window.setTimeout(() => setWrongGuessScreen(null), WRONG_GUESS_SCREEN_MS);
         return () => window.clearTimeout(timer);
-    }, [turnNotice]);
+    }, [wrongGuessScreen]);
 
     useEffect(() => {
         const history = Array.isArray(roomState?.questionHistory) ? roomState.questionHistory : [];
@@ -240,8 +211,7 @@ function GuessWhoContent() {
         const session = { ...membership, playerName: currentUser };
         roomStateVersion.current += 1;
         prevMyHistoryCountRef.current = 0;
-        prevTurnRoleRef.current = null;
-        hadMyGuessAttemptRef.current = false;
+        pendingWrongGuessCardRef.current = null;
         localStorage.setItem(ROOM_SESSION_KEY, JSON.stringify(session));
         setRoomSession(session);
         setRoomState(null);
@@ -250,15 +220,14 @@ function GuessWhoContent() {
         setSelectedTargetId(null);
         setShowOpponentDeckModal(false);
         setAnswerPopup(null);
-        setTurnNotice('');
+        setWrongGuessScreen(null);
         setGameError('');
     };
 
     const leaveRoom = () => {
         roomStateVersion.current += 1;
         prevMyHistoryCountRef.current = 0;
-        prevTurnRoleRef.current = null;
-        hadMyGuessAttemptRef.current = false;
+        pendingWrongGuessCardRef.current = null;
         localStorage.removeItem(ROOM_SESSION_KEY);
         setRoomSession(null);
         setRoomState(null);
@@ -268,7 +237,7 @@ function GuessWhoContent() {
         setQuestionInput('');
         setShowOpponentDeckModal(false);
         setAnswerPopup(null);
-        setTurnNotice('');
+        setWrongGuessScreen(null);
         setGameError('');
     };
 
@@ -370,7 +339,7 @@ function GuessWhoContent() {
         }
 
         setIsSubmitting(true);
-        hadMyGuessAttemptRef.current = true;
+        pendingWrongGuessCardRef.current = selectedCard;
         try {
             const res = await fetch(`/api/rooms/${encodeURIComponent(activeRoomSession.roomCode)}/guess`, {
                 method: 'POST',
@@ -378,7 +347,7 @@ function GuessWhoContent() {
                 body: JSON.stringify({ playerId: activeRoomSession.playerId, cardId: selectedCard.id }),
             });
             if (!res.ok) {
-                hadMyGuessAttemptRef.current = false;
+                pendingWrongGuessCardRef.current = null;
                 throw new Error(await res.text());
             }
             const nextState = await res.json();
@@ -386,9 +355,17 @@ function GuessWhoContent() {
             setShowGuessModal(false);
 
             if (nextState?.status === 'Playing' && nextState?.currentTurnRole !== role) {
-                setTurnNotice('Wrong guess! Turn switched to your opponent.');
-                hadMyGuessAttemptRef.current = false;
+                const oppName = role === 'creator'
+                    ? (nextState?.joinerName || 'Opponent')
+                    : (nextState?.creatorName || 'Opponent');
+                const guessedName = selectedCard?.name || selectedCard?.Name || 'that character';
+                setWrongGuessScreen({
+                    id: Date.now(),
+                    guessedName,
+                    opponentName: oppName,
+                });
             }
+            pendingWrongGuessCardRef.current = null;
         } catch (err) {
             setGameError(err?.message || 'Guess submission failed.');
         } finally {
@@ -438,13 +415,14 @@ function GuessWhoContent() {
     }
 
     const safeCards = Array.isArray(cards) ? cards : [];
+    const isGameOver = roomState?.status === 'GameOver';
     const isPlaying = roomState?.status === 'Playing';
     const hasSelectedTarget = Boolean(roomState?.hasSelectedTarget);
     const myRole = roomState?.role || activeRoomSession?.role;
     const currentTurnRole = roomState?.currentTurnRole || 'creator';
     const canMakeGuess =
         isPlaying &&
-        roomState?.status !== 'GameOver' &&
+        !isGameOver &&
         currentTurnRole === myRole &&
         !roomState?.pendingQuestion;
 
@@ -452,6 +430,9 @@ function GuessWhoContent() {
         ? (roomState?.joinerName || 'Opponent')
         : (roomState?.creatorName || 'Opponent');
     const totalCardsCount = roomState?.totalCardsCount ?? safeCards.length;
+    const myOpenCount = myRole === 'creator'
+        ? (roomState?.creatorOpenCardsCount ?? totalCardsCount)
+        : (roomState?.joinerOpenCardsCount ?? totalCardsCount);
     const opponentOpenCount = myRole === 'creator'
         ? (roomState?.joinerOpenCardsCount ?? totalCardsCount)
         : (roomState?.creatorOpenCardsCount ?? totalCardsCount);
@@ -474,8 +455,43 @@ function GuessWhoContent() {
         q => (q?.askedByRole || q?.AskedByRole || q?.playerId || q?.PlayerId) === myRole
     );
 
+    const didIWin = Boolean(roomState?.winnerRole && myRole && roomState.winnerRole === myRole);
+    const winnerLabel = roomState?.winnerName
+        || roomState?.WinnerName
+        || (roomState?.winnerRole === 'creator'
+            ? (roomState?.creatorName || 'Creator')
+            : (roomState?.joinerName || 'Joiner'));
+
     return (
         <div className="game-app">
+            {wrongGuessScreen && (
+                <div
+                    key={wrongGuessScreen.id}
+                    className="wrong-guess-backdrop"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Wrong Guess Screen"
+                >
+                    <section className="panel wrong-guess-modal">
+                        <div className="wrong-guess-badge">WRONG GUESS</div>
+                        <h2 className="wrong-guess-title">Not Quite!</h2>
+                        <p className="wrong-guess-text">
+                            You guessed <strong>{wrongGuessScreen.guessedName}</strong>, which wasn&apos;t your opponent&apos;s secret character.
+                        </p>
+                        <p className="wrong-guess-turn">
+                            It is now <strong>{wrongGuessScreen.opponentName}</strong>&apos;s turn to ask a question or make a guess.
+                        </p>
+                        <button
+                            type="button"
+                            className="primary-button"
+                            onClick={() => setWrongGuessScreen(null)}
+                        >
+                            Continue Game
+                        </button>
+                    </section>
+                </div>
+            )}
+
             {answerPopup && (
                 <div
                     key={answerPopup.id}
@@ -552,7 +568,7 @@ function GuessWhoContent() {
                     <div className={`vs-player-card ${currentTurnRole === 'creator' ? 'vs-player-card--active' : ''}`}>
                         <div className="vs-player-name">{roomState?.creatorName || 'Player 1'}</div>
                         <div className="vs-card-count">{roomState?.creatorOpenCardsCount ?? 0} / {roomState?.totalCardsCount ?? 0} cards</div>
-                        {currentTurnRole === 'creator' && <div className="vs-turn-indicator">Asking Turn</div>}
+                        {currentTurnRole === 'creator' && <div className="vs-turn-indicator">Active Turn</div>}
                     </div>
 
                     <div className="vs-divider">VS</div>
@@ -560,7 +576,7 @@ function GuessWhoContent() {
                     <div className={`vs-player-card ${currentTurnRole === 'joiner' ? 'vs-player-card--active' : ''}`}>
                         <div className="vs-player-name">{roomState?.joinerName || 'Player 2'}</div>
                         <div className="vs-card-count">{roomState?.joinerOpenCardsCount ?? 0} / {roomState?.totalCardsCount ?? 0} cards</div>
-                        {currentTurnRole === 'joiner' && <div className="vs-turn-indicator">Asking Turn</div>}
+                        {currentTurnRole === 'joiner' && <div className="vs-turn-indicator">Active Turn</div>}
                     </div>
                 </div>
             ) : (
@@ -569,22 +585,62 @@ function GuessWhoContent() {
 
             {gameError && <p className="game-error" role="alert">{gameError}</p>}
 
-            {turnNotice && (
-                <div className="panel" role="status" style={{ textAlign: 'center', padding: '12px 18px', borderColor: 'rgba(251, 191, 36, 0.5)' }}>
-                    <strong style={{ color: '#fbbf24' }}>{turnNotice}</strong>
-                </div>
-            )}
+            {isGameOver ? (
+                <section
+                    className={`panel game-over-panel ${didIWin ? 'game-over-panel--victory' : 'game-over-panel--defeat'}`}
+                    role="region"
+                    aria-label="Game Over Summary"
+                >
+                    <div className="game-over-badge">
+                        {didIWin ? 'VICTORY' : 'DEFEAT'}
+                    </div>
 
-            {roomState?.status === 'GameOver' && (
-                <div className="panel" style={{ textAlign: 'center', backgroundColor: '#1e293b', border: '2px solid #22c55e', padding: '24px', margin: '20px 0' }}>
-                    <h2 style={{ color: '#22c55e', fontSize: '24px', marginBottom: '8px' }}>Game Over!</h2>
-                    <p style={{ fontSize: '18px', color: '#fff' }}>
-                        {roomState.winnerRole === myRole ? 'You won the game by guessing correctly!' : 'Opponent guessed correctly. You lost!'}
+                    <h2 className="game-over-title">
+                        {didIWin ? 'You Won!' : 'Game Over — You Lost'}
+                    </h2>
+
+                    <p className="game-over-subtitle">
+                        {didIWin
+                            ? 'You guessed your opponent\'s secret character correctly!'
+                            : `${winnerLabel} guessed your secret character correctly.`}
                     </p>
-                </div>
-            )}
 
-            {!activeRoomSession ? (
+                    <div className="game-over-stats">
+                        <div className="game-over-stat-card">
+                            <div className="game-over-stat-label">Winner</div>
+                            <div className="game-over-stat-value">{winnerLabel}</div>
+                        </div>
+                        <div className="game-over-stat-card">
+                            <div className="game-over-stat-label">Questions Asked</div>
+                            <div className="game-over-stat-value">{rawHistory.length}</div>
+                        </div>
+                        <div className="game-over-stat-card">
+                            <div className="game-over-stat-label">Your Open Cards</div>
+                            <div className="game-over-stat-value">{myOpenCount} / {totalCardsCount}</div>
+                        </div>
+                    </div>
+
+                    <div className="game-over-actions">
+                        <button
+                            type="button"
+                            className="primary-button"
+                            onClick={leaveRoom}
+                        >
+                            Back to Lobby
+                        </button>
+                        <button
+                            type="button"
+                            className="reset-board-btn"
+                            onClick={() => {
+                                leaveRoom();
+                                setCurrentUser(null);
+                            }}
+                        >
+                            Log Out
+                        </button>
+                    </div>
+                </section>
+            ) : !activeRoomSession ? (
                 <RoomLobby playerName={currentUser} onRoomReady={enterRoom} />
             ) : roomState?.status === 'WaitingForPlayer' ? (
                 <section className="panel room-waiting">
@@ -625,27 +681,15 @@ function GuessWhoContent() {
             ) : (
                 <>
                     <div className="game-action-bar">
-                        {roomState?.status !== 'GameOver' && (
-                            <button
-                                type="button"
-                                disabled={!canMakeGuess || isSubmitting}
-                                onClick={() => setShowGuessModal(true)}
-                                title={canMakeGuess ? 'Make your final character guess' : 'You can only guess on your turn'}
-                                style={{
-                                    padding: '12px 24px',
-                                    backgroundColor: canMakeGuess ? '#dc2626' : '#475569',
-                                    color: '#fff',
-                                    border: 'none',
-                                    borderRadius: '10px',
-                                    fontWeight: '600',
-                                    cursor: canMakeGuess ? 'pointer' : 'not-allowed',
-                                    opacity: canMakeGuess ? 1 : 0.6,
-                                    boxShadow: canMakeGuess ? '0 4px 12px rgba(220, 38, 38, 0.4)' : 'none'
-                                }}
-                            >
-                                {canMakeGuess ? 'Make a Final Guess!' : 'Guess Locked (Not Your Turn)'}
-                            </button>
-                        )}
+                        <button
+                            type="button"
+                            disabled={!canMakeGuess || isSubmitting}
+                            onClick={() => setShowGuessModal(true)}
+                            title={canMakeGuess ? 'Make your final character guess' : 'You can only guess on your turn'}
+                            className={`guess-btn ${canMakeGuess ? 'guess-btn--active' : 'guess-btn--locked'}`}
+                        >
+                            {canMakeGuess ? 'Make a Final Guess!' : 'Guess Locked (Not Your Turn)'}
+                        </button>
 
                         <button
                             type="button"
@@ -738,11 +782,11 @@ function GuessWhoContent() {
                     {((currentTurnRole !== myRole && !roomState?.pendingQuestion) ||
                       (roomState?.pendingQuestion && roomState?.pendingQuestionAskedByRole === myRole)) && (
                         <section className="panel waiting-panel">
-                            <h2>Waiting for opponent...</h2>
+                            <h2>Opponent&apos;s Turn</h2>
                             <p>
                                 {roomState?.pendingQuestion && roomState?.pendingQuestionAskedByRole === myRole
                                     ? `Waiting for opponent to answer: "${roomState.pendingQuestion}"`
-                                    : "It is the opponent's turn to ask."}
+                                    : `${opponentName} can ask a question or make a guess now.`}
                             </p>
                         </section>
                     )}

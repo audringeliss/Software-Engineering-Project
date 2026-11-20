@@ -227,7 +227,7 @@ public class RoomsController : ControllerBase
                 }
                 else
                 {
-                    // Wrong guess switches the active turn to the opponent
+                    // Switch turn to opponent so they can ask a question or make a guess
                     room.CurrentTurnRole = role == "creator" ? "joiner" : "creator";
                 }
 
@@ -284,6 +284,9 @@ public class RoomsController : ControllerBase
 
         string? myTargetId = role == "creator" ? room.CreatorTargetCardId : room.JoinerTargetCardId;
         var myTargetCard = room.Board.FirstOrDefault(c => c.Id == myTargetId);
+        string? winnerName = room.WinnerRole == "creator"
+            ? room.CreatorName
+            : (room.WinnerRole == "joiner" ? room.JoinerName : null);
 
         return new
         {
@@ -296,6 +299,7 @@ public class RoomsController : ControllerBase
             room.PendingQuestion,
             room.PendingQuestionAskedByRole,
             room.WinnerRole,
+            WinnerName = winnerName,
             CreatorName = room.CreatorName,
             JoinerName = room.JoinerName,
             Role = role,
