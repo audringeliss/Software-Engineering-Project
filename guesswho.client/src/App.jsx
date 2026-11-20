@@ -10,7 +10,7 @@ import GuessModal from './components/GuessModal';
 
 const ROOM_SESSION_KEY = 'guesswhoRoomSession';
 const POPUP_DURATION_MS = 8000;
-const WRONG_GUESS_POPUP_MS = 4500;
+const WRONG_GUESS_POPUP_MS = 5000;
 
 class ErrorBoundary extends Component {
     constructor(props) {
@@ -359,9 +359,11 @@ function GuessWhoContent() {
                     ? (nextState?.joinerName || 'Opponent')
                     : (nextState?.creatorName || 'Opponent');
                 const guessedName = selectedCard?.name || selectedCard?.Name || 'that character';
+                const guessedImage = selectedCard?.imageUrl || selectedCard?.ImageUrl || '';
                 setWrongGuessPopup({
                     id: Date.now(),
                     guessedName,
+                    guessedImage,
                     opponentName: oppName,
                 });
             }
@@ -483,12 +485,21 @@ function GuessWhoContent() {
                         </button>
                     </div>
 
-                    <div className="answer-popup__body">
-                        <span className="answer-popup__verdict">
-                            WRONG
-                        </span>
+                    <div className="wrong-guess-popup__body">
+                        <div className="wrong-guess-popup__thumb-wrap">
+                            {wrongGuessPopup.guessedImage ? (
+                                <img
+                                    src={wrongGuessPopup.guessedImage}
+                                    alt={wrongGuessPopup.guessedName}
+                                    className="wrong-guess-popup__thumb"
+                                />
+                            ) : (
+                                <span className="answer-popup__verdict">WRONG</span>
+                            )}
+                        </div>
+
                         <div className="answer-popup__details">
-                            <strong>Guessed {wrongGuessPopup.guessedName}</strong>
+                            <strong>Wrong guess — {wrongGuessPopup.guessedName}</strong>
                             <p>{wrongGuessPopup.opponentName}&apos;s turn to ask or guess.</p>
                         </div>
                     </div>
