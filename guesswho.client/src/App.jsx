@@ -463,6 +463,9 @@ function GuessWhoContent() {
         || (roomState?.winnerRole === 'creator'
             ? (roomState?.creatorName || 'Creator')
             : (roomState?.joinerName || 'Joiner'));
+    const rawOpponentTarget = roomState?.opponentTargetCard ?? roomState?.OpponentTargetCard ?? null;
+    const opponentChosenName = rawOpponentTarget?.name ?? rawOpponentTarget?.Name ?? '';
+    const opponentChosenImage = rawOpponentTarget?.imageUrl ?? rawOpponentTarget?.ImageUrl ?? '';
 
     return (
         <div className="game-app">
@@ -620,11 +623,11 @@ function GuessWhoContent() {
                     aria-label="Game Over Summary"
                 >
                     <div className="game-over-badge">
-                        {didIWin ? 'VICTORY' : 'DEFEAT'}
+                        {didIWin ? 'YOU WIN' : 'YOU LOSE'}
                     </div>
 
                     <h2 className="game-over-title">
-                        {didIWin ? 'You Won!' : 'Game Over — You Lost'}
+                        {didIWin ? 'Victory!' : 'Defeat — You Lost'}
                     </h2>
 
                     <p className="game-over-subtitle">
@@ -632,6 +635,26 @@ function GuessWhoContent() {
                             ? 'You guessed your opponent\'s secret character correctly!'
                             : `${winnerLabel} guessed your secret character correctly.`}
                     </p>
+
+                    {!didIWin && (opponentChosenName || opponentChosenImage) && (
+                        <div className="game-over-reveal">
+                            <span className="game-over-reveal__label">
+                                {opponentName}&apos;s Secret Character
+                            </span>
+                            <div className="game-over-reveal__card">
+                                {opponentChosenImage && (
+                                    <img
+                                        src={opponentChosenImage}
+                                        alt={opponentChosenName || 'Opponent secret character'}
+                                        className="game-over-reveal__img"
+                                    />
+                                )}
+                                {opponentChosenName && (
+                                    <span className="game-over-reveal__name">{opponentChosenName}</span>
+                                )}
+                            </div>
+                        </div>
+                    )}
 
                     <div className="game-over-stats">
                         <div className="game-over-stat-card">
