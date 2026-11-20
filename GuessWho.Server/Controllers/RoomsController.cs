@@ -288,6 +288,9 @@ public class RoomsController : ControllerBase
         var opponentTargetCard = room.Status == "GameOver"
             ? room.Board.FirstOrDefault(c => c.Id == opponentTargetId)
             : null;
+        var opponentGuessTargetCard = room.Status == "GameOver"
+            ? myTargetCard
+            : null;
         string? winnerName = room.WinnerRole == "creator"
             ? room.CreatorName
             : (room.WinnerRole == "joiner" ? room.JoinerName : null);
@@ -311,6 +314,7 @@ public class RoomsController : ControllerBase
             BothTargetsSelected = room.CreatorTargetCardId != null && room.JoinerTargetCardId != null,
             MyTargetCard = myTargetCard,
             OpponentTargetCard = opponentTargetCard,
+            OpponentGuessTargetCard = opponentGuessTargetCard,
             Board = boardWithFlipState,
             TotalCardsCount = room.Board.Count,
             CreatorOpenCardsCount = room.Board.Count - room.CreatorFlippedCardIds.Count,

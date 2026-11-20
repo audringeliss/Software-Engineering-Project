@@ -228,6 +228,79 @@
     color: #e2e8f0;
 }
 
+.game-over-reveals {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+    margin: 0 auto 24px;
+    max-width: 560px;
+}
+
+.game-over-reveal {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px;
+    border-radius: 14px;
+    background: rgba(30, 41, 59, 0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.game-over-reveal--victory {
+    border: 1px solid rgba(74, 222, 128, 0.45);
+}
+
+.game-over-reveal--defeat {
+    border: 1px solid rgba(248, 113, 113, 0.45);
+}
+
+.game-over-reveal__label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.game-over-reveal--victory .game-over-reveal__label {
+    color: #86efac;
+}
+
+.game-over-reveal--defeat .game-over-reveal__label {
+    color: #fca5a5;
+}
+
+.game-over-reveal__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.game-over-reveal__img {
+    width: 112px;
+    height: 112px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+}
+
+.game-over-reveal--victory .game-over-reveal__img {
+    border: 1.5px solid rgba(74, 222, 128, 0.65);
+}
+
+.game-over-reveal--defeat .game-over-reveal__img {
+    border: 1.5px solid rgba(248, 113, 113, 0.65);
+}
+
+.game-over-reveal__name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
 .game-over-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));

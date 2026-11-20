@@ -467,6 +467,13 @@ function GuessWhoContent() {
     const opponentChosenName = rawOpponentTarget?.name ?? rawOpponentTarget?.Name ?? '';
     const opponentChosenImage = rawOpponentTarget?.imageUrl ?? rawOpponentTarget?.ImageUrl ?? '';
 
+    const rawOpponentGuessTarget =
+        roomState?.opponentGuessTargetCard
+        ?? roomState?.OpponentGuessTargetCard
+        ?? (isGameOver ? (roomState?.myTargetCard ?? roomState?.MyTargetCard ?? null) : null);
+    const opponentGuessTargetName = rawOpponentGuessTarget?.name ?? rawOpponentGuessTarget?.Name ?? '';
+    const opponentGuessTargetImage = rawOpponentGuessTarget?.imageUrl ?? rawOpponentGuessTarget?.ImageUrl ?? '';
+
     return (
         <div className="game-app">
             {wrongGuessPopup && (
@@ -636,31 +643,51 @@ function GuessWhoContent() {
                             : `${winnerLabel} guessed your secret character correctly.`}
                     </p>
 
-                    {!didIWin && (opponentChosenName || opponentChosenImage) && (
-                        <div className="game-over-reveal">
-                            <span className="game-over-reveal__label">
-                                {opponentName}&apos;s Secret Character
-                            </span>
-                            <div className="game-over-reveal__card">
-                                {opponentChosenImage && (
-                                    <img
-                                        src={opponentChosenImage}
-                                        alt={opponentChosenName || 'Opponent secret character'}
-                                        className="game-over-reveal__img"
-                                    />
-                                )}
-                                {opponentChosenName && (
-                                    <span className="game-over-reveal__name">{opponentChosenName}</span>
-                                )}
-                            </div>
+                    {((opponentChosenName || opponentChosenImage) || (opponentGuessTargetName || opponentGuessTargetImage)) && (
+                        <div className="game-over-reveals">
+                            {(opponentChosenName || opponentChosenImage) && (
+                                <div className={`game-over-reveal ${didIWin ? 'game-over-reveal--victory' : 'game-over-reveal--defeat'}`}>
+                                    <span className="game-over-reveal__label">
+                                        {opponentName}&apos;s Secret Character
+                                    </span>
+                                    <div className="game-over-reveal__card">
+                                        {opponentChosenImage && (
+                                            <img
+                                                src={opponentChosenImage}
+                                                alt={opponentChosenName || 'Opponent secret character'}
+                                                className="game-over-reveal__img"
+                                            />
+                                        )}
+                                        {opponentChosenName && (
+                                            <span className="game-over-reveal__name">{opponentChosenName}</span>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {(opponentGuessTargetName || opponentGuessTargetImage) && (
+                                <div className={`game-over-reveal ${didIWin ? 'game-over-reveal--victory' : 'game-over-reveal--defeat'}`}>
+                                    <span className="game-over-reveal__label">
+                                        Target {opponentName} Had to Guess
+                                    </span>
+                                    <div className="game-over-reveal__card">
+                                        {opponentGuessTargetImage && (
+                                            <img
+                                                src={opponentGuessTargetImage}
+                                                alt={opponentGuessTargetName || 'Target opponent had to guess'}
+                                                className="game-over-reveal__img"
+                                            />
+                                        )}
+                                        {opponentGuessTargetName && (
+                                            <span className="game-over-reveal__name">{opponentGuessTargetName}</span>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
 
                     <div className="game-over-stats">
-                        <div className="game-over-stat-card">
-                            <div className="game-over-stat-label">Winner</div>
-                            <div className="game-over-stat-value">{winnerLabel}</div>
-                        </div>
                         <div className="game-over-stat-card">
                             <div className="game-over-stat-label">Questions Asked</div>
                             <div className="game-over-stat-value">{rawHistory.length}</div>
