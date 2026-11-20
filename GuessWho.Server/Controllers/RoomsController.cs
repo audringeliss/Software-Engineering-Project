@@ -173,6 +173,11 @@ public class RoomsController : ControllerBase
         {
             room.PendingQuestion = request.QuestionText;
             room.PendingQuestionAskedByRole = role;
+            room.LastWrongGuessId = null;
+            room.LastWrongGuessByRole = null;
+            room.LastWrongGuessCardId = null;
+            room.LastWrongGuessCardName = null;
+            room.LastWrongGuessCardImageUrl = null;
 
             return BuildRoomStateResponse(room, role);
         });
@@ -224,6 +229,11 @@ public class RoomsController : ControllerBase
                 {
                     room.Status = "GameOver";
                     room.WinnerRole = role;
+                    room.LastWrongGuessId = null;
+                    room.LastWrongGuessByRole = null;
+                    room.LastWrongGuessCardId = null;
+                    room.LastWrongGuessCardName = null;
+                    room.LastWrongGuessCardImageUrl = null;
                 }
                 else
                 {
@@ -284,9 +294,11 @@ public class RoomsController : ControllerBase
 
         string? myTargetId = role == "creator" ? room.CreatorTargetCardId : room.JoinerTargetCardId;
         string? opponentTargetId = role == "creator" ? room.JoinerTargetCardId : room.CreatorTargetCardId;
-        var myTargetCard = room.Board.FirstOrDefault(c => c.Id == myTargetId);
-        var opponentTargetCard = room.Status == "GameOver"
-            ? room.Board.FirstOrDefault(c => c.Id == opponentTargetId)
+        var myTargetCard = !string.IsNullOrWhiteSpace(myTargetId)
+            ? room.Board.FirstOrDefault(c => string.Equals(c.Id, myTargetId, StringComparison.OrdinalIgnoreCase))
+            : null;
+        var opponentTargetCard = room.Status == "GameOver" && !string.IsNullOrWhiteSpace(opponentTargetId)
+            ? room.Board.FirstOrDefault(c => string.Equals(c.Id, opponentTargetId, StringComparison.OrdinalIgnoreCase))
             : null;
         var opponentGuessTargetCard = room.Status == "GameOver"
             ? myTargetCard
@@ -315,6 +327,11 @@ public class RoomsController : ControllerBase
             MyTargetCard = myTargetCard,
             OpponentTargetCard = opponentTargetCard,
             OpponentGuessTargetCard = opponentGuessTargetCard,
+            room.LastWrongGuessId,
+            room.LastWrongGuessByRole,
+            room.LastWrongGuessCardId,
+            room.LastWrongGuessCardName,
+            room.LastWrongGuessCardImageUrl,
             Board = boardWithFlipState,
             TotalCardsCount = room.Board.Count,
             CreatorOpenCardsCount = room.Board.Count - room.CreatorFlippedCardIds.Count,
