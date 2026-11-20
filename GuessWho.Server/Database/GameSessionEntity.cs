@@ -18,6 +18,11 @@ public sealed class GameSessionEntity
     public string CurrentTurnRole { get; set; } = "creator";
     public string? PendingQuestion { get; set; }
     public string? PendingQuestionAskedByRole { get; set; }
+    public string? LastWrongGuessId { get; set; }
+    public string? LastWrongGuessByRole { get; set; }
+    public string? LastWrongGuessCardId { get; set; }
+    public string? LastWrongGuessCardName { get; set; }
+    public string? LastWrongGuessCardImageUrl { get; set; }
     public string? WinnerRole { get; set; }
 
     [NotMapped]

@@ -90,6 +90,7 @@ function GuessWhoContent() {
     const [answerPopup, setAnswerPopup] = useState(null);
     const roomStateVersion = useRef(0);
     const prevMyHistoryCountRef = useRef(0);
+    const lastSeenWrongGuessIdRef = useRef(null);
     const pendingWrongGuessCardRef = useRef(null);
 
     useEffect(() => {
@@ -147,6 +148,57 @@ function GuessWhoContent() {
             window.clearTimeout(timeoutId);
         };
     }, [activeRoomSession]);
+
+    useEffect(() => {
+        const wrongGuessId = roomState?.lastWrongGuessId ?? roomState?.LastWrongGuessId ?? null;
+        if (!activeRoomSession || !wrongGuessId) {
+            if (!activeRoomSession) lastSeenWrongGuessIdRef.current = null;
+            return;
+        }
+
+        if (wrongGuessId === lastSeenWrongGuessIdRef.current) return;
+        lastSeenWrongGuessIdRef.current = wrongGuessId;
+
+        const role = roomState?.role || activeRoomSession?.role;
+        const guesserRole = roomState?.lastWrongGuessByRole ?? roomState?.LastWrongGuessByRole ?? '';
+        const iGuessedWrong = Boolean(role && guesserRole && role === guesserRole);
+        const guesserName = guesserRole === 'creator'
+            ? (roomState?.creatorName || 'Player 1')
+            : (roomState?.joinerName || 'Player 2');
+        const nextTurnRole = roomState?.currentTurnRole || 'creator';
+        const nextTurnName = nextTurnRole === 'creator'
+            ? (roomState?.creatorName || 'Player 1')
+            : (roomState?.joinerName || 'Player 2');
+
+        const guessedName = roomState?.lastWrongGuessCardName ?? roomState?.LastWrongGuessCardName ?? 'that character';
+        const guessedImage = roomState?.lastWrongGuessCardImageUrl ?? roomState?.LastWrongGuessCardImageUrl ?? '';
+
+        setWrongGuessPopup({
+            id: wrongGuessId,
+            guessedName,
+            guessedImage,
+            title: iGuessedWrong
+                ? `Wrong guess — ${guessedName}`
+                : `${guesserName} guessed ${guessedName} — Wrong!`,
+            subtitle: iGuessedWrong
+                ? `${nextTurnName}'s turn to ask or guess.`
+                : 'Your turn to ask or guess.',
+        });
+    }, [
+        activeRoomSession,
+        roomState?.lastWrongGuessId,
+        roomState?.LastWrongGuessId,
+        roomState?.lastWrongGuessByRole,
+        roomState?.LastWrongGuessByRole,
+        roomState?.lastWrongGuessCardName,
+        roomState?.LastWrongGuessCardName,
+        roomState?.lastWrongGuessCardImageUrl,
+        roomState?.LastWrongGuessCardImageUrl,
+        roomState?.currentTurnRole,
+        roomState?.creatorName,
+        roomState?.joinerName,
+        roomState?.role,
+    ]);
 
     useEffect(() => {
         if (!wrongGuessPopup) return;
@@ -212,6 +264,7 @@ function GuessWhoContent() {
         const session = { ...membership, playerName: currentUser };
         roomStateVersion.current += 1;
         prevMyHistoryCountRef.current = 0;
+        lastSeenWrongGuessIdRef.current = null;
         pendingWrongGuessCardRef.current = null;
         localStorage.setItem(ROOM_SESSION_KEY, JSON.stringify(session));
         setRoomSession(session);
@@ -229,6 +282,7 @@ function GuessWhoContent() {
     const leaveRoom = () => {
         roomStateVersion.current += 1;
         prevMyHistoryCountRef.current = 0;
+        lastSeenWrongGuessIdRef.current = null;
         pendingWrongGuessCardRef.current = null;
         localStorage.removeItem(ROOM_SESSION_KEY);
         setRoomSession(null);
@@ -359,18 +413,6 @@ function GuessWhoContent() {
 
             if (nextState?.status === 'GameOver') {
                 setWinningCard(selectedCard);
-            } else if (nextState?.status === 'Playing' && nextState?.currentTurnRole !== role) {
-                const oppName = role === 'creator'
-                    ? (nextState?.joinerName || 'Opponent')
-                    : (nextState?.creatorName || 'Opponent');
-                const guessedName = selectedCard?.name || selectedCard?.Name || 'that character';
-                const guessedImage = selectedCard?.imageUrl || selectedCard?.ImageUrl || '';
-                setWrongGuessPopup({
-                    id: Date.now(),
-                    guessedName,
-                    guessedImage,
-                    opponentName: oppName,
-                });
             }
             pendingWrongGuessCardRef.current = null;
         } catch (err) {
@@ -519,8 +561,8 @@ function GuessWhoContent() {
                         </div>
 
                         <div className="answer-popup__details">
-                            <strong>Wrong guess — {wrongGuessPopup.guessedName}</strong>
-                            <p>{wrongGuessPopup.opponentName}&apos;s turn to ask or guess.</p>
+                            <strong>{wrongGuessPopup.title}</strong>
+                            <p>{wrongGuessPopup.subtitle}</p>
                         </div>
                     </div>
 

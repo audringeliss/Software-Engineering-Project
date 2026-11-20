@@ -237,7 +237,15 @@ public class RoomsController : ControllerBase
                 }
                 else
                 {
-                    // Switch turn to opponent so they can ask a question or make a guess
+                    var guessedCard = !string.IsNullOrWhiteSpace(request.CardId)
+                        ? room.Board.FirstOrDefault(c => string.Equals(c.Id, request.CardId, StringComparison.OrdinalIgnoreCase))
+                        : null;
+
+                    room.LastWrongGuessByRole = role;
+                    room.LastWrongGuessCardId = guessedCard?.Id ?? request.CardId;
+                    room.LastWrongGuessCardName = guessedCard?.Name ?? "that character";
+                    room.LastWrongGuessCardImageUrl = guessedCard?.ImageUrl ?? string.Empty;
+                    room.LastWrongGuessId = Guid.NewGuid().ToString("N");
                     room.CurrentTurnRole = role == "creator" ? "joiner" : "creator";
                 }
 
