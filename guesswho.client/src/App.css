@@ -165,6 +165,41 @@
     line-height: 1.45;
 }
 
+.wrong-guess-popup {
+    top: 24px;
+    right: 24px;
+}
+
+.wrong-guess-popup--stacked {
+    top: 176px;
+}
+
+.wrong-guess-popup__progress-bar {
+    animation: wrongGuessShrink 4.5s linear forwards;
+}
+
+@keyframes wrongGuessShrink {
+    from {
+        transform: scaleX(1);
+    }
+    to {
+        transform: scaleX(0);
+    }
+}
+
+@media (max-width: 760px) {
+    .wrong-guess-popup {
+        top: 14px;
+        right: 14px;
+        left: 14px;
+        width: auto;
+    }
+
+    .wrong-guess-popup--stacked {
+        top: 162px;
+    }
+}
+
 /* Game Over Screen */
 .game-over-panel {
     max-width: 720px;

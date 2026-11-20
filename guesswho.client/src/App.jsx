@@ -10,7 +10,7 @@ import GuessModal from './components/GuessModal';
 
 const ROOM_SESSION_KEY = 'guesswhoRoomSession';
 const POPUP_DURATION_MS = 8000;
-const WRONG_GUESS_SCREEN_MS = 4500;
+const WRONG_GUESS_POPUP_MS = 4500;
 
 class ErrorBoundary extends Component {
     constructor(props) {
@@ -82,7 +82,7 @@ function GuessWhoContent() {
     const [selectedTargetId, setSelectedTargetId] = useState(null);
     const [questionInput, setQuestionInput] = useState('');
     const [gameError, setGameError] = useState('');
-    const [wrongGuessScreen, setWrongGuessScreen] = useState(null);
+    const [wrongGuessPopup, setWrongGuessPopup] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showGuessModal, setShowGuessModal] = useState(false);
     const [showOpponentDeckModal, setShowOpponentDeckModal] = useState(false);
@@ -148,10 +148,10 @@ function GuessWhoContent() {
     }, [activeRoomSession]);
 
     useEffect(() => {
-        if (!wrongGuessScreen) return;
-        const timer = window.setTimeout(() => setWrongGuessScreen(null), WRONG_GUESS_SCREEN_MS);
+        if (!wrongGuessPopup) return;
+        const timer = window.setTimeout(() => setWrongGuessPopup(null), WRONG_GUESS_POPUP_MS);
         return () => window.clearTimeout(timer);
-    }, [wrongGuessScreen]);
+    }, [wrongGuessPopup]);
 
     useEffect(() => {
         const history = Array.isArray(roomState?.questionHistory) ? roomState.questionHistory : [];
@@ -220,7 +220,7 @@ function GuessWhoContent() {
         setSelectedTargetId(null);
         setShowOpponentDeckModal(false);
         setAnswerPopup(null);
-        setWrongGuessScreen(null);
+        setWrongGuessPopup(null);
         setGameError('');
     };
 
@@ -237,7 +237,7 @@ function GuessWhoContent() {
         setQuestionInput('');
         setShowOpponentDeckModal(false);
         setAnswerPopup(null);
-        setWrongGuessScreen(null);
+        setWrongGuessPopup(null);
         setGameError('');
     };
 
@@ -359,7 +359,7 @@ function GuessWhoContent() {
                     ? (nextState?.joinerName || 'Opponent')
                     : (nextState?.creatorName || 'Opponent');
                 const guessedName = selectedCard?.name || selectedCard?.Name || 'that character';
-                setWrongGuessScreen({
+                setWrongGuessPopup({
                     id: Date.now(),
                     guessedName,
                     opponentName: oppName,
@@ -464,31 +464,48 @@ function GuessWhoContent() {
 
     return (
         <div className="game-app">
-            {wrongGuessScreen && (
+            {wrongGuessPopup && (
                 <div
-                    key={wrongGuessScreen.id}
-                    className="wrong-guess-backdrop"
-                    role="dialog"
-                    aria-modal="true"
-                    aria-label="Wrong Guess Screen"
+                    key={wrongGuessPopup.id}
+                    className={`answer-popup answer-popup--false wrong-guess-popup ${answerPopup ? 'wrong-guess-popup--stacked' : ''}`}
+                    role="alertdialog"
+                    aria-live="assertive"
                 >
-                    <section className="panel wrong-guess-modal">
-                        <div className="wrong-guess-badge">WRONG GUESS</div>
-                        <h2 className="wrong-guess-title">Not Quite!</h2>
-                        <p className="wrong-guess-text">
-                            You guessed <strong>{wrongGuessScreen.guessedName}</strong>, which wasn&apos;t your opponent&apos;s secret character.
-                        </p>
-                        <p className="wrong-guess-turn">
-                            It is now <strong>{wrongGuessScreen.opponentName}</strong>&apos;s turn to ask a question or make a guess.
-                        </p>
+                    <div className="answer-popup__header">
+                        <span className="answer-popup__tag">WRONG GUESS</span>
                         <button
                             type="button"
-                            className="primary-button"
-                            onClick={() => setWrongGuessScreen(null)}
+                            className="answer-popup__close"
+                            onClick={() => setWrongGuessPopup(null)}
+                            aria-label="Close wrong guess pop-up"
                         >
-                            Continue Game
+                            ✕
                         </button>
-                    </section>
+                    </div>
+
+                    <div className="answer-popup__body">
+                        <span className="answer-popup__verdict">
+                            WRONG
+                        </span>
+                        <div className="answer-popup__details">
+                            <strong>Guessed {wrongGuessPopup.guessedName}</strong>
+                            <p>{wrongGuessPopup.opponentName}&apos;s turn to ask or guess.</p>
+                        </div>
+                    </div>
+
+                    <div className="answer-popup__footer">
+                        <button
+                            type="button"
+                            className="answer-popup__ack"
+                            onClick={() => setWrongGuessPopup(null)}
+                        >
+                            Got it
+                        </button>
+                    </div>
+
+                    <div className="answer-popup__progress-track" aria-hidden="true">
+                        <div className="answer-popup__progress-bar wrong-guess-popup__progress-bar" />
+                    </div>
                 </div>
             )}
 
