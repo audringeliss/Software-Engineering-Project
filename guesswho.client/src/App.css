@@ -301,30 +301,42 @@
     color: #ffffff;
 }
 
-.game-over-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 12px;
-    margin-bottom: 24px;
-    text-align: left;
+.game-over-stats-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 24px;
+    margin: 0 auto 24px;
+    border-radius: 999px;
+    background: rgba(30, 41, 59, 0.75);
+    border: 1px solid rgba(148, 163, 184, 0.2);
 }
 
-.game-over-stat-card {
-    background: #1e293b;
-    padding: 14px;
-    border-radius: 10px;
+.game-over-stats-pill__item {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
 }
 
-.game-over-stat-label {
-    font-size: 0.75rem;
+.game-over-stats-pill__label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     color: #94a3b8;
 }
 
-.game-over-stat-value {
+.game-over-stats-pill__value {
     font-size: 1rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-top: 4px;
+    font-weight: 800;
+    color: #f8fafc;
+}
+
+.game-over-stats-pill__divider {
+    width: 1px;
+    height: 18px;
+    background: rgba(148, 163, 184, 0.25);
 }
 
 .game-over-actions {

@@ -80,6 +80,7 @@ function GuessWhoContent() {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [cards, setCards] = useState([]);
     const [selectedTargetId, setSelectedTargetId] = useState(null);
+    const [winningCard, setWinningCard] = useState(null);
     const [questionInput, setQuestionInput] = useState('');
     const [gameError, setGameError] = useState('');
     const [wrongGuessPopup, setWrongGuessPopup] = useState(null);
@@ -218,6 +219,7 @@ function GuessWhoContent() {
         setSelectedCategory('');
         setCards([]);
         setSelectedTargetId(null);
+        setWinningCard(null);
         setShowOpponentDeckModal(false);
         setAnswerPopup(null);
         setWrongGuessPopup(null);
@@ -234,6 +236,7 @@ function GuessWhoContent() {
         setSelectedCategory('');
         setCards([]);
         setSelectedTargetId(null);
+        setWinningCard(null);
         setQuestionInput('');
         setShowOpponentDeckModal(false);
         setAnswerPopup(null);
@@ -354,7 +357,9 @@ function GuessWhoContent() {
             applyRoomState(nextState);
             setShowGuessModal(false);
 
-            if (nextState?.status === 'Playing' && nextState?.currentTurnRole !== role) {
+            if (nextState?.status === 'GameOver') {
+                setWinningCard(selectedCard);
+            } else if (nextState?.status === 'Playing' && nextState?.currentTurnRole !== role) {
                 const oppName = role === 'creator'
                     ? (nextState?.joinerName || 'Opponent')
                     : (nextState?.creatorName || 'Opponent');
@@ -463,16 +468,21 @@ function GuessWhoContent() {
         || (roomState?.winnerRole === 'creator'
             ? (roomState?.creatorName || 'Creator')
             : (roomState?.joinerName || 'Joiner'));
-    const rawOpponentTarget = roomState?.opponentTargetCard ?? roomState?.OpponentTargetCard ?? null;
+    const rawOpponentTarget =
+        roomState?.opponentTargetCard
+        ?? roomState?.OpponentTargetCard
+        ?? (didIWin ? winningCard : null);
     const opponentChosenName = rawOpponentTarget?.name ?? rawOpponentTarget?.Name ?? '';
     const opponentChosenImage = rawOpponentTarget?.imageUrl ?? rawOpponentTarget?.ImageUrl ?? '';
 
-    const rawOpponentGuessTarget =
-        roomState?.opponentGuessTargetCard
+    const rawMyTarget =
+        roomState?.myTargetCard
+        ?? roomState?.MyTargetCard
+        ?? roomState?.opponentGuessTargetCard
         ?? roomState?.OpponentGuessTargetCard
-        ?? (isGameOver ? (roomState?.myTargetCard ?? roomState?.MyTargetCard ?? null) : null);
-    const opponentGuessTargetName = rawOpponentGuessTarget?.name ?? rawOpponentGuessTarget?.Name ?? '';
-    const opponentGuessTargetImage = rawOpponentGuessTarget?.imageUrl ?? rawOpponentGuessTarget?.ImageUrl ?? '';
+        ?? null;
+    const myChosenName = rawMyTarget?.name ?? rawMyTarget?.Name ?? '';
+    const myChosenImage = rawMyTarget?.imageUrl ?? rawMyTarget?.ImageUrl ?? '';
 
     return (
         <div className="game-app">
@@ -639,62 +649,57 @@ function GuessWhoContent() {
 
                     <p className="game-over-subtitle">
                         {didIWin
-                            ? 'You guessed your opponent\'s secret character correctly!'
+                            ? `You guessed ${opponentName}'s secret character correctly!`
                             : `${winnerLabel} guessed your secret character correctly.`}
                     </p>
 
-                    {((opponentChosenName || opponentChosenImage) || (opponentGuessTargetName || opponentGuessTargetImage)) && (
-                        <div className="game-over-reveals">
-                            {(opponentChosenName || opponentChosenImage) && (
-                                <div className={`game-over-reveal ${didIWin ? 'game-over-reveal--victory' : 'game-over-reveal--defeat'}`}>
-                                    <span className="game-over-reveal__label">
-                                        {opponentName}&apos;s Secret Character
-                                    </span>
-                                    <div className="game-over-reveal__card">
-                                        {opponentChosenImage && (
-                                            <img
-                                                src={opponentChosenImage}
-                                                alt={opponentChosenName || 'Opponent secret character'}
-                                                className="game-over-reveal__img"
-                                            />
-                                        )}
-                                        {opponentChosenName && (
-                                            <span className="game-over-reveal__name">{opponentChosenName}</span>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-
-                            {(opponentGuessTargetName || opponentGuessTargetImage) && (
-                                <div className={`game-over-reveal ${didIWin ? 'game-over-reveal--victory' : 'game-over-reveal--defeat'}`}>
-                                    <span className="game-over-reveal__label">
-                                        Target {opponentName} Had to Guess
-                                    </span>
-                                    <div className="game-over-reveal__card">
-                                        {opponentGuessTargetImage && (
-                                            <img
-                                                src={opponentGuessTargetImage}
-                                                alt={opponentGuessTargetName || 'Target opponent had to guess'}
-                                                className="game-over-reveal__img"
-                                            />
-                                        )}
-                                        {opponentGuessTargetName && (
-                                            <span className="game-over-reveal__name">{opponentGuessTargetName}</span>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
+                    <div className="game-over-reveals">
+                        <div className={`game-over-reveal ${didIWin ? 'game-over-reveal--victory' : 'game-over-reveal--defeat'}`}>
+                            <span className="game-over-reveal__label">
+                                {opponentName}&apos;s Secret Character
+                            </span>
+                            <div className="game-over-reveal__card">
+                                {opponentChosenImage && (
+                                    <img
+                                        src={opponentChosenImage}
+                                        alt={opponentChosenName || `${opponentName}'s secret character`}
+                                        className="game-over-reveal__img"
+                                    />
+                                )}
+                                <span className="game-over-reveal__name">
+                                    {opponentChosenName || 'Unknown'}
+                                </span>
+                            </div>
                         </div>
-                    )}
 
-                    <div className="game-over-stats">
-                        <div className="game-over-stat-card">
-                            <div className="game-over-stat-label">Questions Asked</div>
-                            <div className="game-over-stat-value">{rawHistory.length}</div>
+                        <div className={`game-over-reveal ${didIWin ? 'game-over-reveal--victory' : 'game-over-reveal--defeat'}`}>
+                            <span className="game-over-reveal__label">
+                                Your Chosen Character
+                            </span>
+                            <div className="game-over-reveal__card">
+                                {myChosenImage && (
+                                    <img
+                                        src={myChosenImage}
+                                        alt={myChosenName || 'Your chosen character'}
+                                        className="game-over-reveal__img"
+                                    />
+                                )}
+                                <span className="game-over-reveal__name">
+                                    {myChosenName || 'Unknown'}
+                                </span>
+                            </div>
                         </div>
-                        <div className="game-over-stat-card">
-                            <div className="game-over-stat-label">Your Open Cards</div>
-                            <div className="game-over-stat-value">{myOpenCount} / {totalCardsCount}</div>
+                    </div>
+
+                    <div className="game-over-stats-pill">
+                        <div className="game-over-stats-pill__item">
+                            <span className="game-over-stats-pill__label">Questions</span>
+                            <strong className="game-over-stats-pill__value">{myFilteredHistory.length}</strong>
+                        </div>
+                        <span className="game-over-stats-pill__divider" aria-hidden="true" />
+                        <div className="game-over-stats-pill__item">
+                            <span className="game-over-stats-pill__label">Open Cards</span>
+                            <strong className="game-over-stats-pill__value">{myOpenCount} / {totalCardsCount}</strong>
                         </div>
                     </div>
 
@@ -705,16 +710,6 @@ function GuessWhoContent() {
                             onClick={leaveRoom}
                         >
                             Back to Lobby
-                        </button>
-                        <button
-                            type="button"
-                            className="reset-board-btn"
-                            onClick={() => {
-                                leaveRoom();
-                                setCurrentUser(null);
-                            }}
-                        >
-                            Log Out
                         </button>
                     </div>
                 </section>
