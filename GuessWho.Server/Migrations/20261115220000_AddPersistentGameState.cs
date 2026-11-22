@@ -120,6 +120,5 @@ public partial class AddPersistentGameState : Migration
 
     protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
-        AppDbContextModelSnapshot.ConfigureModel(modelBuilder);
     }
 }

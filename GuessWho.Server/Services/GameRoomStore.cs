@@ -159,6 +159,11 @@ public sealed class GameRoomStore
             session.CurrentTurnRole = room.CurrentTurnRole;
             session.PendingQuestion = room.PendingQuestion;
             session.PendingQuestionAskedByRole = room.PendingQuestionAskedByRole;
+            session.LastWrongGuessId = room.LastWrongGuessId;
+            session.LastWrongGuessByRole = room.LastWrongGuessByRole;
+            session.LastWrongGuessCardId = room.LastWrongGuessCardId;
+            session.LastWrongGuessCardName = room.LastWrongGuessCardName;
+            session.LastWrongGuessCardImageUrl = room.LastWrongGuessCardImageUrl;
             session.WinnerRole = room.WinnerRole;
             session.LastActivityAt = room.LastActivityAt;
 
@@ -259,6 +264,11 @@ public sealed class GameRoomStore
                 CurrentTurnRole = session.CurrentTurnRole,
                 PendingQuestion = session.PendingQuestion,
                 PendingQuestionAskedByRole = session.PendingQuestionAskedByRole,
+                LastWrongGuessId = session.LastWrongGuessId,
+                LastWrongGuessByRole = session.LastWrongGuessByRole,
+                LastWrongGuessCardId = session.LastWrongGuessCardId,
+                LastWrongGuessCardName = session.LastWrongGuessCardName,
+                LastWrongGuessCardImageUrl = session.LastWrongGuessCardImageUrl,
                 WinnerRole = session.WinnerRole
             };
 

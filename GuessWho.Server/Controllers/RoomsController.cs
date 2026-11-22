@@ -173,6 +173,11 @@ public class RoomsController : ControllerBase
         {
             room.PendingQuestion = request.QuestionText;
             room.PendingQuestionAskedByRole = role;
+            room.LastWrongGuessId = null;
+            room.LastWrongGuessByRole = null;
+            room.LastWrongGuessCardId = null;
+            room.LastWrongGuessCardName = null;
+            room.LastWrongGuessCardImageUrl = null;
 
             return BuildRoomStateResponse(room, role);
         });
@@ -201,27 +206,52 @@ public class RoomsController : ControllerBase
             request.PlayerId,
             (room, role) =>
             {
-                if (room.Status == "GameOver")
+                if (room.Status != "Playing")
+                {
+                    return null;
+                }
+
+                if (!string.Equals(room.CurrentTurnRole, role, StringComparison.OrdinalIgnoreCase))
+                {
+                    return null;
+                }
+
+                if (!string.IsNullOrEmpty(room.PendingQuestion))
                 {
                     return null;
                 }
 
                 string? opponentTargetId = role == "creator" ? room.JoinerTargetCardId : room.CreatorTargetCardId;
-                bool isCorrect = request.CardId.Equals(opponentTargetId, StringComparison.OrdinalIgnoreCase);
+                bool isCorrect = !string.IsNullOrWhiteSpace(request.CardId) &&
+                                 request.CardId.Equals(opponentTargetId, StringComparison.OrdinalIgnoreCase);
 
                 if (isCorrect)
                 {
                     room.Status = "GameOver";
                     room.WinnerRole = role;
+                    room.LastWrongGuessId = null;
+                    room.LastWrongGuessByRole = null;
+                    room.LastWrongGuessCardId = null;
+                    room.LastWrongGuessCardName = null;
+                    room.LastWrongGuessCardImageUrl = null;
                 }
                 else
                 {
+                    var guessedCard = !string.IsNullOrWhiteSpace(request.CardId)
+                        ? room.Board.FirstOrDefault(c => string.Equals(c.Id, request.CardId, StringComparison.OrdinalIgnoreCase))
+                        : null;
+
+                    room.LastWrongGuessByRole = role;
+                    room.LastWrongGuessCardId = guessedCard?.Id ?? request.CardId;
+                    room.LastWrongGuessCardName = guessedCard?.Name ?? "that character";
+                    room.LastWrongGuessCardImageUrl = guessedCard?.ImageUrl ?? string.Empty;
+                    room.LastWrongGuessId = Guid.NewGuid().ToString("N");
                     room.CurrentTurnRole = role == "creator" ? "joiner" : "creator";
                 }
 
                 return BuildRoomStateResponse(room, role);
             },
-            errorMessage: "Game is already over or unauthorized.",
+            errorMessage: "You can only make a guess on your own turn during active play with no pending question.",
             returnBadRequestOnNull: true);
 
     [HttpPost("{code}/cards/flip")]
@@ -259,6 +289,7 @@ public class RoomsController : ControllerBase
     private static object BuildRoomStateResponse(GameRoom room, string role)
     {
         var flippedSet = role == "creator" ? room.CreatorFlippedCardIds : room.JoinerFlippedCardIds;
+        var opponentFlippedSet = role == "creator" ? room.JoinerFlippedCardIds : room.CreatorFlippedCardIds;
         var boardWithFlipState = room.Board.Select(c => new
         {
             c.Id,
@@ -270,7 +301,19 @@ public class RoomsController : ControllerBase
         }).ToList();
 
         string? myTargetId = role == "creator" ? room.CreatorTargetCardId : room.JoinerTargetCardId;
-        var myTargetCard = room.Board.FirstOrDefault(c => c.Id == myTargetId);
+        string? opponentTargetId = role == "creator" ? room.JoinerTargetCardId : room.CreatorTargetCardId;
+        var myTargetCard = !string.IsNullOrWhiteSpace(myTargetId)
+            ? room.Board.FirstOrDefault(c => string.Equals(c.Id, myTargetId, StringComparison.OrdinalIgnoreCase))
+            : null;
+        var opponentTargetCard = room.Status == "GameOver" && !string.IsNullOrWhiteSpace(opponentTargetId)
+            ? room.Board.FirstOrDefault(c => string.Equals(c.Id, opponentTargetId, StringComparison.OrdinalIgnoreCase))
+            : null;
+        var opponentGuessTargetCard = room.Status == "GameOver"
+            ? myTargetCard
+            : null;
+        string? winnerName = room.WinnerRole == "creator"
+            ? room.CreatorName
+            : (room.WinnerRole == "joiner" ? room.JoinerName : null);
 
         return new
         {
@@ -283,16 +326,25 @@ public class RoomsController : ControllerBase
             room.PendingQuestion,
             room.PendingQuestionAskedByRole,
             room.WinnerRole,
+            WinnerName = winnerName,
             CreatorName = room.CreatorName,
             JoinerName = room.JoinerName,
             Role = role,
             HasSelectedTarget = myTargetId != null,
             BothTargetsSelected = room.CreatorTargetCardId != null && room.JoinerTargetCardId != null,
             MyTargetCard = myTargetCard,
+            OpponentTargetCard = opponentTargetCard,
+            OpponentGuessTargetCard = opponentGuessTargetCard,
+            room.LastWrongGuessId,
+            room.LastWrongGuessByRole,
+            room.LastWrongGuessCardId,
+            room.LastWrongGuessCardName,
+            room.LastWrongGuessCardImageUrl,
             Board = boardWithFlipState,
             TotalCardsCount = room.Board.Count,
             CreatorOpenCardsCount = room.Board.Count - room.CreatorFlippedCardIds.Count,
             JoinerOpenCardsCount = room.Board.Count - room.JoinerFlippedCardIds.Count,
+            OpponentFlippedCardIds = opponentFlippedSet,
             room.QuestionHistory
         };
     }
