@@ -942,7 +942,7 @@
     background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9));
     border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
-    padding: 30px 20px;
+    padding: 24px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -970,8 +970,8 @@
 }
 
 .category-tile-icon {
-    font-size: 4.5rem;
-    margin-bottom: 15px;
+    font-size: 3.25rem;
+    margin-bottom: 10px;
     transition: transform 0.3s;
 }
 
@@ -993,6 +993,129 @@
 
 .category-tile--selected .category-tile-desc {
     color: #e0f2fe;
+}
+
+.category-tile-preview-action {
+    margin-top: 12px;
+    color: #7dd3fc;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.category-proposal {
+    text-align: center;
+}
+
+.category-proposal h2 {
+    margin-top: 0;
+}
+
+.category-proposal__message {
+    margin: 15px 0;
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+.category-proposal__message span {
+    color: #60a5fa;
+    font-weight: 800;
+}
+
+.category-proposal__waiting {
+    color: #b0c4de;
+}
+
+.category-preview {
+    max-width: 1100px;
+}
+
+.category-preview__header h2 {
+    margin: 0;
+    color: #f4f8ff;
+    font-size: 1.2rem;
+}
+
+.category-preview__header p,
+.category-preview__message {
+    margin: 6px 0 0;
+    color: #9db0cc;
+}
+
+.category-preview__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    max-height: 440px;
+    margin-top: 16px;
+    overflow-y: auto;
+    padding: 2px 6px 2px 2px;
+}
+
+.category-preview__card {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid rgba(146, 170, 214, 0.2);
+    border-radius: 12px;
+    background: rgba(7, 13, 26, 0.6);
+}
+
+.category-preview__card img,
+.category-preview__placeholder {
+    display: grid;
+    width: 100%;
+    height: 104px;
+    object-fit: cover;
+    background: rgba(82, 209, 255, 0.08);
+    place-items: center;
+}
+
+.category-preview__placeholder {
+    color: #52d1ff;
+    font-size: 1.6rem;
+    font-weight: 800;
+}
+
+.category-preview__card span {
+    display: block;
+    overflow: hidden;
+    padding: 8px;
+    color: #f4f8ff;
+    font-size: 0.85rem;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.category-preview__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.category-preview__respond {
+    min-width: 120px;
+    padding: 12px 24px;
+    border: 0;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+}
+
+.category-preview__respond--accept {
+    background: #16a34a;
+}
+
+.category-preview__respond--decline {
+    background: #dc2626;
+}
+
+.category-preview__respond:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 .change-deck-btn {
@@ -1551,6 +1674,19 @@
 
     .room-banner__actions {
         justify-content: flex-start;
+    }
+
+    .category-tiles-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .category-tile {
+        padding: 18px 12px;
+    }
+
+    .category-tile-icon {
+        font-size: 2.5rem;
     }
 
     .card-grid {

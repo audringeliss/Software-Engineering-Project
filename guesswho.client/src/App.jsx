@@ -804,7 +804,6 @@ function GuessWhoContent() {
             ) : !selectedCategory || roomState?.status === 'WaitingForCategory' || roomState?.status === 'CategoryProposed' ? (
                 <CategorySelector
                     categories={categories}
-                    selectedCategory={selectedCategory}
                     proposedCategory={roomState?.proposedCategory}
                     proposedCategoryByRole={roomState?.proposedCategoryByRole}
                     myRole={myRole}
