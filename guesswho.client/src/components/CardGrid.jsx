@@ -5,6 +5,7 @@ function CardGrid({
     selectedCategory,
     selectionMode = false,
     selectedCardId,
+    secretCardId,
     onSelectCard,
     canToggleCards = true,
 }) {
@@ -26,7 +27,8 @@ function CardGrid({
                     const name = card.name || card.Name || 'Unknown';
                     const imageUrl = card.imageUrl || card.ImageUrl || '';
                     const isEliminated = eliminatedCards.includes(id);
-                    const isSelected = selectionMode && selectedCardId === id;
+                    const isSecret = secretCardId != null && String(secretCardId) === String(id);
+                    const isSelected = (selectionMode && selectedCardId === id) || isSecret;
                     const isInteractive = selectionMode || canToggleCards;
                     const handleClick = selectionMode
                         ? () => onSelectCard(id)
@@ -38,7 +40,7 @@ function CardGrid({
                         <div
                             key={id}
                             onClick={isInteractive ? handleClick : undefined}
-                            className={`card-container ${isEliminated ? 'is-eliminated' : ''} ${isSelected ? 'is-selected' : ''}`}
+                            className={`card-container ${isEliminated ? 'is-eliminated' : ''} ${isSelected ? 'is-selected' : ''} ${isSecret ? 'is-secret' : ''}`}
                             role={isInteractive ? 'button' : undefined}
                             tabIndex={isInteractive ? 0 : undefined}
                             onKeyDown={(e) => {
@@ -52,7 +54,7 @@ function CardGrid({
                                 ? `${name} ${isEliminated ? 'Eliminated' : 'Active'}`
                                 : selectionMode
                                     ? `${name} ${isSelected ? 'selected' : 'select as target'}`
-                                    : `${name} ${isEliminated ? 'Eliminated' : 'Active'}`}
+                                    : `${name} ${isEliminated ? 'Eliminated' : 'Active'}${isSecret ? ', your card' : ''}`}
                         >
                             <div className="guess-card">
                                 {/* Priekinė kortelės pusė */}
@@ -74,6 +76,7 @@ function CardGrid({
                                     </div>
                                 </div>
                             </div>
+                            {isSecret && <span className="card-secret-badge">Your card</span>}
                         </div>
                     );
                 })}

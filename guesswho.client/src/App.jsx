@@ -951,6 +951,7 @@ function GuessWhoContent() {
                         onToggleCard={toggleFlip}
                         canToggleCards={true}
                         selectedCategory={selectedCategory}
+                        secretCardId={rawMyTarget?.id ?? rawMyTarget?.Id}
                     />
                 </>
             )}

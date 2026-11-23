@@ -1351,8 +1351,8 @@
     box-shadow: 0 0 0 3px rgba(82, 209, 255, 0.65), 0 0 28px rgba(82, 209, 255, 0.28);
 }
 
-.card-container.is-selected .guess-card__face--front::after {
-    content: 'YOUR SECRET CHARACTER';
+.card-container.is-selected:not(.is-secret) .guess-card__face--front::after {
+    content: 'YOUR CARD';
     position: absolute;
     top: 16px;
     left: 16px;
@@ -1367,9 +1367,26 @@
 }
 
 .card-container {
+    position: relative;
     perspective: 1200px;
     min-height: clamp(220px, 29vw, 260px);
     cursor: pointer;
+}
+
+.card-secret-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 3;
+    padding: 5px 9px;
+    border-radius: 999px;
+    color: #071321;
+    background: #52d1ff;
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    pointer-events: none;
+    text-transform: uppercase;
 }
 
 .card-image-container {
