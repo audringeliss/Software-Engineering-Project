@@ -751,6 +751,18 @@
     color: #f4f8ff;
 }
 
+.room-waiting__code {
+    display: block;
+    margin: 8px 0 14px;
+    color: #52d1ff;
+    font-size: 1.6rem;
+    letter-spacing: 0.15em;
+}
+
+.room-waiting__copy {
+    margin: 0 auto;
+}
+
 .room-waiting p,
 .room-role-notice {
     color: #9db0cc;
