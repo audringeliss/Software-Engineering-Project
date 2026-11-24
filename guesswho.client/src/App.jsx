@@ -88,6 +88,7 @@ function GuessWhoContent() {
     const [showGuessModal, setShowGuessModal] = useState(false);
     const [showOpponentDeckModal, setShowOpponentDeckModal] = useState(false);
     const [answerPopup, setAnswerPopup] = useState(null);
+    const [copiedRoomCode, setCopiedRoomCode] = useState(false);
     const roomStateVersion = useRef(0);
     const prevMyHistoryCountRef = useRef(0);
     const lastSeenWrongGuessIdRef = useRef(null);
@@ -269,6 +270,7 @@ function GuessWhoContent() {
         localStorage.setItem(ROOM_SESSION_KEY, JSON.stringify(session));
         setRoomSession(session);
         setRoomState(null);
+        setCopiedRoomCode(false);
         setSelectedCategory('');
         setCards([]);
         setSelectedTargetId(null);
@@ -287,6 +289,7 @@ function GuessWhoContent() {
         localStorage.removeItem(ROOM_SESSION_KEY);
         setRoomSession(null);
         setRoomState(null);
+        setCopiedRoomCode(false);
         setSelectedCategory('');
         setCards([]);
         setSelectedTargetId(null);
@@ -296,6 +299,32 @@ function GuessWhoContent() {
         setAnswerPopup(null);
         setWrongGuessPopup(null);
         setGameError('');
+    };
+
+    const copyRoomCode = async () => {
+        const roomCode = activeRoomSession?.roomCode;
+        if (!roomCode) return;
+
+        try {
+            if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(roomCode);
+            } else {
+                const textArea = document.createElement('textarea');
+                textArea.value = roomCode;
+                textArea.style.position = 'fixed';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.select();
+                const copied = document.execCommand('copy');
+                textArea.remove();
+                if (!copied) throw new Error('Copy is not supported');
+            }
+
+            setCopiedRoomCode(true);
+            window.setTimeout(() => setCopiedRoomCode(false), 2000);
+        } catch {
+            setGameError('Could not copy the room code.');
+        }
     };
 
     const handleProposeCategory = async (category) => {
@@ -760,12 +789,21 @@ function GuessWhoContent() {
             ) : roomState?.status === 'WaitingForPlayer' ? (
                 <section className="panel room-waiting">
                     <h2>Waiting for a second player</h2>
-                    <p>Share room code: <strong>{activeRoomSession.roomCode}</strong></p>
+                    <p>
+                        Share room code:
+                        <strong className="room-waiting__code">{activeRoomSession.roomCode}</strong>
+                    </p>
+                    <button
+                        type="button"
+                        className="reset-board-btn room-waiting__copy"
+                        onClick={copyRoomCode}
+                    >
+                        {copiedRoomCode ? 'Copied!' : 'Copy Code'}
+                    </button>
                 </section>
             ) : !selectedCategory || roomState?.status === 'WaitingForCategory' || roomState?.status === 'CategoryProposed' ? (
                 <CategorySelector
                     categories={categories}
-                    selectedCategory={selectedCategory}
                     proposedCategory={roomState?.proposedCategory}
                     proposedCategoryByRole={roomState?.proposedCategoryByRole}
                     myRole={myRole}
@@ -913,6 +951,7 @@ function GuessWhoContent() {
                         onToggleCard={toggleFlip}
                         canToggleCards={true}
                         selectedCategory={selectedCategory}
+                        secretCardId={rawMyTarget?.id ?? rawMyTarget?.Id}
                     />
                 </>
             )}

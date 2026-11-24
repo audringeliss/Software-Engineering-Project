@@ -1,15 +1,64 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 
-function CategorySelector({ 
-    categories, 
-    selectedCategory, 
-    proposedCategory, 
-    proposedCategoryByRole, 
-    myRole, 
-    onCategoryChange, 
-    onProposeCategory, 
-    onRespondCategory 
+function CategorySelector({
+    categories,
+    proposedCategory,
+    proposedCategoryByRole,
+    myRole,
+    onProposeCategory,
+    onRespondCategory
 }) {
+    const [previewCategory, setPreviewCategory] = useState('');
+    const [previewResult, setPreviewResult] = useState(null);
+
+    const categoryOptions = categories.map((category, index) => {
+        const value = typeof category === 'object'
+            ? (category.id || category.Id || category.name || category.Name)
+            : category;
+        const label = typeof category === 'object'
+            ? (category.name || category.Name)
+            : category;
+
+        return { value, label, key: value || index };
+    });
+
+    const activePreviewCategory = proposedCategory || previewCategory;
+
+    useEffect(() => {
+        if (!activePreviewCategory) return undefined;
+
+        let isActive = true;
+
+        fetch(`/api/cards?category=${encodeURIComponent(activePreviewCategory)}`)
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            })
+            .then(cards => {
+                if (!isActive) return;
+                if (!Array.isArray(cards)) throw new Error('Invalid card data');
+                setPreviewResult({ category: activePreviewCategory, cards, status: 'loaded' });
+            })
+            .catch(() => {
+                if (!isActive) return;
+                setPreviewResult({
+                    category: activePreviewCategory,
+                    cards: [],
+                    status: 'error',
+                    error: 'Could not load the cards for this category.'
+                });
+            });
+
+        return () => {
+            isActive = false;
+        };
+    }, [activePreviewCategory]);
+
+    const isCurrentPreview = previewResult?.category === activePreviewCategory;
+    const previewCards = isCurrentPreview ? previewResult.cards : [];
+    const previewStatus = activePreviewCategory
+        ? (isCurrentPreview ? previewResult.status : 'loading')
+        : 'idle';
     const getCategoryMeta = (catName) => {
         const name = String(catName).toLowerCase();
         if (name.includes('animal')) return { icon: '🦁', desc: 'Creatures & beasts' };
@@ -29,81 +78,131 @@ function CategorySelector({
 
     const isMyProposal = proposedCategoryByRole === myRole;
     const proposerName = proposedCategoryByRole === 'creator' ? 'Room Creator' : 'Opponent';
-
-    // If a category has been proposed by either player, display the proposal banner/acceptance view
-    if (proposedCategory) {
-        return (
-            <section className="panel category-proposal" style={{ textAlign: 'center', padding: '40px' }}>
-                <h2>Category Proposed</h2>
-                <p style={{ fontSize: '1.2rem', margin: '15px 0', color: '#fff' }}>
-                    <strong>{isMyProposal ? 'You' : proposerName}</strong> suggested: {' '}
-                    <span style={{ color: '#60a5fa', fontWeight: 'bold' }}>{proposedCategory.toUpperCase()}</span>
-                </p>
-
-                {isMyProposal ? (
-                    <p style={{ color: '#b0c4de' }}>Waiting for your opponent to accept or decline...</p>
-                ) : (
-                    <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '24px' }}>
-                        <button 
-                            onClick={() => onRespondCategory(true)} 
-                            style={{ padding: '12px 28px', background: '#22c55e', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '1rem' }}
-                        >
-                            Accept
-                        </button>
-                        <button 
-                            onClick={() => onRespondCategory(false)} 
-                            style={{ padding: '12px 28px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '1rem' }}
-                        >
-                            Decline
-                        </button>
-                    </div>
-                )}
-            </section>
-        );
-    }
+    const canRespond = previewStatus === 'loaded' && previewCards.length > 0;
+    const previewLabel = categoryOptions.find(option => option.value === activePreviewCategory)?.label
+        || activePreviewCategory;
 
     return (
-        <section className="category-selector panel">
-            <div className="panel-heading">
-                <div>
-                    <h2>Suggest a category</h2>
-                    <p>Pick a deck to propose to your opponent!</p>
-                </div>
-            </div>
+        <>
+            {proposedCategory ? (
+                <section className="panel category-proposal">
+                    <h2>Category Proposed</h2>
+                    <p className="category-proposal__message">
+                        <strong>{isMyProposal ? 'You' : proposerName}</strong> suggested{' '}
+                        <span>{proposedCategory.toUpperCase()}</span>
+                    </p>
+                    {isMyProposal ? (
+                        <p className="category-proposal__waiting">Waiting for your opponent to accept or decline...</p>
+                    ) : null}
+                </section>
+            ) : (
+                <section className="category-selector panel">
+                    <div className="panel-heading">
+                        <div>
+                            <h2>Suggest a category</h2>
+                            <p>Preview the cards before suggesting a deck.</p>
+                        </div>
+                    </div>
 
-            <div className="category-tiles-grid">
-                {categories.map((category, index) => {
-                    const value = typeof category === 'object'
-                        ? (category.id || category.Id || category.name || category.Name)
-                        : category;
-                    const label = typeof category === 'object'
-                        ? (category.name || category.Name)
-                        : category;
-                    
-                    const isSelected = selectedCategory === value;
-                    const meta = getCategoryMeta(label);
+                    <div className="category-tiles-grid">
+                        {categoryOptions.map(({ value, label, key }) => {
+                            const isSelected = previewCategory === value;
+                            const meta = getCategoryMeta(label);
 
-                    return (
-                        <button
-                            key={value || index}
-                            type="button"
-                            className={`category-tile ${isSelected ? 'category-tile--selected' : ''}`}
-                            onClick={() => {
-                                if (onProposeCategory) {
-                                    onProposeCategory(value);
-                                } else {
-                                    onCategoryChange(value);
-                                }
-                            }}
-                        >
-                            <span className="category-tile-icon" aria-hidden="true">{meta.icon}</span>
-                            <span className="category-tile-name">{String(label).toUpperCase()}</span>
-                            <span className="category-tile-desc">{meta.desc}</span>
-                        </button>
-                    );
-                })}
-            </div>
-        </section>
+                            return (
+                                <button
+                                    key={key}
+                                    type="button"
+                                    className={`category-tile ${isSelected ? 'category-tile--selected' : ''}`}
+                                    aria-pressed={isSelected}
+                                    onClick={() => setPreviewCategory(value)}
+                                >
+                                    <span className="category-tile-icon" aria-hidden="true">{meta.icon}</span>
+                                    <span className="category-tile-name">{String(label).toUpperCase()}</span>
+                                    <span className="category-tile-desc">{meta.desc}</span>
+                                    <span className="category-tile-preview-action">
+                                        {isSelected ? 'Previewing cards' : 'Preview cards'}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </section>
+            )}
+
+            {activePreviewCategory && (
+                <section className="panel category-preview" aria-live="polite">
+                    <div className="category-preview__header">
+                        <div>
+                            <h2>{proposedCategory ? 'Review the proposed deck' : `${previewLabel} cards`}</h2>
+                            {previewStatus === 'loaded' && (
+                                <p>{previewCards.length} {previewCards.length === 1 ? 'card' : 'cards'} in this deck</p>
+                            )}
+                        </div>
+                    </div>
+
+                    {previewStatus === 'loading' && <p className="category-preview__message">Loading cards...</p>}
+                    {previewStatus === 'error' && <p className="category-preview__message" role="alert">{previewResult.error}</p>}
+                    {previewStatus === 'loaded' && previewCards.length === 0 && (
+                        <p className="category-preview__message">This category has no cards to preview.</p>
+                    )}
+                    {previewCards.length > 0 && (
+                        <div className="category-preview__grid">
+                            {previewCards.map((card, index) => {
+                                const id = card.id ?? card.Id ?? index;
+                                const name = card.name ?? card.Name ?? 'Unknown';
+                                const imageUrl = card.imageUrl ?? card.ImageUrl ?? '';
+
+                                return (
+                                    <article className="category-preview__card" key={id}>
+                                        {imageUrl ? (
+                                            <img src={imageUrl} alt="" loading="lazy" />
+                                        ) : (
+                                            <div className="category-preview__placeholder" aria-hidden="true">?</div>
+                                        )}
+                                        <span>{name}</span>
+                                    </article>
+                                );
+                            })}
+                        </div>
+                    )}
+
+                    {proposedCategory ? (
+                        !isMyProposal && (
+                            <div className="category-preview__actions">
+                                <button
+                                    type="button"
+                                    className="category-preview__respond category-preview__respond--accept"
+                                    onClick={() => onRespondCategory(true)}
+                                    disabled={!canRespond}
+                                >
+                                    Accept
+                                </button>
+                                <button
+                                    type="button"
+                                    className="category-preview__respond category-preview__respond--decline"
+                                    onClick={() => onRespondCategory(false)}
+                                    disabled={!canRespond}
+                                >
+                                    Decline
+                                </button>
+                            </div>
+                        )
+                    ) : (
+                        <div className="category-preview__actions">
+                            <button
+                                type="button"
+                                className="primary-button"
+                                onClick={() => onProposeCategory(activePreviewCategory)}
+                                disabled={!canRespond}
+                            >
+                                Suggest {previewLabel}
+                            </button>
+                        </div>
+                    )}
+                </section>
+            )}
+        </>
     );
 }
 
