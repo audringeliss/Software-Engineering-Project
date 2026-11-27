@@ -1,0 +1,182 @@
+[
+    {
+        "id": "1",
+        "name": "Mike Ross",
+        "category": "fiction",
+        "imageUrl": "/images/apps/mikeross.jpg"
+    },
+    {
+        "id": "2",
+        "name": "Meredith Grey",
+        "category": "fiction",
+        "imageUrl": "/images/apps/meredithgrey.jpg"
+    },
+    {
+        "id": "3",
+        "name": "Barbie",
+        "category": "fiction",
+        "imageUrl": "/images/apps/barbie.jpg"
+    },
+    {
+        "id": "4",
+        "name": "Damon Salvatore",
+        "category": "fiction",
+        "imageUrl": "/images/apps/damonsalvatore.jpg"
+    },
+    {
+        "id": "5",
+        "name": "Eleven",
+        "category": "fiction",
+        "imageUrl": "/images/apps/eleven.jpg"
+    },
+    {
+        "id": "6",
+        "name": "Sheldon Cooper",
+        "category": "fiction",
+        "imageUrl": "/images/apps/sheldoncooper.jpg"
+    },
+    {
+        "id": "7",
+        "name": "Katniss Everdeen",
+        "category": "fiction",
+        "imageUrl": "/images/apps/katniss.jpg"
+    },
+    {
+        "id": "8",
+        "name": "Otis Milburn",
+        "category": "fiction",
+        "imageUrl": "/images/apps/otismilburn.jpg"
+    },
+    {
+        "id": "9",
+        "name": "John Wick",
+        "category": "fiction",
+        "imageUrl": "/images/apps/johnwick.jpg"
+    },
+    {
+        "id": "10",
+        "name": "Betty Cooper",
+        "category": "fiction",
+        "imageUrl": "/images/apps/bettycooper.jpg"
+    },
+    {
+        "id": "11",
+        "name": "Ginny Miller",
+        "category": "fiction",
+        "imageUrl": "/images/apps/ginnyMiller.jpg"
+    },
+    {
+        "id": "12",
+        "name": "Walter White",
+        "category": "fiction",
+        "imageUrl": "/images/apps/walterwhite.jpg"
+    },
+    {
+        "id": "13",
+        "name": "Belly Conklin",
+        "category": "fiction",
+        "imageUrl": "/images/apps/bellyconklin.jpg"
+    },
+    {
+        "id": "14",
+        "name": "Daenerys Targaryen",
+        "category": "fiction",
+        "imageUrl": "/images/apps/daenerystargaryen.jpg"
+    },
+    {
+        "id": "15",
+        "name": "Mia Dolan",
+        "category": "fiction",
+        "imageUrl": "/images/apps/miadolan.jpg"
+    },
+    {
+        "id": "16",
+        "name": "Jack Sparrow",
+        "category": "fiction",
+        "imageUrl": "/images/apps/jacksparrow.jpg"
+    },
+    {
+        "id": "17",
+        "name": "Edward Cullen",
+        "category": "fiction",
+        "imageUrl": "/images/apps/edwardcullen.jpg"
+    },
+    {
+        "id": "18",
+        "name": "Elle Woods",
+        "category": "fiction",
+        "imageUrl": "/images/apps/ellewoods.jpg"
+    },
+    {
+        "id": "19",
+        "name": "Harry Potter",
+        "category": "fiction",
+        "imageUrl": "/images/apps/harrypotter.jpg"
+    },
+    {
+        "id": "20",
+        "name": "James Bond",
+        "category": "fiction",
+        "imageUrl": "/images/apps/jamesbond.jpg"
+    },
+    {
+        "id": "21",
+        "name": "Mia Thermopolis",
+        "category": "fiction",
+        "imageUrl": "/images/apps/miadolan.jpg"
+    },  
+    {
+        "id": "22",
+        "name": "Rory Gilmore",
+        "category": "fiction",
+        "imageUrl": "/images/apps/rorygilmore.jpg"
+    },
+    {
+        "id": "23",
+        "name": "joe Goldberg",
+        "category": "fiction",
+        "imageUrl": "/images/apps/joegoldberg.jpg"
+    },
+    {
+        "id": "24",
+        "name": "Maya Bishop",
+        "category": "fiction",
+        "imageUrl": "/images/apps/mayabishop.jpg"
+    },
+    {
+        "id": "25",
+        "name": "Percy Jackson",
+        "category": "fiction",
+        "imageUrl": "/images/apps/percyjackson.jpg"
+    },  
+    {
+        "id": "26",
+        "name": "Rachel Green",
+        "category": "fiction",
+        "imageUrl": "/images/apps/rachelgreen.jpg"
+    },
+    {
+        "id": "27",
+        "name": "Sherlock Holmes",
+        "category": "fiction",
+        "imageUrl": "/images/apps/sherlockholmes.jpg"
+    },  
+    {
+        "id": "28",
+        "name": "Temperance Brennan",
+        "category": "fiction",
+        "imageUrl": "/images/apps/temperancebrennan.jpg"
+    },
+    {
+        "id": "29",
+        "name": "Thomas Shelby",
+        "category": "fiction",
+        "imageUrl": "/images/apps/thomasshelby.jpg"
+    },
+    {
+        "id": "30",
+        "name": "Wednesday Addams",
+        "category": "fiction",
+        "imageUrl": "/images/apps/wednesdayaddams.jpg"
+    }
+]

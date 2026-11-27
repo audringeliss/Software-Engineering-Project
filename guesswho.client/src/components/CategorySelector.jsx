@@ -74,6 +74,7 @@ function CategorySelector({
         if (name.includes('cute')) return { icon: '💕', desc: 'Cute Pokémon' };
         if (name.includes('apps')) return { icon: '📱', desc: 'Popular apps' };
         if (name.includes('celebrities')) return { icon: '💃', desc: 'Famous people' };
+        if (name.includes('fiction')) return { icon: '🎭', desc: 'Fictional characters' };
         return { icon: '✨', desc: 'Custom card deck' };
     };
 
