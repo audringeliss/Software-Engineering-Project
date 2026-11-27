@@ -75,6 +75,7 @@ function CategorySelector({
         if (name.includes('apps')) return { icon: '📱', desc: 'Popular apps' };
         if (name.includes('celebrities')) return { icon: '💃', desc: 'Famous people' };
         if (name.includes('fiction')) return { icon: '🎭', desc: 'Fictional characters' };
+        if (name.includes('oldanimation')) return { icon: '🎥', desc: 'Old animation characters' };
         return { icon: '✨', desc: 'Custom card deck' };
     };
 

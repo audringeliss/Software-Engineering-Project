@@ -1,0 +1,212 @@
+[
+    {
+        "id": "1",
+        "name": "Daffy Duck",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/daffyduck.jpg"
+    },
+    {
+        "id": "2",
+        "name": "Donald Duck",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/donaldduck.jpg"
+    },
+    {
+        "id": "3",
+        "name": "Mickey Mouse",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/mickeymouse.jpg"
+    },
+    {
+        "id": "4",
+        "name": "Bugs Bunny",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/bugsbunny.jpg"
+    },
+    {
+        "id": "5",
+        "name": "Pink Panther",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/pinkpanther.jpg"
+    },
+    {
+        "id": "6",
+        "name": "Tom",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/tom.jpg"
+    },
+    {
+        "id": "7",
+        "name": "Scooby-Doo",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/scoobydoo.jpg"
+    },
+    {
+        "id": "8",
+        "name": "Pochacco",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/pochacco.jpg"
+    },
+    {
+        "id": "9",
+        "name": "Bloom",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/bloom.jpg"
+    },
+    {
+        "id": "10",
+        "name": "Big Nose",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/bignose.jpg"
+    },
+    {
+        "id": "11",
+        "name": "Ash Ketchum",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/ashketchum.jpg"
+    },
+    {
+        "id": "12",
+        "name": "Blossom",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/blossom.jpg"
+    },
+    {
+        "id": "13",
+        "name": "Dora the Explorer",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/doratheexplorer.jpg"
+    },
+    {
+        "id": "14",
+        "name": "Garfield",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/garfield.jpg"
+    },
+    {
+        "id": "15",
+        "name": "Musa",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/musa.jpg"
+    },
+    {
+        "id": "16",
+        "name": "Charlie Brown",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/charliebrown.jpg"
+    },
+    {
+        "id": "17",
+        "name": "SpongeBob SquarePants",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/spongebob.jpg"
+    },
+    {
+        "id": "18",
+        "name": "Shaun the Sheep",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/shaun.jpg"
+    },
+    {
+        "id": "19",
+        "name": "Peppa Pig",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/peppapig.jpg"
+    },
+    {
+        "id": "20",
+        "name": "Fred Flintstone",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/fredflintstone.jpg"
+    },
+    {
+        "id": "21",
+        "name": "Bob the Builder",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/bobthebuilder.jpg"
+    },
+    {
+        "id": "22",
+        "name": "Curious George",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/curiousgeorge.jpg"
+    },
+    {
+        "id": "23",
+        "name": "Hello Kitty",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/hellocat.jpg"
+    },
+    {
+        "id": "24",
+        "name": "Pingu",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/pingu.jpg"
+    },
+    {
+        "id": "25",
+        "name": "Winnie the Pooh",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/winniethepooh.jpg"
+    },
+    {
+        "id": "26",
+        "name": "Mr. Krabs",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/mrkrabs.jpg"
+    },
+    {
+        "id": "27",
+        "name": "Bubbles",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/bubbles.jpg"
+    },
+    {
+        "id": "28",
+        "name": "Flora",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/flora.jpg"
+    },
+    {
+        "id": "29",
+        "name": "Buttercup",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/buttercup.jpg"
+    },
+    {
+        "id": "30",
+        "name": "Keroppi",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/keroppi.jpg"
+    },
+    {
+        "id": "31",
+        "name": "Masha",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/masha.jpg"
+    },
+    {
+        "id": "32",
+        "name": "Piglet",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/piglet.jpg"
+    },
+    {
+        "id": "33",
+        "name": "Pikachu",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/pikachu.jpg"
+    },
+    {
+        "id": "34",
+        "name": "Snoopy",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/snoopy.jpg"
+    },
+    {
+        "id": "35",
+        "name": "Squidward",
+        "category": "Old animation",
+        "imageUrl": "/images/oldsanimation/squidward.jpg"
+    }
+]
