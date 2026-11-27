@@ -1,0 +1,184 @@
+[
+  {
+    "id": "1",
+    "name": "Angelina Jolie",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/angelinajolie.jpg"
+  }, 
+  {
+    "id": "2",
+    "name": "Brad Pitt",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/bradpitt.jpg"
+  }, 
+  {
+    "id": "3",
+    "name": "Tom Cruise",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/tomcruise.jpg"
+  }, 
+  {
+    "id": "4",
+    "name": "Scarlett Johansson",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/scarlettjohansson.jpg"
+  },
+  {
+    "id": "5",
+    "name": "Leonardo DiCaprio",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/leonardodicaprio.jpg"
+  },
+  {
+    "id": "6",
+    "name": "Jennifer Lawrence",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/jenniferlawrence.jpg"
+  },
+  {
+    "id": "7",
+    "name": "Rihanna",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/rihanna.jpg"
+  },
+  {
+    "id": "8",
+    "name": "Sabrina Carpenter",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/sabrinacarpenter.jpg"
+  },
+  {
+    "id": "9",
+    "name": "Lady Gaga",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/ladygaga.jpg"
+  },
+  {
+    "id": "10",
+    "name": "Dwayne Johnson",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/dwaynejohnson.jpg"
+  },    
+  {
+    "id": "11",
+    "name": "Timothy Chalamet",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/timothychalamet.jpg"
+  },
+  {
+    "id": "12",
+    "name": "Olivia Rodrigo",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/oliviarodrigo.jpg"
+  },
+  {
+    "id": "13",
+    "name": "Ryan Reynolds",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/ryanreynolds.jpg"
+  },
+  {
+    "id": "14",
+    "name": "Damiano David",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/damianodavid.jpg"
+  },
+  {
+    "id": "15",
+    "name": "Robert Downey Jr.",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/robertdowneyjr.jpg"
+  },
+  {
+    "id": "16",
+    "name": "Billie Eilish",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/billieeilish.jpg"
+  },
+  {
+    "id": "17",
+    "name": "Bruno Mars",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/brunomars.jpg"
+  },
+  {
+    "id": "18",
+    "name": "Anne Hathaway",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/annehathaway.jpg"
+  },
+  {
+    "id": "19",
+    "name": "Cara Delevingne",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/caradelevingne.jpg"
+  },
+  {
+    "id": "20",
+    "name": "Bad Bunny",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/badbunny.jpg"
+  },
+  {
+    "id": "21",
+    "name": "Jackie Chan",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/jackiechan.jpg"
+  },
+  {
+    "id": "22",
+    "name": "Harry Styles",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/harrystyles.jpg"
+  },
+  {
+    "id": "23",
+    "name": "Johnny Depp",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/johnnydepp.jpg"
+  },
+  {
+    "id": "24",
+    "name": "Cillian Murphy",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/cillianmurphy.jpg"
+  },
+  {
+    "id": "25",
+    "name": "Pedro Pascal",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/pedropascal.jpg"
+  },
+  {
+    "id": "26",
+    "name": "Shakira",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/shakira.jpg"
+  },
+  {
+    "id": "27",
+    "name": "The Weeknd",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/theweeknd.jpg"
+  },
+  {
+    "id": "28",
+    "name": "Margot Robbie",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/margotrobbie.jpg"
+  },
+  {
+    "id": "29",
+    "name": "Zendaya",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/zendaya.jpg"
+  },
+  {
+    "id": "30",
+    "name": "Dua Lipa",
+    "category": "celebrities",
+    "imageUrl": "/images/celebrities/dualipa.jpg"
+  }
+
+
+]

@@ -73,6 +73,7 @@ function CategorySelector({
         if (name.includes('spooky')) return { icon: '👻', desc: 'Spooky Pokémon' };
         if (name.includes('cute')) return { icon: '💕', desc: 'Cute Pokémon' };
         if (name.includes('apps')) return { icon: '📱', desc: 'Popular apps' };
+        if (name.includes('celebrities')) return { icon: '💃', desc: 'Famous people' };
         return { icon: '✨', desc: 'Custom card deck' };
     };
 
