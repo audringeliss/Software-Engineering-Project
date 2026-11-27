@@ -77,6 +77,7 @@ function CategorySelector({
         if (name.includes('fiction')) return { icon: '🎭', desc: 'Fictional characters' };
         if (name.includes('memes')) return { icon: '😂', desc: 'Popular memes' };
         if (name.includes('nostalgia')) return { icon: '🎥', desc: 'Old animation characters' };
+        if (name.includes('girly-pop')) return { icon: '🎀', desc: 'Girly animated characters' };
         return { icon: '✨', desc: 'Custom card deck' };
     };
 
