@@ -1,0 +1,152 @@
+[
+    {
+        "id": "1",
+        "name": "Pepe the Frog",
+        "category": "Memes",
+        "imageUrl": "/images/memes/pepe.jpg"
+    },
+    {
+        "id": "2",
+        "name": "Elmo Fire",
+        "category": "Memes",
+        "imageUrl": "/images/memes/elmofire.jpg"
+    },
+    {
+        "id": "3",
+        "name": "Pop Cat",
+        "category": "Memes",
+        "imageUrl": "/images/memes/popcat.jpg"
+    },
+    {
+        "id": "4",
+        "name": "Success Kid",
+        "category": "Memes",
+        "imageUrl": "/images/memes/successkid.jpg"
+    },
+    {
+        "id": "5",
+        "name": "Distracted Boyfriend",
+        "category": "Memes",
+        "imageUrl": "/images/memes/distractedboyfriend.jpg"
+    },
+    {
+        "id": "6",
+        "name": "Rickroll",
+        "category": "Memes",
+        "imageUrl": "/images/memes/rickroll.jpg"
+    },
+    {
+        "id": "7",
+        "name": "Shocked Pikachu",
+        "category": "Memes",
+        "imageUrl": "/images/memes/shockedpikachu.jpg"
+    },
+    {
+        "id": "8",
+        "name": "Drake Hotline Bling",
+        "category": "Memes",
+        "imageUrl": "/images/memes/drakehotlinebling.jpg"
+    },
+    {
+        "id": "9",
+        "name": "Staring Hamster",
+        "category": "Memes",
+        "imageUrl": "/images/memes/staringhamster.jpg"
+    },
+    {
+        "id": "10",
+        "name": "Walter the Dog",
+        "category": "Memes",
+        "imageUrl": "/images/memes/walterthedog.jpg"
+    },
+    {
+        "id": "11",
+        "name": "Absolute Cinema",
+        "category": "Memes",
+        "imageUrl": "/images/memes/absolutecinema.jpg"
+    },
+    {
+        "id": "12",
+        "name": "Hide the Pain Harold",
+        "category": "Memes",
+        "imageUrl": "/images/memes/hidethepainharold.jpg"
+    },
+    {
+        "id": "13",
+        "name": "Chicken Jockey",
+        "category": "Memes",
+        "imageUrl": "/images/memes/chickenjockey.jpg"
+    },
+    {
+        "id": "14",
+        "name": "Beluga",
+        "category": "Memes",
+        "imageUrl": "/images/memes/beluga.jpg"
+    },
+    {
+        "id": "15",
+        "name": "Look at all those Chickens",
+        "category": "Memes",
+        "imageUrl": "/images/memes/lookatallthosechickens.jpg"
+    },
+    {
+        "id": "16",
+        "name": "Bad Luck Brian",
+        "category": "Memes",
+        "imageUrl": "/images/memes/badluckbrian.jpg"
+    },
+    {
+        "id": "17",
+        "name": "Confused Nick Young",
+        "category": "Memes",
+        "imageUrl": "/images/memes/confusednickyoung.jpg"
+    },
+    {
+        "id": "18",
+        "name": "Maxwell the Cat",
+        "category": "Memes",
+        "imageUrl": "/images/memes/maxwellthecat.jpg"
+    },
+    {
+        "id": "19",
+        "name": "Let Him Cook",
+        "category": "Memes",
+        "imageUrl": "/images/memes/lethimcook.jpg"
+    },
+    {
+        "id": "20",
+        "name": "Leonardo DiCaprio Cheers",
+        "category": "Memes",
+        "imageUrl": "/images/memes/leonardodicapriocheers.jpg"
+    },
+    {
+        "id": "21",
+        "name": "Shy Guy",
+        "category": "Memes",
+        "imageUrl": "/images/memes/shyguy.jpg"
+    },
+    {
+        "id": "22",
+        "name": "Side Eye Chloe",
+        "category": "Memes",
+        "imageUrl": "/images/memes/sideeyechloe.jpg"
+    },
+    {
+        "id": "23",
+        "name": "This is Fine",
+        "category": "Memes",
+        "imageUrl": "/images/memes/thisisfine.jpg"
+    },
+    {
+        "id": "24",
+        "name": "Touch Grass",
+        "category": "Memes",
+        "imageUrl": "/images/memes/touchgrass.jpg"
+    },
+    {
+        "id": "25",
+        "name": "What are those?!",
+        "category": "Memes",
+        "imageUrl": "/images/memes/whatarethose.jpg"
+    }
+]
