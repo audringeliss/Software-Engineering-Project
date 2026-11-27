@@ -1,0 +1,212 @@
+[
+    {
+        "id": "1",
+        "name": "Daffy Duck",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/daffyduck.jpg"
+    },
+    {
+        "id": "2",
+        "name": "Donald Duck",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/donaldduck.jpg"
+    },
+    {
+        "id": "3",
+        "name": "Mickey Mouse",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/mickeymouse.jpg"
+    },
+    {
+        "id": "4",
+        "name": "Bugs Bunny",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/bugsbunny.jpg"
+    },
+    {
+        "id": "5",
+        "name": "Pink Panther",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/pinkpanther.jpg"
+    },
+    {
+        "id": "6",
+        "name": "Tom",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/tom.jpg"
+    },
+    {
+        "id": "7",
+        "name": "Scooby-Doo",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/scoobydoo.jpg"
+    },
+    {
+        "id": "8",
+        "name": "Pochacco",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/pochacco.jpg"
+    },
+    {
+        "id": "9",
+        "name": "Bloom",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/bloom.jpg"
+    },
+    {
+        "id": "10",
+        "name": "Big Nose",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/bignose.jpg"
+    },
+    {
+        "id": "11",
+        "name": "Ash Ketchum",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/ashketchum.jpg"
+    },
+    {
+        "id": "12",
+        "name": "Blossom",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/blossom.jpg"
+    },
+    {
+        "id": "13",
+        "name": "Dora the Explorer",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/doratheexplorer.jpg"
+    },
+    {
+        "id": "14",
+        "name": "Garfield",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/garfield.jpg"
+    },
+    {
+        "id": "15",
+        "name": "Musa",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/musa.jpg"
+    },
+    {
+        "id": "16",
+        "name": "Charlie Brown",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/charliebrown.jpg"
+    },
+    {
+        "id": "17",
+        "name": "SpongeBob SquarePants",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/spongebobsquarepants.jpg"
+    },
+    {
+        "id": "18",
+        "name": "Shaun the Sheep",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/shaun.jpg"
+    },
+    {
+        "id": "19",
+        "name": "Peppa Pig",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/peppapig.jpg"
+    },
+    {
+        "id": "20",
+        "name": "Fred Flintstone",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/fredflintstone.jpg"
+    },
+    {
+        "id": "21",
+        "name": "Bob the Builder",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/bobthebuilder.jpg"
+    },
+    {
+        "id": "22",
+        "name": "Curious George",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/curiousgeorge.jpg"
+    },
+    {
+        "id": "23",
+        "name": "Hello Kitty",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/hellokitty.jpg"
+    },
+    {
+        "id": "24",
+        "name": "Pingu",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/pingu.jpg"
+    },
+    {
+        "id": "25",
+        "name": "Winnie the Pooh",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/winniethepooh.jpg"
+    },
+    {
+        "id": "26",
+        "name": "Mr. Krabs",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/mrkrabs.jpg"
+    },
+    {
+        "id": "27",
+        "name": "Bubbles",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/bubbles.jpg"
+    },
+    {
+        "id": "28",
+        "name": "Flora",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/flora.jpg"
+    },
+    {
+        "id": "29",
+        "name": "Buttercup",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/buttercup.jpg"
+    },
+    {
+        "id": "30",
+        "name": "Keroppi",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/keroppi.jpg"
+    },
+    {
+        "id": "31",
+        "name": "Masha",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/masha.jpg"
+    },
+    {
+        "id": "32",
+        "name": "Piglet",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/piglet.jpg"
+    },
+    {
+        "id": "33",
+        "name": "Pikachu",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/pikachu.jpg"
+    },
+    {
+        "id": "34",
+        "name": "Snoopy",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/snoopy.jpg"
+    },
+    {
+        "id": "35",
+        "name": "Squidward",
+        "category": "Nostalgia",
+        "imageUrl": "/images/nostalgia/squidward.jpg"
+    }
+]
