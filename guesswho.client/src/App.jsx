@@ -3,6 +3,7 @@ import './App.css';
 import Auth from './components/Auth';
 import CardGrid from './components/CardGrid';
 import CategorySelector from './components/CategorySelector';
+import SecretCardSelector from './components/SecretCardSelector';
 import QnaHistory from './components/QnaHistory';
 import QuestionPanel from './components/QuestionPanel';
 import RoomLobby from './components/RoomLobby';
@@ -357,14 +358,20 @@ function GuessWhoContent() {
         }
     };
 
-    const submitTargetChoice = async () => {
-        if (!selectedTargetId || !activeRoomSession || !selectedCategory) return;
+    const handleConfirmSecretCard = async (card) => {
+        const targetIdToSend = card?.id ?? selectedTargetId;
+        if (!targetIdToSend || !activeRoomSession || !selectedCategory) return;
+        setSelectedTargetId(targetIdToSend);
         setIsSubmitting(true);
         try {
             const res = await fetch(`/api/rooms/${encodeURIComponent(activeRoomSession.roomCode)}/select-target`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ playerId: activeRoomSession.playerId, category: selectedCategory, targetId: selectedTargetId }),
+                body: JSON.stringify({
+                    playerId: activeRoomSession.playerId,
+                    category: selectedCategory,
+                    targetId: targetIdToSend,
+                }),
             });
             if (!res.ok) throw new Error(await res.text());
             applyRoomState(await res.json());
@@ -554,6 +561,9 @@ function GuessWhoContent() {
         ?? null;
     const myChosenName = rawMyTarget?.name ?? rawMyTarget?.Name ?? '';
     const myChosenImage = rawMyTarget?.imageUrl ?? rawMyTarget?.ImageUrl ?? '';
+    const lockedTargetId = hasSelectedTarget
+        ? (rawMyTarget?.id ?? rawMyTarget?.Id ?? selectedTargetId)
+        : selectedTargetId;
 
     return (
         <div className="game-app">
@@ -813,26 +823,15 @@ function GuessWhoContent() {
                     onRespondCategory={handleRespondCategory}
                 />
             ) : !isPlaying ? (
-                <>
-                    <section className="panel target-selection">
-                        <div className="panel-heading">
-                            <h2>Choose your secret character</h2>
-                            <p>{hasSelectedTarget ? 'Locked in! Waiting for opponent...' : 'Select a card below and confirm.'}</p>
-                        </div>
-                        {!hasSelectedTarget && (
-                            <button className="primary-button" disabled={!selectedTargetId || isSubmitting} onClick={submitTargetChoice}>
-                                {isSubmitting ? 'Confirming...' : 'Confirm & Start'}
-                            </button>
-                        )}
-                    </section>
-                    <CardGrid
-                        cards={safeCards}
-                        selectedCategory={selectedCategory}
-                        selectionMode={!hasSelectedTarget}
-                        selectedCardId={selectedTargetId}
-                        onSelectCard={(id) => !hasSelectedTarget && setSelectedTargetId(id)}
-                    />
-                </>
+                <SecretCardSelector
+                    cards={safeCards}
+                    categoryLabel={selectedCategory}
+                    selectedCardId={lockedTargetId}
+                    isLockedIn={hasSelectedTarget || isSubmitting}
+                    opponentName={opponentName}
+                    onSelectCard={(card) => setSelectedTargetId(card.id)}
+                    onConfirmSecretCard={handleConfirmSecretCard}
+                />
             ) : (
                 <>
                     <div className="game-action-bar">
