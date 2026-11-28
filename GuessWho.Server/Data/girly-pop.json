@@ -1,0 +1,182 @@
+[
+    {
+        "id": "1",
+        "name": "Aurora",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/aurora.jpg"
+    },
+    {
+        "id": "2",
+        "name": "Hello Kitty",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/hellokitty.jpg"
+    },
+    {
+        "id": "3",
+        "name": "Fawn",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/fawn.jpg"
+    },
+    {
+        "id": "4",
+        "name": "Rosetta",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/rosetta.jpg"
+    },
+    {
+        "id": "5",
+        "name": "Princess Peach",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/princesspeach.jpg"
+    },
+    {
+        "id": "6",
+        "name": "Stella",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/stella.jpg"
+    },
+    {
+        "id": "7",
+        "name": "Poppy",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/poppy.jpg"
+    },
+    {
+        "id": "8",
+        "name": "Clawdeen Wolf",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/clawdeen.jpg"
+    },
+    {
+        "id": "9",
+        "name": "Rapunzel",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/rapunzel.jpg"
+    },
+    {
+        "id": "10",
+        "name": "Rainbow Dash",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/rainbowdash.jpg"
+    },
+    {
+        "id": "11",
+        "name": "Belle",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/belle.jpg"
+    },
+    {
+        "id": "12",
+        "name": "Moxie",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/moxie.jpg"
+    },
+    {
+        "id": "13",
+        "name": "Elsa",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/elsa.jpg"
+    },
+    {
+        "id": "14",
+        "name": "Princess Bubblegum",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/princessbubblegum.jpg"
+    },
+    {
+        "id": "15",
+        "name": "Pompompurin",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/pompompurin.jpg"
+    },
+    {
+        "id": "16",
+        "name": "Rarity",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/rarity.jpg"
+    },
+    {
+        "id": "17",
+        "name": "Megara",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/megara.jpg"
+    },
+    {
+        "id": "18",
+        "name": "Bloom",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/bloom.jpg"
+    },
+    {
+        "id": "19",
+        "name": "Princess Daisy",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/princessdaisy.jpg"
+    },
+    {
+        "id": "20",
+        "name": "Star Butterfly",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/starbutterfly.jpg"
+    },
+    {
+        "id": "21",
+        "name": "Cleo DeNile",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/cleodenile.jpg"
+    },
+    {
+        "id": "22",
+        "name": "Judy Hopps",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/judyhopps.jpg"
+    },
+    {
+        "id": "23",
+        "name": "Kuromi",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/kuromi.jpg"
+    },
+    {
+        "id": "24",
+        "name": "Pinkie Pie",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/pinkiepie.jpg"
+    },
+    {
+        "id": "25",
+        "name": "Tinker Bell",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/tinkerbell.jpg"
+    },
+    {
+        "id": "26",
+        "name": "Vaggie",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/vaggie.jpg"
+    },
+    {
+        "id": "27",
+        "name": "Vanellope Von Schweetz",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/vanellopevonschweetz.jpg"
+    },
+    {
+        "id": "28",
+        "name": "Draculaura",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/draculaura.jpg"
+    },
+    {
+        "id": "29",
+        "name": "My Melody",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/mymelody.jpg"
+    },
+    {
+        "id": "30",
+        "name": "Twilight Sparkle",
+        "category": "girly-pop",
+        "imageUrl": "/images/girly-pop/twilightsparkle.jpg"
+    }
+]
