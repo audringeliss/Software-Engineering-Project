@@ -5,6 +5,8 @@ function CategorySelector({
     proposedCategory,
     proposedCategoryByRole,
     myRole,
+    creatorName = 'Room Creator',
+    joinerName = 'Opponent',
     onProposeCategory,
     onRespondCategory
 }) {
@@ -12,14 +14,22 @@ function CategorySelector({
     const [previewResult, setPreviewResult] = useState(null);
 
     const categoryOptions = categories.map((category, index) => {
-        const value = typeof category === 'object'
-            ? (category.id || category.Id || category.name || category.Name)
-            : category;
-        const label = typeof category === 'object'
-            ? (category.name || category.Name)
-            : category;
+        const isObj = typeof category === 'object' && category !== null;
+        const value = isObj
+            ? (category.id ?? category.Id ?? category.name ?? category.Name ?? '')
+            : String(category);
+        const label = isObj
+            ? (category.name ?? category.Name ?? value)
+            : String(category);
+        const rawCount = isObj
+            ? (category.cardCount ?? category.CardCount ?? category.count ?? category.Count)
+            : undefined;
+        const cardCount = typeof rawCount === 'number' ? rawCount : null;
+        const thumbnailUrl = isObj
+            ? (category.previewImageUrl ?? category.PreviewImageUrl ?? category.imageUrl ?? category.ImageUrl ?? '')
+            : '';
 
-        return { value, label, key: value || index };
+        return { value, label, cardCount, thumbnailUrl, key: value || index };
     });
 
     const activePreviewCategory = proposedCategory || previewCategory;
@@ -59,6 +69,7 @@ function CategorySelector({
     const previewStatus = activePreviewCategory
         ? (isCurrentPreview ? previewResult.status : 'loading')
         : 'idle';
+
     const getCategoryMeta = (catName) => {
         const name = String(catName).toLowerCase();
         if (name.includes('animal')) return { icon: '🦁', desc: 'Creatures & beasts' };
@@ -66,7 +77,7 @@ function CategorySelector({
         if (name.includes('cn')) return { icon: '📺', desc: 'Cartoon Network characters' };
         if (name.includes('disney')) return { icon: '🏰', desc: 'Magical characters' };
         if (name.includes('people')) return { icon: '👥', desc: 'Simple characters' };
-        if (name.includes('pokémon')) return { icon: '⚡', desc: 'Monsters & creatures' };
+        if (name.includes('pokémon') || name.includes('pokemon')) return { icon: '⚡', desc: 'Monsters & creatures' };
         if (name.includes('food')) return { icon: '🍔', desc: 'Delicious dishes' };
         if (name.includes('hobbies')) return { icon: '🎨', desc: 'Fun activities' };
         if (name.includes('countries')) return { icon: '🌍', desc: 'Countries around the world' };
@@ -82,35 +93,55 @@ function CategorySelector({
     };
 
     const isMyProposal = proposedCategoryByRole === myRole;
-    const proposerName = proposedCategoryByRole === 'creator' ? 'Room Creator' : 'Opponent';
+    const proposerName = proposedCategoryByRole === 'creator'
+        ? (creatorName || 'Room Creator')
+        : (joinerName || 'Opponent');
+    const responderName = proposedCategoryByRole === 'creator'
+        ? (joinerName || 'Opponent')
+        : (creatorName || 'Room Creator');
+
     const canRespond = previewStatus === 'loaded' && previewCards.length > 0;
-    const previewLabel = categoryOptions.find(option => option.value === activePreviewCategory)?.label
-        || activePreviewCategory;
+    const matchedOption = categoryOptions.find(option => option.value === activePreviewCategory);
+    const previewLabel = matchedOption?.label || activePreviewCategory;
+    const previewCount = previewStatus === 'loaded'
+        ? previewCards.length
+        : matchedOption?.cardCount;
 
     return (
         <>
             {proposedCategory ? (
-                <section className="panel category-proposal">
-                    <h2>Category Proposed</h2>
+                <section
+                    className={`panel category-proposal ${isMyProposal ? 'category-proposal--waiting' : 'category-proposal--action-required'}`}
+                    aria-live="polite"
+                >
+                    <span className="category-proposal__badge">
+                        {isMyProposal ? 'PROPOSAL SENT • WAITING' : 'ACTION REQUIRED • REVIEW DECK'}
+                    </span>
+                    <h2>{isMyProposal ? 'Category Proposed' : `${proposerName} Proposed a Category`}</h2>
                     <p className="category-proposal__message">
                         <strong>{isMyProposal ? 'You' : proposerName}</strong> suggested{' '}
-                        <span>{proposedCategory.toUpperCase()}</span>
+                        <span>{String(previewLabel).toUpperCase()}</span>
+                        {typeof previewCount === 'number' && (
+                            <span className="category-proposal__count"> ({previewCount} cards)</span>
+                        )}
                     </p>
-                    {isMyProposal ? (
-                        <p className="category-proposal__waiting">Waiting for your opponent to accept or decline...</p>
-                    ) : null}
+                    <p className="category-proposal__waiting">
+                        {isMyProposal
+                            ? `Waiting for ${responderName} to accept or decline...`
+                            : `Accept to start picking secret cards, or decline to pick another category.`}
+                    </p>
                 </section>
             ) : (
                 <section className="category-selector panel">
                     <div className="panel-heading">
                         <div>
-                            <h2>Suggest a category</h2>
-                            <p>Preview the cards before suggesting a deck.</p>
+                            <h2>Choose &amp; suggest a category</h2>
+                            <p>Click any category to preview its cards and card count before proposing to {joinerName || 'your opponent'}.</p>
                         </div>
                     </div>
 
                     <div className="category-tiles-grid">
-                        {categoryOptions.map(({ value, label, key }) => {
+                        {categoryOptions.map(({ value, label, cardCount, thumbnailUrl, key }) => {
                             const isSelected = previewCategory === value;
                             const meta = getCategoryMeta(label);
 
@@ -122,11 +153,23 @@ function CategorySelector({
                                     aria-pressed={isSelected}
                                     onClick={() => setPreviewCategory(value)}
                                 >
-                                    <span className="category-tile-icon" aria-hidden="true">{meta.icon}</span>
+                                    {thumbnailUrl ? (
+                                        <img
+                                            src={thumbnailUrl}
+                                            alt=""
+                                            className="category-tile-thumb"
+                                            loading="lazy"
+                                        />
+                                    ) : (
+                                        <span className="category-tile-icon" aria-hidden="true">{meta.icon}</span>
+                                    )}
                                     <span className="category-tile-name">{String(label).toUpperCase()}</span>
                                     <span className="category-tile-desc">{meta.desc}</span>
+                                    {typeof cardCount === 'number' && (
+                                        <span className="category-tile-count">{cardCount} cards</span>
+                                    )}
                                     <span className="category-tile-preview-action">
-                                        {isSelected ? 'Previewing cards' : 'Preview cards'}
+                                        {isSelected ? '✓ Previewing deck' : 'Preview deck'}
                                     </span>
                                 </button>
                             );
@@ -138,12 +181,21 @@ function CategorySelector({
             {activePreviewCategory && (
                 <section className="panel category-preview" aria-live="polite">
                     <div className="category-preview__header">
-                        <div>
-                            <h2>{proposedCategory ? 'Review the proposed deck' : `${previewLabel} cards`}</h2>
-                            {previewStatus === 'loaded' && (
-                                <p>{previewCards.length} {previewCards.length === 1 ? 'card' : 'cards'} in this deck</p>
+                        <div className="category-preview__title-row">
+                            <h2>{proposedCategory ? `Proposed Deck: ${previewLabel}` : `${previewLabel} Preview`}</h2>
+                            {typeof previewCount === 'number' && (
+                                <span className="category-preview__count-pill">
+                                    {previewCount} {previewCount === 1 ? 'card' : 'cards'}
+                                </span>
                             )}
                         </div>
+                        <p>
+                            {proposedCategory
+                                ? (isMyProposal
+                                    ? `You proposed this deck to ${responderName}.`
+                                    : `Inspect the cards below and decide whether to play with ${previewLabel}.`)
+                                : 'Inspect the cards below, then suggest this category to lock it in with your opponent.'}
+                        </p>
                     </div>
 
                     {previewStatus === 'loading' && <p className="category-preview__message">Loading cards...</p>}
@@ -181,7 +233,7 @@ function CategorySelector({
                                     onClick={() => onRespondCategory(true)}
                                     disabled={!canRespond}
                                 >
-                                    Accept
+                                    Accept Category
                                 </button>
                                 <button
                                     type="button"
@@ -201,7 +253,7 @@ function CategorySelector({
                                 onClick={() => onProposeCategory(activePreviewCategory)}
                                 disabled={!canRespond}
                             >
-                                Suggest {previewLabel}
+                                Suggest {previewLabel}{typeof previewCount === 'number' ? ` (${previewCount} cards)` : ''}
                             </button>
                         </div>
                     )}

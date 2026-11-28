@@ -807,6 +807,8 @@ function GuessWhoContent() {
                     proposedCategory={roomState?.proposedCategory}
                     proposedCategoryByRole={roomState?.proposedCategoryByRole}
                     myRole={myRole}
+                    creatorName={roomState?.creatorName}
+                    joinerName={roomState?.joinerName}
                     onProposeCategory={handleProposeCategory}
                     onRespondCategory={handleRespondCategory}
                 />
